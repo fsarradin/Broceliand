@@ -77,7 +77,7 @@
             <version>${simple.version}</version>
         </dependency>
 
-        <!-- DBMS dependencies -->
+        <!-- Presistence dependencies -->
 
         <dependency>
             <groupId>org.hsqldb</groupId>
@@ -90,6 +90,13 @@
             <artifactId>hibernate-entitymanager</artifactId>
             <version>3.6.6.Final</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.google.inject.extensions</groupId>
+            <artifactId>guice-persist</artifactId>
+            <version>${guice.version}</version>
+        </dependency>
+
 
         <!-- Test dependencies -->
 
