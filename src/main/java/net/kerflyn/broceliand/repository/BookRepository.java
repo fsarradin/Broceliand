@@ -1,19 +1,10 @@
 package net.kerflyn.broceliand.repository;
 
-import com.google.inject.Inject;
-import com.google.inject.persist.Transactional;
 import net.kerflyn.broceliand.model.Book;
 
-import javax.persistence.EntityManager;
+import java.util.List;
 
-public class BookRepository {
-
-    @Inject
-    EntityManager entityManager;
-
-    @Transactional
-    public void save(Book book) {
-        entityManager.persist(book);
-    }
-
+public interface BookRepository {
+    List<Book> findAll();
+    void save(Book book);
 }

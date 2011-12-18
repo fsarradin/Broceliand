@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import java.util.Random;
 
 import static ch.qos.logback.classic.Level.DEBUG;
-import static ch.qos.logback.classic.Level.INFO;
 
 public class BroceliandTest extends WebTester {
 
@@ -31,7 +30,7 @@ public class BroceliandTest extends WebTester {
             try {
                 port = getRandomPort();
 
-                service = new BroceliandService(port);
+                service = new BroceliandWebApp(port);
                 service.startAndWait();
 
                 setBaseUrl("http://localhost:" + port);

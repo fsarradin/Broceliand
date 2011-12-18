@@ -12,7 +12,7 @@ public class Book {
 
     private String title;
 
-    private String auhtor;
+    private String author;
 
     private BigDecimal price;
 
@@ -32,14 +32,6 @@ public class Book {
         this.title = title;
     }
 
-    public String getAuhtor() {
-        return auhtor;
-    }
-
-    public void setAuhtor(String auhtor) {
-        this.auhtor = auhtor;
-    }
-
     public BigDecimal getPrice() {
         return price;
     }
@@ -48,4 +40,11 @@ public class Book {
         this.price = price;
     }
 
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
 }

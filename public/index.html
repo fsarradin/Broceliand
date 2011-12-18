@@ -15,5 +15,12 @@ body {
 <h1>Broceliand</h1>
 
 <p>Test test</p>
+
+<ul>
+    $books:{ book |
+        <li>$book.author$, <strong>$book.title$</strong></li>
+    }$
+</ul>
+
 </body>
 </html>
