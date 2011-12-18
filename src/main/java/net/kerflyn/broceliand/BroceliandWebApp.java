@@ -2,14 +2,10 @@ package net.kerflyn.broceliand;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.util.concurrent.AbstractService;
-import com.google.inject.*;
+import com.google.inject.Injector;
+import com.google.inject.Key;
 import com.google.inject.name.Names;
-import com.google.inject.persist.PersistService;
-import com.google.inject.persist.jpa.JpaPersistModule;
-import net.kerflyn.broceliand.repository.BookRepository;
-import net.kerflyn.broceliand.repository.impl.BookRepositoryImpl;
-import net.kerflyn.broceliand.service.BookService;
-import net.kerflyn.broceliand.service.impl.BookServiceImpl;
+import net.kerflyn.broceliand.configuration.BroceliandConfiguration;
 import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
 import org.simpleframework.http.core.Container;
@@ -21,7 +17,6 @@ import java.util.List;
 
 import static com.google.common.collect.Iterables.getFirst;
 import static com.google.common.collect.Iterables.skip;
-import static com.google.inject.name.Names.named;
 import static java.util.Arrays.asList;
 import static net.kerflyn.broceliand.util.Reflections.invoke;
 
@@ -33,17 +28,7 @@ public class BroceliandWebApp extends AbstractService implements Container {
 
     public BroceliandWebApp(int port) {
         this.port = port;
-
-        injector = Guice.createInjector(new JpaPersistModule("hsqldb-pu"),
-                new AbstractModule() {
-                    @Override
-                    protected void configure() {
-                        bind(BookRepository.class).to(BookRepositoryImpl.class);
-                        bind(BookService.class).to(BookServiceImpl.class);
-                        bind(Key.get(Object.class, named("index"))).to(IndexController.class);
-                    }
-                });
-        injector.getInstance(Initializer.class);
+        this.injector = BroceliandConfiguration.newGuiceInjector();
     }
 
     @Override
@@ -94,10 +79,4 @@ public class BroceliandWebApp extends AbstractService implements Container {
         new BroceliandWebApp(8080).startAndWait();
     }
 
-    private static class Initializer {
-        @Inject
-        public Initializer(PersistService service) {
-            service.start();
-        }
-    }
 }
