@@ -69,6 +69,14 @@
             <version>${stringtemplate.version}</version>
         </dependency>
 
+        <!-- Logging dependencies -->
+
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
         <!-- Web service -->
 
         <dependency>

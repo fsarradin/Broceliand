@@ -8,8 +8,11 @@ import com.google.inject.name.Names;
 import net.kerflyn.broceliand.configuration.BroceliandConfiguration;
 import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
+import org.simpleframework.http.Status;
 import org.simpleframework.http.core.Container;
 import org.simpleframework.transport.connect.SocketConnection;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -21,6 +24,8 @@ import static java.util.Arrays.asList;
 import static net.kerflyn.broceliand.util.Reflections.invoke;
 
 public class BroceliandWebApp extends AbstractService implements Container {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(BroceliandWebApp.class);
 
     private SocketConnection socketConnection;
     private int port;
@@ -36,7 +41,12 @@ public class BroceliandWebApp extends AbstractService implements Container {
         List<String> path = asList(request.getPath().getSegments());
         String action = getFirst(path, "index");
         try {
-            invoke(getController(action), "render", getArguments(response, path));
+            LOGGER.info("action: " + action + ", path: " + path);
+            invoke(getController(action), "render", getArguments(request, response, path));
+        } catch (Exception e) {
+            LOGGER.error("Error during invocation", e);
+            response.setCode(Status.TEMPORARY_REDIRECT.getCode());
+            response.set("Location", "/");
         } finally {
             try {
                 response.close();
@@ -46,8 +56,11 @@ public class BroceliandWebApp extends AbstractService implements Container {
         }
     }
 
-    private List<Object> getArguments(Response response, List<String> path) {
-        return ImmutableList.builder().add(response).addAll(skip(path, 1)).build();
+    private List<Object> getArguments(Request request, Response response, List<String> path) {
+        return ImmutableList.builder()
+                .add(request).add(response)
+                .addAll(skip(path, 1))
+                .build();
     }
 
     private Object getController(String action) {

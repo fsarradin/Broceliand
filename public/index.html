@@ -14,11 +14,11 @@ body {
 <body>
 <h1>Broceliand</h1>
 
-<p>Test test</p>
+<p><a href="/book">Create a book</a></p>
 
 <ul>
     $books:{ book |
-        <li>$book.author$, <strong>$book.title$</strong></li>
+        <li>$book.author$, <strong>$book.title$</strong>, $book.price$&nbsp;€</li>
     }$
 </ul>
 

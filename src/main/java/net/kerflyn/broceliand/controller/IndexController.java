@@ -1,9 +1,10 @@
-package net.kerflyn.broceliand;
+package net.kerflyn.broceliand.controller;
 
 import com.google.common.io.Files;
 import com.google.inject.Inject;
 import net.kerflyn.broceliand.model.Book;
 import net.kerflyn.broceliand.service.BookService;
+import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
 import org.stringtemplate.v4.ST;
 
@@ -22,7 +23,7 @@ public class IndexController {
         this.bookService = bookService;
     }
 
-    public void render(Response response) throws IOException {
+    public void render(Request request, Response response) throws IOException {
         List<Book> books = bookService.findAll();
 
         String raw = Files.toString(new File("public/index.html"), UTF_8);

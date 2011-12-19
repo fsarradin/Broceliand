@@ -16,16 +16,12 @@ public class Reflections {
         throw new UnsupportedOperationException();
     }
 
-    public static void invoke(Object target, final String methodName, List<Object> arguments) {
+    public static void invoke(Object target, final String methodName, List<Object> arguments) throws Exception {
         checkNotNull(methodName);
-        Method method = findMethod(target, methodName);
+        Method method = findMethod(target, methodName, arguments.size());
         Object[] convertedArguments = convertArguments(arguments, method);
 
-        try {
-            method.invoke(target, convertedArguments);
-        } catch (Exception e) {
-            throw Throwables.propagate(e);
-        }
+        method.invoke(target, convertedArguments);
     }
 
     private static Object[] convertArguments(List<Object> arguments, Method method) {
@@ -40,16 +36,16 @@ public class Reflections {
         return convertedArguments;
     }
 
-    private static Method findMethod(Object target, String methodName) {
+    private static Method findMethod(Object target, String methodName, int parameterCount) {
         List<Method> methods = asList(target.getClass().getMethods());
-        return find(methods, methodHasName(methodName));
+        return find(methods, methodLooksLike(methodName, parameterCount));
     }
 
-    private static Predicate<Method> methodHasName(final String methodName) {
+    private static Predicate<Method> methodLooksLike(final String methodName, final int parameterCount) {
         return new Predicate<Method>() {
             @Override
             public boolean apply(Method method) {
-                return methodName.equals(method.getName());
+                return methodName.equals(method.getName()) && method.getParameterTypes().length == parameterCount;
             }
         };
     }
