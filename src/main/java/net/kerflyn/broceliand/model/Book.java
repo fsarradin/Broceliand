@@ -1,6 +1,7 @@
 package net.kerflyn.broceliand.model;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.math.BigDecimal;
 
@@ -8,7 +9,8 @@ import java.math.BigDecimal;
 public class Book {
 
     @Id
-    private long id;
+    @GeneratedValue
+    private Long id;
 
     private String title;
 
