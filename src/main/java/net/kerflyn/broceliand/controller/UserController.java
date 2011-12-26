@@ -1,9 +1,11 @@
 package net.kerflyn.broceliand.controller;
 
+import com.google.common.base.Charsets;
 import com.google.common.io.Files;
 import com.google.inject.Inject;
 import net.kerflyn.broceliand.model.Book;
-import net.kerflyn.broceliand.service.BookService;
+import net.kerflyn.broceliand.model.User;
+import net.kerflyn.broceliand.service.UserService;
 import org.simpleframework.http.Form;
 import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
@@ -18,41 +20,39 @@ import java.math.BigDecimal;
 
 import static com.google.common.base.Charsets.UTF_8;
 
-public class BookController {
+public class UserController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(BookController.class);
-
-    private BookService bookService;
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
+    private UserService userService;
 
     @Inject
-    public BookController(BookService bookService) {
-        this.bookService = bookService;
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
     public void render(Request request, Response response) throws IOException {
-        ST template = buildTemplate("public/create-book.html");
+        ST template = buildTemplate("public/create-user.html");
         response.getPrintStream().append(template.render());
+    }
+
+    private ST buildTemplate(String webpage) throws IOException {
+        String raw = Files.toString(new File(webpage), UTF_8);
+        return new ST(raw, '$', '$');
     }
 
     public void render(Request request, Response response, String action) throws IOException {
         if ("new".equals(action)) {
             Form form = request.getForm();
 
-            Book book = new Book();
-            book.setTitle(form.get("title"));
-            book.setAuthor(form.get("author"));
-            book.setPrice(new BigDecimal(form.get("price")));
+            User user = new User();
+            user.setName(form.get("name"));
+            user.setLogin(form.get("login"));
 
-            bookService.save(book);
+            userService.save(user);
         }
 
         response.setCode(Status.TEMPORARY_REDIRECT.getCode());
         response.set("Location", "/");
-    }
-
-    private ST buildTemplate(String webpage) throws IOException {
-        String raw = Files.toString(new File(webpage), UTF_8);
-        return new ST(raw, '$', '$');
     }
 
 }

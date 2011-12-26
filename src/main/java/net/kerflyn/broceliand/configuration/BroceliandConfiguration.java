@@ -10,6 +10,7 @@ import com.google.inject.persist.jpa.JpaPersistModule;
 import net.kerflyn.broceliand.controller.ImageController;
 import net.kerflyn.broceliand.controller.IndexController;
 import net.kerflyn.broceliand.controller.BookController;
+import net.kerflyn.broceliand.controller.UserController;
 import net.kerflyn.broceliand.repository.BookRepository;
 import net.kerflyn.broceliand.repository.UserRepository;
 import net.kerflyn.broceliand.repository.impl.BookRepositoryImpl;
@@ -36,6 +37,7 @@ public class BroceliandConfiguration {
                         bind(Key.get(Object.class, named("index"))).to(IndexController.class);
                         bind(Key.get(Object.class, named("img"))).to(ImageController.class);
                         bind(Key.get(Object.class, named("book"))).to(BookController.class);
+                        bind(Key.get(Object.class, named("user"))).to(UserController.class);
                     }
                 });
         injector.getInstance(PersistenceInitializer.class);

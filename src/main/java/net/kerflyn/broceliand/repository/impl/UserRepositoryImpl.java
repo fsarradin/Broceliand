@@ -19,4 +19,10 @@ public class UserRepositoryImpl implements UserRepository {
     public List<User> findAll() {
         return entityManager.createQuery("select b from User b").getResultList();
     }
+
+    @Override
+    @Transactional
+    public void save(User user) {
+        entityManager.persist(user);
+    }
 }
