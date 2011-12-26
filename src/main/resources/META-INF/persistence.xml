@@ -12,6 +12,7 @@
 
         <!-- Entities -->
         <class>net.kerflyn.broceliand.model.Book</class>
+        <class>net.kerflyn.broceliand.model.User</class>
 
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
 

@@ -11,9 +11,13 @@ import net.kerflyn.broceliand.controller.ImageController;
 import net.kerflyn.broceliand.controller.IndexController;
 import net.kerflyn.broceliand.controller.BookController;
 import net.kerflyn.broceliand.repository.BookRepository;
+import net.kerflyn.broceliand.repository.UserRepository;
 import net.kerflyn.broceliand.repository.impl.BookRepositoryImpl;
+import net.kerflyn.broceliand.repository.impl.UserRepositoryImpl;
 import net.kerflyn.broceliand.service.BookService;
+import net.kerflyn.broceliand.service.UserService;
 import net.kerflyn.broceliand.service.impl.BookServiceImpl;
+import net.kerflyn.broceliand.service.impl.UserServiceImpl;
 
 import static com.google.inject.name.Names.named;
 
@@ -24,6 +28,8 @@ public class BroceliandConfiguration {
                 new AbstractModule() {
                     @Override
                     protected void configure() {
+                        bind(UserRepository.class).to(UserRepositoryImpl.class);
+                        bind(UserService.class).to(UserServiceImpl.class);
                         bind(BookRepository.class).to(BookRepositoryImpl.class);
                         bind(BookService.class).to(BookServiceImpl.class);
 

@@ -16,11 +16,21 @@ body {
 
 <img src="/img/broceliand-Idylls_of_the_King.jpg" alt="Broceliand" width="25%" />
 
+<h2>Books</h2>
+
 <p><a href="/book">Create a book</a></p>
 
 <ul>
     $books:{ book |
         <li>$book.author$, <strong>$book.title$</strong>, $book.price$&nbsp;&euro;</li>
+    }$
+</ul>
+
+<h2>Users</h2>
+
+<ul>
+    $users:{ user |
+        <li>$user.name$, <strong>$user.login$</strong></li>
     }$
 </ul>
 
