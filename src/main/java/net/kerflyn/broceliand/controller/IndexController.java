@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.util.List;
 
 import static com.google.common.base.Charsets.UTF_8;
+import static net.kerflyn.broceliand.util.Templates.buildTemplate;
 
 public class IndexController {
 
@@ -45,8 +46,7 @@ public class IndexController {
         List<Book> books = bookService.findAll();
         List<User> users = userService.findAll();
 
-        String raw = Files.toString(new File("public/index.html"), UTF_8);
-        ST template = new ST(raw, '$', '$');
+        ST template = buildTemplate("public/index.html");
         template.add("books", books);
         template.add("users", users);
         template.add("currentUser", currentUser);

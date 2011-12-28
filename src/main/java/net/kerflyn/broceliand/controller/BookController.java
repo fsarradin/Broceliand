@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 
 import static com.google.common.base.Charsets.UTF_8;
+import static net.kerflyn.broceliand.util.Templates.buildTemplate;
 
 public class BookController {
 
@@ -48,11 +49,6 @@ public class BookController {
 
         response.setCode(Status.TEMPORARY_REDIRECT.getCode());
         response.set("Location", "/");
-    }
-
-    private ST buildTemplate(String webpage) throws IOException {
-        String raw = Files.toString(new File(webpage), UTF_8);
-        return new ST(raw, '$', '$');
     }
 
 }
