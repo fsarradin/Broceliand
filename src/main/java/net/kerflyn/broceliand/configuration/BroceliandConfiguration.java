@@ -7,7 +7,6 @@ import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.persist.PersistService;
 import com.google.inject.persist.jpa.JpaPersistModule;
-import net.kerflyn.broceliand.controller.LoginController;
 import net.kerflyn.broceliand.controller.ResourceController;
 import net.kerflyn.broceliand.controller.IndexController;
 import net.kerflyn.broceliand.controller.BookController;
@@ -36,7 +35,6 @@ public class BroceliandConfiguration {
                         bind(BookService.class).to(BookServiceImpl.class);
 
                         bind(Key.get(Object.class, named("resources"))).to(ResourceController.class);
-                        bind(Key.get(Object.class, named("login"))).to(LoginController.class);
                         bind(Key.get(Object.class, named("index"))).to(IndexController.class);
                         bind(Key.get(Object.class, named("book"))).to(BookController.class);
                         bind(Key.get(Object.class, named("user"))).to(UserController.class);
