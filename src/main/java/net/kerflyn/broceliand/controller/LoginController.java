@@ -30,18 +30,18 @@ public class LoginController {
     }
 
     @SuppressWarnings("unchecked")
-    public void render(Request request, Response response, String action) throws IOException {
+    public void render(Request request, Response response, String action) throws IOException, LeaseException {
         if ("connect".equals(action)) {
             Form form = request.getForm();
             User user = userService.findByLogin(form.get("login"));
             if (user != null) {
-                Session session = null;
-                try {
-                    session = request.getSession(true);
-                } catch (LeaseException e) {
-                    throw new IOException(e);
-                }
+                Session session = request.getSession(true);
                 session.put("current-user", user.getLogin());
+            }
+        } else if ("logout".equals(action)) {
+            Session session = request.getSession(false);
+            if (session != null) {
+                session.remove("current-user");
             }
         }
 

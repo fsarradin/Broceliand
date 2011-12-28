@@ -35,13 +35,8 @@ public class IndexController {
         this.userService = userService;
     }
 
-    public void render(Request request, Response response) throws IOException {
-        User currentUser = null;
-        try {
-            currentUser = getConnectedUser(request);
-        } catch (LeaseException e) {
-            throw new IOException(e);
-        }
+    public void render(Request request, Response response) throws IOException, LeaseException {
+        User currentUser = getConnectedUser(request);
 
         List<Book> books = bookService.findAll();
         List<User> users = userService.findAll();
