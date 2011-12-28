@@ -14,6 +14,7 @@ import org.stringtemplate.v4.ST;
 import java.io.IOException;
 
 import static net.kerflyn.broceliand.util.Templates.buildTemplate;
+import static net.kerflyn.broceliand.util.Users.CURRENT_USER_SESSION_KEY;
 
 public class LoginController {
 
@@ -36,12 +37,12 @@ public class LoginController {
             User user = userService.findByLogin(form.get("login"));
             if (user != null) {
                 Session session = request.getSession(true);
-                session.put("current-user", user.getLogin());
+                session.put(CURRENT_USER_SESSION_KEY, user.getLogin());
             }
         } else if ("logout".equals(action)) {
             Session session = request.getSession(false);
             if (session != null) {
-                session.remove("current-user");
+                session.remove(CURRENT_USER_SESSION_KEY);
             }
         }
 
