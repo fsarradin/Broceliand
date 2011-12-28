@@ -6,6 +6,7 @@ import net.kerflyn.broceliand.model.User;
 import net.kerflyn.broceliand.repository.UserRepository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import java.util.List;
 
 public class UserRepositoryImpl implements UserRepository {
@@ -17,12 +18,19 @@ public class UserRepositoryImpl implements UserRepository {
     @Transactional
     @SuppressWarnings("unchecked")
     public List<User> findAll() {
-        return entityManager.createQuery("select b from User b").getResultList();
+        return entityManager.createQuery("select u from User u").getResultList();
     }
 
     @Override
     @Transactional
     public void save(User user) {
         entityManager.persist(user);
+    }
+
+    @Override
+    public User findByLogin(String login) {
+        final Query query = entityManager.createQuery("select u from User u where u.login = :login");
+        query.setParameter("login", login);
+        return (User) query.getSingleResult();
     }
 }

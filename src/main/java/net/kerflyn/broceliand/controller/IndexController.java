@@ -8,6 +8,8 @@ import net.kerflyn.broceliand.service.BookService;
 import net.kerflyn.broceliand.service.UserService;
 import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
+import org.simpleframework.http.session.Session;
+import org.simpleframework.util.lease.LeaseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.stringtemplate.v4.ST;
@@ -33,6 +35,13 @@ public class IndexController {
     }
 
     public void render(Request request, Response response) throws IOException {
+        User currentUser = null;
+        try {
+            currentUser = getConnectedUser(request);
+        } catch (LeaseException e) {
+            throw new IOException(e);
+        }
+
         List<Book> books = bookService.findAll();
         List<User> users = userService.findAll();
 
@@ -40,7 +49,17 @@ public class IndexController {
         ST template = new ST(raw, '$', '$');
         template.add("books", books);
         template.add("users", users);
+        template.add("currentUser", currentUser);
         response.getPrintStream().append(template.render());
+    }
+
+    private User getConnectedUser(Request request) throws LeaseException {
+        User connectedUser = null;
+        Session session = request.getSession(false);
+        if (session != null && session.containsKey("current-user")) {
+            connectedUser = userService.findByLogin((String) session.get("current-user"));
+        }
+        return connectedUser;
     }
 
 }
