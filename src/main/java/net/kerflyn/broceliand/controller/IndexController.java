@@ -1,8 +1,10 @@
 package net.kerflyn.broceliand.controller;
 
 import com.google.inject.Inject;
+import net.kerflyn.broceliand.model.BasketElement;
 import net.kerflyn.broceliand.model.Book;
 import net.kerflyn.broceliand.model.User;
+import net.kerflyn.broceliand.service.BasketElementService;
 import net.kerflyn.broceliand.service.BookService;
 import net.kerflyn.broceliand.service.UserService;
 import net.kerflyn.broceliand.util.Users;
@@ -14,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.stringtemplate.v4.ST;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 
 import static net.kerflyn.broceliand.util.Templates.buildTemplate;
@@ -25,15 +28,23 @@ public class IndexController {
     private BookService bookService;
 
     private UserService userService;
+    private BasketElementService basketElementService;
 
     @Inject
-    public IndexController(BookService bookService, UserService userService) {
+    public IndexController(BookService bookService, UserService userService, BasketElementService basketElementService) {
         this.bookService = bookService;
         this.userService = userService;
+        this.basketElementService = basketElementService;
     }
 
     public void render(Request request, Response response) throws IOException, LeaseException {
         User currentUser = Users.getConnectedUser(userService, request);
+        List<BasketElement> basketElements = Collections.emptyList();
+        int basketCount = 0;
+        if (currentUser != null) {
+            basketElements = basketElementService.findByUser(currentUser);
+            basketCount = basketElementService.countByUser(currentUser);
+        }
 
         List<Book> books = bookService.findAll();
         List<User> users = userService.findAll();
@@ -42,6 +53,8 @@ public class IndexController {
         template.add("books", books);
         template.add("users", users);
         template.add("currentUser", currentUser);
+        template.add("basket", basketElements);
+        template.add("basketCount", basketCount);
         response.getPrintStream().append(template.render());
     }
 

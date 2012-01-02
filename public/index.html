@@ -10,13 +10,23 @@
 
 <p>
 $if(currentUser)$
-Bonjour, $currentUser.name$. <a href="/user/logout">Déconnexion</a>
+Hi, $currentUser.name$. <a href="/user/logout">Logout</a><br />
+$basketCount$ product(s) in your basket.
 $else$
-<a href="/user/login">Connectez-vous!</a>
+<a href="/user/login">Please, login!</a>
 $endif$
 </p>
 
 <img src="/resources/img/broceliand-Idylls_of_the_King.jpg" alt="Broceliand" width="25%" />
+
+$if(currentUser)$
+<h2>Basket</h2>
+<ul>
+    $basket:{ element |
+        <li>$element.book.title$, $element.quantity$</li>
+    }$
+</ul>
+$endif$
 
 <h2>Books</h2>
 
