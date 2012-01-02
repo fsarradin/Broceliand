@@ -2,8 +2,10 @@ package net.kerflyn.broceliand.controller;
 
 import com.google.inject.Inject;
 import net.kerflyn.broceliand.model.User;
+import net.kerflyn.broceliand.service.BasketElementService;
 import net.kerflyn.broceliand.service.UserService;
 import net.kerflyn.broceliand.util.Templates;
+import net.kerflyn.broceliand.util.Users;
 import org.simpleframework.http.Form;
 import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
@@ -22,11 +24,14 @@ import static net.kerflyn.broceliand.util.Users.CURRENT_USER_SESSION_KEY;
 public class UserController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
+
     private UserService userService;
+    private BasketElementService basketElementService;
 
     @Inject
-    public UserController(UserService userService) {
+    public UserController(UserService userService, BasketElementService basketElementService) {
         this.userService = userService;
+        this.basketElementService = basketElementService;
     }
 
     public void render(Request request, Response response) throws IOException {
@@ -34,39 +39,59 @@ public class UserController {
         response.getPrintStream().append(template.render());
     }
 
-    @SuppressWarnings("unchecked")
     public void render(Request request, Response response, String action) throws IOException, LeaseException {
         if ("new".equals(action)) {
-            Form form = request.getForm();
-
-            User user = new User();
-            user.setName(form.get("name"));
-            user.setLogin(form.get("login"));
-
-            userService.save(user);
-
-            response.setCode(Status.TEMPORARY_REDIRECT.getCode());
-            response.set("Location", "/");
+            createUser(request, response);
         } else if ("login".equals(action)) {
             ST template = buildTemplate("public/login.html");
             response.getPrintStream().append(template.render());
         } else if ("connect".equals(action)) {
-            Form form = request.getForm();
-            User user = userService.findByLogin(form.get("login"));
-            if (user != null) {
-                Session session = request.getSession(true);
-                session.put(CURRENT_USER_SESSION_KEY, user.getLogin());
-            }
-            response.setCode(Status.TEMPORARY_REDIRECT.getCode());
-            response.set("Location", "/");
+            login(request, response);
         } else if ("logout".equals(action)) {
-            Session session = request.getSession(false);
-            if (session != null) {
-                session.remove(CURRENT_USER_SESSION_KEY);
-            }
-            response.setCode(Status.TEMPORARY_REDIRECT.getCode());
-            response.set("Location", "/");
+            logout(request, response);
+        } else if ("basket-add".equals(action)) {
+            Form form = request.getForm();
+            Long bookId = Long.valueOf(form.get("book-id"));
+            User currentUser = Users.getConnectedUser(userService, request);
+            basketElementService.addBookById(currentUser, bookId);
+            redirectTo(response, "/");
         }
+    }
+
+    private void logout(Request request, Response response) throws LeaseException {
+        Session session = request.getSession(false);
+        if (session != null) {
+            session.remove(CURRENT_USER_SESSION_KEY);
+        }
+        redirectTo(response, "/");
+    }
+
+    private void redirectTo(Response response, String url) {
+        response.setCode(Status.TEMPORARY_REDIRECT.getCode());
+        response.set("Location", url);
+    }
+
+    @SuppressWarnings("unchecked")
+    private void login(Request request, Response response) throws IOException, LeaseException {
+        Form form = request.getForm();
+        User user = userService.findByLogin(form.get("login"));
+        if (user != null) {
+            Session session = request.getSession(true);
+            session.put(CURRENT_USER_SESSION_KEY, user.getLogin());
+        }
+        redirectTo(response, "/");
+    }
+
+    private void createUser(Request request, Response response) throws IOException {
+        Form form = request.getForm();
+
+        User user = new User();
+        user.setName(form.get("name"));
+        user.setLogin(form.get("login"));
+
+        userService.save(user);
+
+        redirectTo(response, "/");
     }
 
 }

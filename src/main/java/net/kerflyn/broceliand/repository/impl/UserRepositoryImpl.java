@@ -28,6 +28,7 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
+    @Transactional
     public User findByLogin(String login) {
         final Query query = entityManager.createQuery("select u from User u where u.login = :login");
         query.setParameter("login", login);

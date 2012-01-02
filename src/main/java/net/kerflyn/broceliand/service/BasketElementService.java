@@ -9,5 +9,7 @@ public interface BasketElementService {
 
     List<BasketElement> findByUser(User user);
 
-    int countByUser(User user);
+    long countByUser(User user);
+
+    void addBookById(User user, Long bookId);
 }

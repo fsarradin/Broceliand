@@ -40,7 +40,7 @@ public class IndexController {
     public void render(Request request, Response response) throws IOException, LeaseException {
         User currentUser = Users.getConnectedUser(userService, request);
         List<BasketElement> basketElements = Collections.emptyList();
-        int basketCount = 0;
+        long basketCount = 0L;
         if (currentUser != null) {
             basketElements = basketElementService.findByUser(currentUser);
             basketCount = basketElementService.countByUser(currentUser);

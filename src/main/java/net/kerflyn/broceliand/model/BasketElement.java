@@ -4,7 +4,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import java.math.BigInteger;
 
 @Entity
 public class BasketElement {
@@ -19,7 +18,7 @@ public class BasketElement {
     @ManyToOne
     private Book book;
 
-    private BigInteger quantity;
+    private Integer quantity;
 
     public User getOwner() {
         return owner;
@@ -37,11 +36,11 @@ public class BasketElement {
         this.book = book;
     }
 
-    public BigInteger getQuantity() {
+    public Integer getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(BigInteger quantity) {
+    public void setQuantity(Integer quantity) {
         this.quantity = quantity;
     }
 }
