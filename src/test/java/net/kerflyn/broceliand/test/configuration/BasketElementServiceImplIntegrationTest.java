@@ -18,27 +18,27 @@ import static org.fest.assertions.Assertions.assertThat;
 public class BasketElementServiceImplIntegrationTest {
 
     private Injector injector;
-    public Book book;
+
+    private Book book;
+    private User user;
+    private BasketElementService basketElementService;
 
     @Before
     public void setUp() {
         injector = BroceliandTestConfiguration.newGuiceInjector();
 
-        User user = new User();
+        user = new User();
         user.setLogin("toto");
         injector.getInstance(UserService.class).save(user);
 
         book = new Book();
         book.setPrice(new BigDecimal("40.0"));
         injector.getInstance(BookService.class).save(book);
+        basketElementService = injector.getInstance(BasketElementService.class);
     }
 
     @Test
     public void should_add_new_book_to_user() {
-        BasketElementService basketElementService = injector.getInstance(BasketElementService.class);
-        UserService userService = injector.getInstance(UserService.class);
-
-        User user = userService.findByLogin("toto");
         basketElementService.addBookById(user, book.getId());
 
         List<BasketElement> basketElements = basketElementService.findByUser(user);
@@ -47,10 +47,6 @@ public class BasketElementServiceImplIntegrationTest {
 
     @Test
     public void should_add_another_occurrence_of_book_to_user() {
-        BasketElementService basketElementService = injector.getInstance(BasketElementService.class);
-        UserService userService = injector.getInstance(UserService.class);
-
-        User user = userService.findByLogin("toto");
         basketElementService.addBookById(user, book.getId());
         basketElementService.addBookById(user, book.getId());
 
