@@ -15,4 +15,6 @@ public interface BasketElementRepository {
     BasketElement findByUserAndBook(User user, Book book);
 
     void save(BasketElement basketElement);
+
+    void update(BasketElement basketElement);
 }

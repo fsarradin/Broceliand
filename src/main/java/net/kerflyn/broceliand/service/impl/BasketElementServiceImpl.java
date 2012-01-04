@@ -40,12 +40,13 @@ public class BasketElementServiceImpl implements BasketElementService {
         try {
             element = basketElementRepository.findByUserAndBook(user, book);
             element.setQuantity(element.getQuantity() + 1);
+            basketElementRepository.update(element);
         } catch (NoResultException e) {
             element = new BasketElement();
             element.setOwner(user);
             element.setBook(book);
             element.setQuantity(1);
+            basketElementRepository.save(element);
         }
-        basketElementRepository.save(element);
     }
 }

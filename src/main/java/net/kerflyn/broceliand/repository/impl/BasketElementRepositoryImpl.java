@@ -49,4 +49,10 @@ public class BasketElementRepositoryImpl implements BasketElementRepository {
         entityManager.persist(basketElement);
     }
 
+    @Override
+    @Transactional
+    public void update(BasketElement basketElement) {
+        entityManager.merge(basketElement);
+    }
+
 }
