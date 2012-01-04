@@ -3,6 +3,7 @@ package net.kerflyn.broceliand.service.impl;
 import com.google.inject.Inject;
 import net.kerflyn.broceliand.model.BasketElement;
 import net.kerflyn.broceliand.model.Book;
+import net.kerflyn.broceliand.model.Invoice;
 import net.kerflyn.broceliand.model.User;
 import net.kerflyn.broceliand.repository.BasketElementRepository;
 import net.kerflyn.broceliand.service.BasketService;
@@ -48,5 +49,11 @@ public class BasketServiceImpl implements BasketService {
             element.setQuantity(1);
             basketElementRepository.save(element);
         }
+    }
+
+    @Override
+    public Invoice getCurrentInvoiceFor(User user) {
+        Iterable<BasketElement> basketElements = findByUser(user);
+        return new Invoice(basketElements);
     }
 }
