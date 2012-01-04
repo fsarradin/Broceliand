@@ -17,10 +17,10 @@ import net.kerflyn.broceliand.repository.UserRepository;
 import net.kerflyn.broceliand.repository.impl.BasketElementRepositoryImpl;
 import net.kerflyn.broceliand.repository.impl.BookRepositoryImpl;
 import net.kerflyn.broceliand.repository.impl.UserRepositoryImpl;
-import net.kerflyn.broceliand.service.BasketElementService;
+import net.kerflyn.broceliand.service.BasketService;
 import net.kerflyn.broceliand.service.BookService;
 import net.kerflyn.broceliand.service.UserService;
-import net.kerflyn.broceliand.service.impl.BasketElementServiceImpl;
+import net.kerflyn.broceliand.service.impl.BasketServiceImpl;
 import net.kerflyn.broceliand.service.impl.BookServiceImpl;
 import net.kerflyn.broceliand.service.impl.UserServiceImpl;
 
@@ -38,7 +38,7 @@ public class BroceliandTestConfiguration {
                         bind(BookRepository.class).to(BookRepositoryImpl.class);
                         bind(BookService.class).to(BookServiceImpl.class);
                         bind(BasketElementRepository.class).to(BasketElementRepositoryImpl.class);
-                        bind(BasketElementService.class).to(BasketElementServiceImpl.class);
+                        bind(BasketService.class).to(BasketServiceImpl.class);
 
                         bind(Key.get(Object.class, named("resources"))).to(ResourceController.class);
                         bind(Key.get(Object.class, named("index"))).to(IndexController.class);

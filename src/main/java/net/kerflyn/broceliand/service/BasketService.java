@@ -5,7 +5,7 @@ import net.kerflyn.broceliand.model.User;
 
 import java.util.List;
 
-public interface BasketElementService {
+public interface BasketService {
 
     List<BasketElement> findByUser(User user);
 

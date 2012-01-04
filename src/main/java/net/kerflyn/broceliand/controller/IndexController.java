@@ -4,7 +4,7 @@ import com.google.inject.Inject;
 import net.kerflyn.broceliand.model.BasketElement;
 import net.kerflyn.broceliand.model.Book;
 import net.kerflyn.broceliand.model.User;
-import net.kerflyn.broceliand.service.BasketElementService;
+import net.kerflyn.broceliand.service.BasketService;
 import net.kerflyn.broceliand.service.BookService;
 import net.kerflyn.broceliand.service.UserService;
 import net.kerflyn.broceliand.util.Users;
@@ -28,13 +28,13 @@ public class IndexController {
     private BookService bookService;
 
     private UserService userService;
-    private BasketElementService basketElementService;
+    private BasketService basketService;
 
     @Inject
-    public IndexController(BookService bookService, UserService userService, BasketElementService basketElementService) {
+    public IndexController(BookService bookService, UserService userService, BasketService basketService) {
         this.bookService = bookService;
         this.userService = userService;
-        this.basketElementService = basketElementService;
+        this.basketService = basketService;
     }
 
     public void render(Request request, Response response) throws IOException, LeaseException {
@@ -42,8 +42,8 @@ public class IndexController {
         List<BasketElement> basketElements = Collections.emptyList();
         long basketCount = 0L;
         if (currentUser != null) {
-            basketElements = basketElementService.findByUser(currentUser);
-            basketCount = basketElementService.countByUser(currentUser);
+            basketElements = basketService.findByUser(currentUser);
+            basketCount = basketService.countByUser(currentUser);
         }
 
         List<Book> books = bookService.findAll();

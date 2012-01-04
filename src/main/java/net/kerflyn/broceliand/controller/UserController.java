@@ -2,7 +2,7 @@ package net.kerflyn.broceliand.controller;
 
 import com.google.inject.Inject;
 import net.kerflyn.broceliand.model.User;
-import net.kerflyn.broceliand.service.BasketElementService;
+import net.kerflyn.broceliand.service.BasketService;
 import net.kerflyn.broceliand.service.UserService;
 import net.kerflyn.broceliand.util.Templates;
 import net.kerflyn.broceliand.util.Users;
@@ -26,12 +26,12 @@ public class UserController {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
     private UserService userService;
-    private BasketElementService basketElementService;
+    private BasketService basketService;
 
     @Inject
-    public UserController(UserService userService, BasketElementService basketElementService) {
+    public UserController(UserService userService, BasketService basketService) {
         this.userService = userService;
-        this.basketElementService = basketElementService;
+        this.basketService = basketService;
     }
 
     public void render(Request request, Response response) throws IOException {
@@ -53,7 +53,7 @@ public class UserController {
             Form form = request.getForm();
             Long bookId = Long.valueOf(form.get("book-id"));
             User currentUser = Users.getConnectedUser(userService, request);
-            basketElementService.addBookById(currentUser, bookId);
+            basketService.addBookById(currentUser, bookId);
             redirectTo(response, "/");
         }
     }

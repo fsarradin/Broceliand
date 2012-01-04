@@ -5,20 +5,20 @@ import net.kerflyn.broceliand.model.BasketElement;
 import net.kerflyn.broceliand.model.Book;
 import net.kerflyn.broceliand.model.User;
 import net.kerflyn.broceliand.repository.BasketElementRepository;
-import net.kerflyn.broceliand.service.BasketElementService;
+import net.kerflyn.broceliand.service.BasketService;
 import net.kerflyn.broceliand.service.BookService;
 
 import javax.persistence.NoResultException;
 import java.util.List;
 
-public class BasketElementServiceImpl implements BasketElementService {
+public class BasketServiceImpl implements BasketService {
 
     private BasketElementRepository basketElementRepository;
 
     private BookService bookService;
 
     @Inject
-    public BasketElementServiceImpl(BasketElementRepository basketElementRepository, BookService bookService) {
+    public BasketServiceImpl(BasketElementRepository basketElementRepository, BookService bookService) {
         this.basketElementRepository = basketElementRepository;
         this.bookService = bookService;
     }

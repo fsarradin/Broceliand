@@ -17,9 +17,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class BasketElementServiceImplTest {
+public class BasketServiceImplTest {
 
-    private BasketElementServiceImpl basketElementService;
+    private BasketServiceImpl basketService;
     private BasketElementRepository basketElementRepository;
     private BookService bookService;
 
@@ -28,7 +28,7 @@ public class BasketElementServiceImplTest {
         basketElementRepository = mock(BasketElementRepository.class);
         bookService = mock(BookService.class);
 
-        basketElementService = new BasketElementServiceImpl(basketElementRepository, bookService);
+        basketService = new BasketServiceImpl(basketElementRepository, bookService);
     }
 
     @Test
@@ -46,7 +46,7 @@ public class BasketElementServiceImplTest {
         basketElement.setQuantity(1);
         when(basketElementRepository.findByUserAndBook(eq(user), eq(book))).thenReturn(basketElement);
 
-        basketElementService.addBookById(user, 1L);
+        basketService.addBookById(user, 1L);
 
         ArgumentCaptor<BasketElement> basketElementCaptor = ArgumentCaptor.forClass(BasketElement.class);
         verify(basketElementRepository).update(basketElementCaptor.capture());
@@ -64,7 +64,7 @@ public class BasketElementServiceImplTest {
 
         when(basketElementRepository.findByUserAndBook(eq(user), eq(book))).thenThrow(new NoResultException());
 
-        basketElementService.addBookById(user, 1L);
+        basketService.addBookById(user, 1L);
 
         ArgumentCaptor<BasketElement> basketElementCaptor = ArgumentCaptor.forClass(BasketElement.class);
         verify(basketElementRepository).save(basketElementCaptor.capture());
