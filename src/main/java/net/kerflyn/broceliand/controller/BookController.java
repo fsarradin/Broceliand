@@ -56,6 +56,10 @@ public class BookController {
             book.setPrice(new BigDecimal(form.get("price")));
 
             bookService.save(book);
+        } else if ("delete".equals(action)) {
+            Form form = request.getForm();
+            final Long bookId = Long.valueOf(form.get("book-id"));
+            bookService.deleteById(bookId);
         }
 
         response.setCode(Status.TEMPORARY_REDIRECT.getCode());

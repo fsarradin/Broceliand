@@ -39,8 +39,12 @@ $endif$
     $books:{ book |
         <li>
             $book.author$, <strong>$book.title$</strong>, <span class="price">$book.price$&nbsp;&euro;</span>
-            $if(currentUser && !isAdmin)$
-            <a href="/user/basket-add?book-id=$book.id$">add</a>
+            $if(currentUser)$
+              $if(isAdmin)$
+                <a href="/book/delete?book-id=$book.id$">delete</a>
+              $else$
+                <a href="/user/basket-add?book-id=$book.id$">add</a>
+              $endif$
             $endif$
         </li>
     }$

@@ -10,4 +10,8 @@ public interface BookRepository {
     void save(Book book);
 
     Book findById(Long bookId);
+
+    void delete(Book book);
+
+    void deleteById(Long bookId);
 }
