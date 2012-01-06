@@ -5,9 +5,48 @@ body, table, input {
     font-family: Helvetica, Verdana, Arial, sans-serif;
     font-size: 24pt;
 }
+h2 {
+    color: #50A050;
+}
+a {
+    color: #206020;
+}
 table {
     width: 68%;
 }
 th {
     text-align: left;
+    font-size: 60%;
+}
+
+#site-name {
+    font-size: 180%;
+    font-weight: bold;
+}
+#top-announce {
+    font-size: 60%;
+    text-align: right;
+}
+table#header {
+    width: 100%;
+}
+table#header * {
+    vertical-align: top;
+}
+table#invoice {
+    border-collapse: collapse;
+}
+table#invoice tr:first-child th {
+    border-bottom: 1px solid black;
+    text-align: right;
+}
+table#invoice td {
+    text-align: right;
+}
+table#invoice td:first-child {
+    text-align: left;
+}
+
+.price {
+    color: #A00000;
 }

@@ -6,6 +6,27 @@
     <title>New book</title>
 </head>
 <body>
+
+<table id="header">
+    <tr>
+        <td id="site-name"><a style="text-decoration: none; color: black" href="/">
+            <span style="color: #50A050;">Broce</span>liand
+        </a></td>
+        <td id="top-announce">
+$if(currentUser)$
+Hi, $currentUser.name$.
+<a href="/user/invoice">$basketCount$ product(s) in your basket</a>.
+<a href="/user/logout">Logout</a>
+$else$
+<a href="/user/login">Please, login!</a>
+$endif$
+        </td>
+    </tr>
+</table>
+
+<img src="/resources/img/broceliand-Idylls_of_the_King.jpg" alt="Broceliand" width="25%"
+     style="float: right; padding-right: 1em;" />
+
 <form action="/book/new" method="post">
     <div>
         Title<br />

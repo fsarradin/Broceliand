@@ -6,27 +6,26 @@
     <title>Broceliand</title>
 </head>
 <body>
-<h1>Broceliand</h1>
 
-<p>
+<table id="header">
+    <tr>
+        <td id="site-name"><a style="text-decoration: none; color: black" href="/">
+            <span style="color: #50A050;">Broce</span>liand
+        </a></td>
+        <td id="top-announce">
 $if(currentUser)$
-Hi, $currentUser.name$. <a href="/user/logout">Logout</a><br />
-<a href="/user/invoice">$basketCount$ product(s) in your basket.</a>
+Hi, $currentUser.name$.
+<a href="/user/invoice">$basketCount$ product(s) in your basket</a>.
+<a href="/user/logout">Logout</a>
 $else$
-<a href="/user/login">Please, login!</a>
+<a href="/user/login">Please, login!</a> Or <a href="/user">create an account</a>.
 $endif$
-</p>
+        </td>
+    </tr>
+</table>
 
-<img src="/resources/img/broceliand-Idylls_of_the_King.jpg" alt="Broceliand" width="25%" />
-
-$if(currentUser)$
-<h2>Basket</h2>
-<ul>
-    $basket:{ element |
-        <li>$element.book.title$ ($element.quantity$)</li>
-    }$
-</ul>
-$endif$
+<img src="/resources/img/broceliand-Idylls_of_the_King.jpg" alt="Broceliand" width="25%"
+     style="float: right; padding-right: 1em;" />
 
 <h2>Books</h2>
 
@@ -35,21 +34,11 @@ $endif$
 <ul>
     $books:{ book |
         <li>
-            $book.author$, <strong>$book.title$</strong>, $book.price$&nbsp;&euro;
+            $book.author$, <strong>$book.title$</strong>, <span class="price">$book.price$&nbsp;&euro;</span>
             $if(currentUser)$
             <a href="/user/basket-add?book-id=$book.id$">add</a>
             $endif$
         </li>
-    }$
-</ul>
-
-<h2>Users</h2>
-
-<p><a href="/user">Create a user</a></p>
-
-<ul>
-    $users:{ user |
-        <li>$user.name$, <strong>$user.login$</strong></li>
     }$
 </ul>
 

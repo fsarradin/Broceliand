@@ -6,29 +6,40 @@
     <title>Broceliand</title>
 </head>
 <body>
-<h1>Broceliand</h1>
 
-<p>
+<table id="header">
+    <tr>
+        <td id="site-name"><a style="text-decoration: none; color: black" href="/">
+            <span style="color: #50A050;">Broce</span>liand
+        </a></td>
+        <td id="top-announce">
 $if(currentUser)$
-Hi, $currentUser.name$. <a href="/user/logout">Logout</a><br />
+Hi, $currentUser.name$.
+<a href="/user/logout">Logout</a>
 $else$
 <a href="/user/login">Please, login!</a>
 $endif$
-</p>
+        </td>
+    </tr>
+</table>
+
+<img src="/resources/img/broceliand-Idylls_of_the_King.jpg" alt="Broceliand" width="25%"
+     style="float: right; padding-right: 1em;" />
 
 $if(currentUser)$
 <h2>Invoice</h2>
-<table>
-    <tr><th>Title</th><th>Unit price</th><th>Quantity</th><th>Price</th></tr>
+<table id="invoice">
+    <tr><th></th><th>Unit price</th><th>Quantity</th><th>Price</th></tr>
     $invoice.basketElements:{ element |
-        <tr><td>$element.book.title$</td><td>$element.book.price$</td><td>$element.quantity$</td><td>$element.price$</td></tr>
+        <tr><td>$element.book.title$</td>
+        <td class="price">$element.book.price$&nbsp;&euro;</td>
+        <td>$element.quantity$</td>
+        <td class="price">$element.price$&nbsp;&euro;</td></tr>
     }$
 </table>
 
-<p><strong>Total: $invoice.total$</strong></p>
+<p><strong>Total: <span class="price">$invoice.total$&nbsp;&euro;</span></strong></p>
 $endif$
-
-<a href="/">Go back to home</a>
 
 </body>
 </html>
