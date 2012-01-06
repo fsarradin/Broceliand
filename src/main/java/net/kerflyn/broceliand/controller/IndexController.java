@@ -39,8 +39,10 @@ public class IndexController {
 
     public void render(Request request, Response response) throws IOException, LeaseException {
         User currentUser = Users.getConnectedUser(userService, request);
+        boolean isAdmin = Users.isAdmin(currentUser);
         List<BasketElement> basketElements = Collections.emptyList();
         long basketCount = 0L;
+
         if (currentUser != null) {
             basketElements = basketService.findByUser(currentUser);
             basketCount = basketService.countByUser(currentUser);
@@ -53,6 +55,7 @@ public class IndexController {
         template.add("books", books);
         template.add("users", users);
         template.add("currentUser", currentUser);
+        template.add("isAdmin", isAdmin);
         template.add("basket", basketElements);
         template.add("basketCount", basketCount);
         response.getPrintStream().append(template.render());

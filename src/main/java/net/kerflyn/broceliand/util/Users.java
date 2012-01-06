@@ -6,6 +6,8 @@ import org.simpleframework.http.Request;
 import org.simpleframework.http.session.Session;
 import org.simpleframework.util.lease.LeaseException;
 
+import javax.persistence.NoResultException;
+
 public class Users {
 
     public static final String CURRENT_USER_SESSION_KEY = "current-user";
@@ -19,4 +21,18 @@ public class Users {
         return connectedUser;
     }
 
+    public static void checkForAdminAccount(UserService userService) {
+        try{
+            userService.findByLogin("admin");
+        } catch (NoResultException e) {
+            User adminUser = new User();
+            adminUser.setLogin("admin");
+            adminUser.setName("Administrator");
+            userService.save(adminUser);
+        }
+    }
+
+    public static boolean isAdmin(User currentUser) {
+        return (currentUser != null) && "admin".equals(currentUser.getLogin());
+    }
 }

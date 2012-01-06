@@ -6,6 +6,8 @@ import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.name.Names;
 import net.kerflyn.broceliand.configuration.BroceliandConfiguration;
+import net.kerflyn.broceliand.service.UserService;
+import net.kerflyn.broceliand.util.Users;
 import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
 import org.simpleframework.http.Status;
@@ -34,6 +36,12 @@ public class BroceliandWebApp extends AbstractService implements Container {
     public BroceliandWebApp(int port) {
         this.port = port;
         this.injector = BroceliandConfiguration.newGuiceInjector();
+        bootstrap();
+    }
+
+    private void bootstrap() {
+        UserService userService = injector.getInstance(UserService.class);
+        Users.checkForAdminAccount(userService);
     }
 
     @Override
