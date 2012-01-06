@@ -1,0 +1,34 @@
+<html>
+<head>
+
+    <link rel="stylesheet" type="text/css" href="/resources/css/main.css" />
+
+    <title>Broceliand</title>
+</head>
+<body>
+<h1>Broceliand</h1>
+
+<p>
+$if(currentUser)$
+Hi, $currentUser.name$. <a href="/user/logout">Logout</a><br />
+$else$
+<a href="/user/login">Please, login!</a>
+$endif$
+</p>
+
+$if(currentUser)$
+<h2>Invoice</h2>
+<table>
+    <tr><th>Title</th><th>Unit price</th><th>Quantity</th><th>Price</th></tr>
+    $invoice.basketElements:{ element |
+        <tr><td>$element.book.title$</td><td>$element.book.price$</td><td>$element.quantity$</td><td>$element.price$</td></tr>
+    }$
+</table>
+
+<p><strong>Total: $invoice.total$</strong></p>
+$endif$
+
+<a href="/">Go back to home</a>
+
+</body>
+</html>

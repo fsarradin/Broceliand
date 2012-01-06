@@ -1,6 +1,7 @@
 package net.kerflyn.broceliand.controller;
 
 import com.google.inject.Inject;
+import net.kerflyn.broceliand.model.Invoice;
 import net.kerflyn.broceliand.model.User;
 import net.kerflyn.broceliand.service.BasketService;
 import net.kerflyn.broceliand.service.UserService;
@@ -55,6 +56,13 @@ public class UserController {
             User currentUser = Users.getConnectedUser(userService, request);
             basketService.addBookById(currentUser, bookId);
             redirectTo(response, "/");
+        } else if ("invoice".equals(action)) {
+            User currentUser = Users.getConnectedUser(userService, request);
+            Invoice invoice = basketService.getCurrentInvoiceFor(currentUser);
+            ST template = buildTemplate("public/invoice.html");
+            template.add("currentUser", currentUser);
+            template.add("invoice", invoice);
+            response.getPrintStream().append(template.render());
         }
     }
 

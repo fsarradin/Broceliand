@@ -11,7 +11,7 @@
 <p>
 $if(currentUser)$
 Hi, $currentUser.name$. <a href="/user/logout">Logout</a><br />
-$basketCount$ product(s) in your basket.
+<a href="/user/invoice">$basketCount$ product(s) in your basket.</a>
 $else$
 <a href="/user/login">Please, login!</a>
 $endif$

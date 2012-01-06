@@ -20,8 +20,6 @@ import static org.mockito.Mockito.when;
 public class BasketServiceImplWhenGettingInvoiceTest {
 
     private BasketServiceImpl basketService;
-    private BasketElementRepository basketElementRepository;
-    private BookService bookService;
     private Book book;
     private User user;
 
@@ -35,9 +33,8 @@ public class BasketServiceImplWhenGettingInvoiceTest {
         book.setTitle("Toto");
         book.setPrice(new BigDecimal("40.00"));
 
-        basketElementRepository = mock(BasketElementRepository.class);
-
-        bookService = mock(BookService.class);
+        BasketElementRepository basketElementRepository = mock(BasketElementRepository.class);
+        BookService bookService = mock(BookService.class);
         when(bookService.findById(eq(1L))).thenReturn(book);
 
         basketService = new BasketServiceImpl(basketElementRepository, bookService);

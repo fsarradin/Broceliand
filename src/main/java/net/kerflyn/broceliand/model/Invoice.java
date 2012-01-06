@@ -10,6 +10,10 @@ public class Invoice {
         this.basketElements = basketElements;
     }
 
+    public Iterable<BasketElement> getBasketElements() {
+        return basketElements;
+    }
+
     public BigDecimal getTotal() {
         BigDecimal total = BigDecimal.ZERO;
 

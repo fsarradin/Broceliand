@@ -1,7 +1,13 @@
 * html body {
     margin-top: 0px;
 }
-body {
+body, table, input {
     font-family: Helvetica, Verdana, Arial, sans-serif;
-    font-size: small;
+    font-size: 24pt;
+}
+table {
+    width: 68%;
+}
+th {
+    text-align: left;
 }
