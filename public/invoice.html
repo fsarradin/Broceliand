@@ -29,12 +29,17 @@ $endif$
 $if(currentUser)$
 <h2>Invoice</h2>
 <table id="invoice">
-    <tr><th></th><th>Unit price</th><th>Quantity</th><th>Price</th></tr>
+    <tr><th></th><th>Unit price</th><th>Quantity</th><th>Price</th><th></th></tr>
     $invoice.basketElements:{ element |
-        <tr><td>$element.book.title$</td>
-        <td class="price">$element.book.price$&nbsp;&euro;</td>
-        <td>$element.quantity$</td>
-        <td class="price">$element.price$&nbsp;&euro;</td></tr>
+        <tr>
+            <td>$element.book.title$</td>
+            <td class="price">$element.book.price$&nbsp;&euro;</td>
+            <td>$element.quantity$</td>
+            <td class="price">$element.price$&nbsp;&euro;</td>
+            <td>
+                <a href="/user/basket-delete?book-id=$element.book.id$">del</a>
+            </td>
+        </tr>
     }$
 </table>
 

@@ -49,4 +49,8 @@ public class BasketElement {
     public BigDecimal getPrice() {
         return book.getPrice().multiply(new BigDecimal(quantity));
     }
+
+    public Long getId() {
+        return id;
+    }
 }

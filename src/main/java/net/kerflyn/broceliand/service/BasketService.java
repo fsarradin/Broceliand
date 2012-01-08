@@ -15,4 +15,6 @@ public interface BasketService {
     void addBookById(User user, Long bookId);
 
     Invoice getCurrentInvoiceFor(User user);
+
+    void deleteBookById(User user, Long bookId);
 }

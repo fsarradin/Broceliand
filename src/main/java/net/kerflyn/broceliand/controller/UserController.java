@@ -56,6 +56,12 @@ public class UserController {
             User currentUser = Users.getConnectedUser(userService, request);
             basketService.addBookById(currentUser, bookId);
             redirectTo(response, "/");
+        } else if ("basket-delete".equals(action)) {
+            Form form = request.getForm();
+            Long bookId = Long.valueOf(form.get("book-id"));
+            User currentUser = Users.getConnectedUser(userService, request);
+            basketService.deleteBookById(currentUser, bookId);
+            redirectTo(response, "/user/invoice");
         } else if ("invoice".equals(action)) {
             User currentUser = Users.getConnectedUser(userService, request);
             Invoice invoice = basketService.getCurrentInvoiceFor(currentUser);

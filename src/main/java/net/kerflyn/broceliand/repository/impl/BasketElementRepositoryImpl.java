@@ -52,7 +52,15 @@ public class BasketElementRepositoryImpl implements BasketElementRepository {
     @Override
     @Transactional
     public void update(BasketElement basketElement) {
-        entityManager.merge(basketElement);
+//        entityManager.merge(basketElement);
+        entityManager.getEntityManagerFactory().getCache().evict(BasketElement.class, basketElement.getId());
+        entityManager.flush();
+    }
+
+    @Override
+    @Transactional
+    public void delete(BasketElement basketElement) {
+        entityManager.remove(basketElement);
     }
 
 }
