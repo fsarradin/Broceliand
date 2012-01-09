@@ -16,7 +16,5 @@ public interface BasketElementRepository {
 
     void save(BasketElement basketElement);
 
-    void update(BasketElement basketElement);
-
     void delete(BasketElement basketElement);
 }

@@ -27,6 +27,7 @@ $endif$
      style="float: right; padding-right: 1em;" />
 
 $if(currentUser)$
+<div id="content">
 <h2>Invoice</h2>
 <table id="invoice">
     <tr><th></th><th>Unit price</th><th>Quantity</th><th>Price</th><th></th></tr>
@@ -43,8 +44,14 @@ $if(currentUser)$
     }$
 </table>
 
-<p><strong>Total: <span class="price">$invoice.total$&nbsp;&euro;</span></strong></p>
+<div id="invoice-total">
+    Total: <span class="price">$invoice.total$&nbsp;&euro;</span>
+</div>
+</div>
 $endif$
 
+<div id="footer">
+    Conditions of Use &nbsp;&nbsp;&nbsp; &copy; 2012, François Sarradin
+</div>
 </body>
 </html>

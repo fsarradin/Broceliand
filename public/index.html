@@ -29,26 +29,28 @@ $endif$
 <img src="/resources/img/broceliand-Idylls_of_the_King.jpg" alt="Broceliand" width="25%"
      style="float: right; padding-right: 1em;" />
 
+<div id="content">
 <h2>Books</h2>
 
 $if(isAdmin)$
 <p><a href="/book">Create a book</a></p>
 $endif$
 
-<ul>
-    $books:{ book |
-        <li>
-            $book.author$, <strong>$book.title$</strong>, <span class="price">$book.price$&nbsp;&euro;</span>
-            $if(currentUser)$
-              $if(isAdmin)$
-                <a href="/book/delete?book-id=$book.id$">delete</a>
-              $else$
-                <a href="/user/basket-add?book-id=$book.id$">add</a>
-              $endif$
-            $endif$
-        </li>
-    }$
-</ul>
+$books:{ book |
+    <div class="book-description">
+        <strong>$book.title$</strong>, <span class="book-price">$book.price$&nbsp;&euro;</span>
+        $if(currentUser)$
+          $if(isAdmin)$
+            <a href="/book/delete?book-id=$book.id$">delete</a>
+          $else$
+            <a href="/user/basket-add?book-id=$book.id$">add</a>
+          $endif$
+        $endif$
+        <br/>
+        <span class="book-author">by $book.author$</span>
+    </div>
+}$
+</div>
 
 <div id="footer">
     Conditions of Use &nbsp;&nbsp;&nbsp; &copy; 2012, François Sarradin

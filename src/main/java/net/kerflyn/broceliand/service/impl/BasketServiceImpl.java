@@ -50,22 +50,22 @@ public class BasketServiceImpl implements BasketService {
         try {
             // FIXME: hack to refresh the book quantity for all dispatcher threads
             element = basketElementRepository.findByUserAndBook(user, book);
-            Integer quantity = element.getQuantity();
-            basketElementRepository.delete(element);
-
-            element = new BasketElement();
-            element.setOwner(user);
-            element.setBook(book);
-            element.setQuantity(quantity + 1);
+//            Integer quantity = element.getQuantity();
+//            basketElementRepository.delete(element);
+//
+//            element = new BasketElement();
+//            element.setOwner(user);
+//            element.setBook(book);
+            element.setQuantity(element.getQuantity() + 1);
             // end of hack
         } catch (NoResultException e) {
             element = new BasketElement();
             element.setOwner(user);
             element.setBook(book);
             element.setQuantity(1);
+            basketElementRepository.save(element);
         }
 
-        basketElementRepository.save(element);
     }
 
     @Override
