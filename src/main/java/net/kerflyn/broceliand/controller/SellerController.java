@@ -43,15 +43,26 @@ public class SellerController {
         if ("new".equals(action)) {
             createSeller(request, response);
         } else if ("list".equals(action)) {
-            User currentUser = Users.getConnectedUser(userService, request);
-            boolean isAdmin = Users.isAdmin(currentUser);
-            List<Seller> sellers = sellerService.findAll();
-            ST template = Templates.buildTemplate("public/list-sellers.html");
-            template.add("sellers", sellers);
-            template.add("currentUser", currentUser);
-            template.add("isAdmin", isAdmin);
-            response.getPrintStream().append(template.render());
+            listSellers(request, response);
+        } else if ("delete".equals(action)) {
+            Form form = request.getForm();
+            Long sellerId = Long.valueOf(form.get("seller-id"));
+            sellerService.deleteById(sellerId);
+            redirectTo(response, "/seller/list");
         }
+    }
+
+    private void listSellers(Request request, Response response) throws LeaseException, IOException {
+        User currentUser = Users.getConnectedUser(userService, request);
+        boolean isAdmin = Users.isAdmin(currentUser);
+
+        List<Seller> sellers = sellerService.findAll();
+
+        ST template = Templates.buildTemplate("public/list-sellers.html");
+        template.add("sellers", sellers);
+        template.add("currentUser", currentUser);
+        template.add("isAdmin", isAdmin);
+        response.getPrintStream().append(template.render());
     }
 
     private void createSeller(Request request, Response response) throws IOException {

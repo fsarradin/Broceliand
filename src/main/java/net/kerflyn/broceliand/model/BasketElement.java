@@ -1,6 +1,5 @@
 package net.kerflyn.broceliand.model;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -21,6 +20,14 @@ public class BasketElement {
     private Book book;
 
     private Integer quantity;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public User getOwner() {
         return owner;
@@ -48,9 +55,5 @@ public class BasketElement {
 
     public BigDecimal getPrice() {
         return book.getPrice().multiply(new BigDecimal(quantity));
-    }
-
-    public Long getId() {
-        return id;
     }
 }

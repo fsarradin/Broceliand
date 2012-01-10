@@ -8,6 +8,9 @@ public interface SellerRepository {
 
     List<Seller> findAll();
 
+    Seller findById(Long sellerId);
+
     void save(Seller seller);
 
+    void deleteById(Long sellerId);
 }

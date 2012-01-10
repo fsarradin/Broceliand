@@ -6,7 +6,6 @@ import net.kerflyn.broceliand.model.Seller;
 import net.kerflyn.broceliand.repository.SellerRepository;
 
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
 import java.util.List;
 
 public class SellerRepositoryImpl implements SellerRepository {
@@ -22,14 +21,26 @@ public class SellerRepositoryImpl implements SellerRepository {
     @Transactional
     @SuppressWarnings("unchecked")
     public List<Seller> findAll() {
-        Query query = entityManager.createQuery("select s from Seller s");
-        return query.getResultList();
+        return entityManager.createQuery("select s from Seller s").getResultList();
     }
 
     @Override
     @Transactional
     public void save(Seller seller) {
         entityManager.persist(seller);
+    }
+
+    @Override
+    @Transactional
+    public void deleteById(Long sellerId) {
+        Seller seller = findById(sellerId);
+        entityManager.remove(seller);
+    }
+
+    @Override
+    @Transactional
+    public Seller findById(Long sellerId) {
+        return entityManager.find(Seller.class, sellerId);
     }
 
 

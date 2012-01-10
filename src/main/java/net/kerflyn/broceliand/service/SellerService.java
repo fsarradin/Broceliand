@@ -12,4 +12,6 @@ public interface SellerService {
     SortedMap<String,SortedMap<String,Seller>> findAllSorted();
 
     void save(Seller seller);
+
+    void deleteById(Long sellerId);
 }

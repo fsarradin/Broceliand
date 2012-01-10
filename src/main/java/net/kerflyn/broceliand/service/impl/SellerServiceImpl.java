@@ -45,4 +45,9 @@ public class SellerServiceImpl implements SellerService {
         sellerRepository.save(seller);
     }
 
+    @Override
+    public void deleteById(Long sellerId) {
+        sellerRepository.deleteById(sellerId);
+    }
+
 }
