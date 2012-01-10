@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 
 import static com.google.common.base.Charsets.UTF_8;
+import static net.kerflyn.broceliand.util.HttpUtils.redirectTo;
 import static net.kerflyn.broceliand.util.Templates.buildTemplate;
 
 public class BookController {
@@ -62,8 +63,7 @@ public class BookController {
             bookService.deleteById(bookId);
         }
 
-        response.setCode(Status.TEMPORARY_REDIRECT.getCode());
-        response.set("Location", "/");
+        redirectTo(response, "/");
     }
 
 }

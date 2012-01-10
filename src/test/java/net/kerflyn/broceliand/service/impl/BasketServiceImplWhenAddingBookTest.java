@@ -63,7 +63,6 @@ public class BasketServiceImplWhenAddingBookTest {
         basketService.addBookById(user, 1L);
 
         ArgumentCaptor<BasketElement> basketElementCaptor = ArgumentCaptor.forClass(BasketElement.class);
-        verify(basketElementRepository).update(basketElementCaptor.capture());
         assertThat(basketElementCaptor.getValue().getQuantity()).isEqualTo(2);
     }
 

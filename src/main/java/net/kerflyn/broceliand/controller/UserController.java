@@ -5,12 +5,12 @@ import net.kerflyn.broceliand.model.Invoice;
 import net.kerflyn.broceliand.model.User;
 import net.kerflyn.broceliand.service.BasketService;
 import net.kerflyn.broceliand.service.UserService;
+import net.kerflyn.broceliand.util.HttpUtils;
 import net.kerflyn.broceliand.util.Templates;
 import net.kerflyn.broceliand.util.Users;
 import org.simpleframework.http.Form;
 import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
-import org.simpleframework.http.Status;
 import org.simpleframework.http.session.Session;
 import org.simpleframework.util.lease.LeaseException;
 import org.slf4j.Logger;
@@ -19,6 +19,7 @@ import org.stringtemplate.v4.ST;
 
 import java.io.IOException;
 
+import static net.kerflyn.broceliand.util.HttpUtils.redirectTo;
 import static net.kerflyn.broceliand.util.Templates.buildTemplate;
 import static net.kerflyn.broceliand.util.Users.CURRENT_USER_SESSION_KEY;
 
@@ -78,11 +79,6 @@ public class UserController {
             session.remove(CURRENT_USER_SESSION_KEY);
         }
         redirectTo(response, "/");
-    }
-
-    private void redirectTo(Response response, String url) {
-        response.setCode(Status.TEMPORARY_REDIRECT.getCode());
-        response.set("Location", url);
     }
 
     @SuppressWarnings("unchecked")

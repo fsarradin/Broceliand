@@ -15,7 +15,9 @@
         <td id="top-announce">
 $if(currentUser)$
 Hi, $currentUser.name$.
-  $if(!isAdmin)$
+  $if(isAdmin)$
+    <a href="/seller/list">Sellers</a>.
+  $else$
     <a href="/user/invoice">$basketCount$ product(s) in your basket</a>.
   $endif$
 <a href="/user/logout">Logout</a>

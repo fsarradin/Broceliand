@@ -90,21 +90,26 @@ table#header * {
 #content {
     width: 68%;
 }
-table#invoice {
+table#invoice, table#seller {
     width: 100%;
 }
-table#invoice th {
+table#invoice th, table#seller th {
     border-bottom: 1px solid black;
-    text-align: center;
     font-size: 60%;
 }
-
+table#invoice th {
+    text-align: center;
+}
+table#seller th {
+    text-align: left;
+}
 table#invoice td {
     text-align: right;
     padding-top: 6pt;
 }
-table#invoice td:first-child {
+table#invoice td:first-child, table#seller td {
     text-align: left;
+    padding-top: 6pt;
 }
 #invoice-total {
     font-weight: bold;

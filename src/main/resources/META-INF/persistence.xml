@@ -14,6 +14,7 @@
         <class>net.kerflyn.broceliand.model.Book</class>
         <class>net.kerflyn.broceliand.model.User</class>
         <class>net.kerflyn.broceliand.model.BasketElement</class>
+        <class>net.kerflyn.broceliand.model.Seller</class>
 
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
 
