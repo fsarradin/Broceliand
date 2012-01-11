@@ -81,6 +81,7 @@ public class BroceliandWebApp extends AbstractService implements Container {
             socketConnection = new SocketConnection(this);
             socketConnection.connect(new InetSocketAddress(port));
             notifyStarted();
+            LOGGER.info("service running");
         } catch (IOException e) {
             notifyFailed(e);
         }
@@ -91,6 +92,7 @@ public class BroceliandWebApp extends AbstractService implements Container {
         try {
             socketConnection.close();
             notifyStopped();
+            LOGGER.info("service stopped");
         } catch (IOException e) {
             notifyFailed(e);
         }
