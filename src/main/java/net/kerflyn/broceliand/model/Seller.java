@@ -1,10 +1,9 @@
 package net.kerflyn.broceliand.model;
 
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 @Entity
 public class Seller {
@@ -21,6 +20,7 @@ public class Seller {
 
     private String country;
 
+    @OneToOne
     private ShippingCharge shippingCharge;
 
     public Long getId() {
