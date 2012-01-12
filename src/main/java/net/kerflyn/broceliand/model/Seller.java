@@ -1,5 +1,7 @@
 package net.kerflyn.broceliand.model;
 
+import net.kerflyn.broceliand.model.charge.ShippingChargeStrategy;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -21,7 +23,7 @@ public class Seller {
     private String country;
 
     @OneToOne
-    private ShippingCharge shippingCharge;
+    private ShippingChargeStrategy shippingChargeStrategy;
 
     public Long getId() {
         return id;
@@ -63,11 +65,11 @@ public class Seller {
         this.country = country;
     }
 
-    public ShippingCharge getShippingCharge() {
-        return shippingCharge;
+    public ShippingChargeStrategy getShippingChargeStrategy() {
+        return shippingChargeStrategy;
     }
 
-    public void setShippingCharge(ShippingCharge shippingCharge) {
-        this.shippingCharge = shippingCharge;
+    public void setShippingChargeStrategy(ShippingChargeStrategy shippingChargeStrategy) {
+        this.shippingChargeStrategy = shippingChargeStrategy;
     }
 }
