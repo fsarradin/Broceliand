@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.stringtemplate.v4.ST;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import static net.kerflyn.broceliand.util.HttpUtils.redirectTo;
 import static net.kerflyn.broceliand.util.Templates.buildTemplate;
@@ -87,6 +88,7 @@ public class UserController {
         User user = userService.findByLogin(form.get("login"));
         if (user != null) {
             Session session = request.getSession(true);
+            session.getLease().renew(30, TimeUnit.DAYS);
             session.put(CURRENT_USER_SESSION_KEY, user.getLogin());
         }
         redirectTo(response, "/");
