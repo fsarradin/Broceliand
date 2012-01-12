@@ -3,7 +3,9 @@ package net.kerflyn.broceliand.model;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import java.math.BigDecimal;
+import java.util.Set;
 
 @Entity
 public class Book {
@@ -17,6 +19,9 @@ public class Book {
     private String author;
 
     private BigDecimal price;
+
+    @ManyToMany
+    private Set<Seller> sellers;
 
     public long getId() {
         return id;
@@ -48,5 +53,13 @@ public class Book {
 
     public void setAuthor(String author) {
         this.author = author;
+    }
+
+    public Set<Seller> getSellers() {
+        return sellers;
+    }
+
+    public void setSellers(Set<Seller> sellers) {
+        this.sellers = sellers;
     }
 }

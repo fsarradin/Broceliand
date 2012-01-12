@@ -5,7 +5,9 @@ import net.kerflyn.broceliand.model.charge.ShippingChargeStrategy;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
+import java.util.Set;
 
 @Entity
 public class Seller {
@@ -21,6 +23,9 @@ public class Seller {
     private String city;
 
     private String country;
+
+    @ManyToMany
+    private Set<Book> books;
 
     @OneToOne
     private ShippingChargeStrategy shippingChargeStrategy;
@@ -71,5 +76,13 @@ public class Seller {
 
     public void setShippingChargeStrategy(ShippingChargeStrategy shippingChargeStrategy) {
         this.shippingChargeStrategy = shippingChargeStrategy;
+    }
+
+    public Set<Book> getBooks() {
+        return books;
+    }
+
+    public void setBooks(Set<Book> books) {
+        this.books = books;
     }
 }
