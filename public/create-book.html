@@ -40,6 +40,14 @@ $endif$
         <input type="text" name="price" />
     </div>
     <div>
+        Sellers<br />
+        <select name="sellers" multiple="multiple" size="10">
+            $sellers:{ seller |
+                <option value="$seller.id$">$seller.name$ - $seller.city$, $seller.country$</option>
+            }$
+        </select>
+    </div>
+    <div>
         <input type="submit" title="Create" />
     </div>
 </form>

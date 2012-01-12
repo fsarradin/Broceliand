@@ -55,7 +55,7 @@ h1, h2 {
     margin-top: 12pt;
     margin-bottom: 12pt;
 }
-body, table, input {
+body, table, input, select, option {
     font-family: Helvetica, Verdana, Arial, sans-serif;
     font-size: 24pt;
 }
@@ -66,6 +66,10 @@ h2 {
 a {
     color: #206020;
 }
+select {
+    width: 20em;
+}
+
 #site-name {
     font-size: 180%;
     font-weight: bold;
