@@ -121,6 +121,9 @@ table#invoice td:first-child, table#seller td {
     margin-top: 24pt;
 }
 
+a.modify-book {
+    color: #5AC;
+}
 .book-description {
     margin-bottom: 12pt;
 }

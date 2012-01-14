@@ -3,7 +3,7 @@
 
     <link rel="stylesheet" type="text/css" href="/resources/css/main.css" />
 
-    <title>New book</title>
+    <title>$actionName$</title>
 </head>
 <body>
 
@@ -26,18 +26,21 @@ $endif$
 <img src="/resources/img/broceliand-Idylls_of_the_King.jpg" alt="Broceliand" width="25%"
      style="float: right; padding-right: 1em;" />
 
-<form action="/book/new" method="post">
+<form action="/book/$action$" method="post">
+    $if(book)$
+    <input type="hidden" name="book-id" value="$book.id$" />
+    $endif$
     <div>
         Title<br />
-        <input type="text" name="title" />
+        <input type="text" name="title" value="$book.title$" />
     </div>
     <div>
         Author<br />
-        <input type="text" name="author" />
+        <input type="text" name="author" value="$book.author$" />
     </div>
     <div>
         Price<br />
-        <input type="text" name="price" />
+        <input type="text" name="price" value="$book.price$" />
     </div>
     <div>
         Sellers<br />

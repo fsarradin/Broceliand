@@ -40,7 +40,10 @@ $endif$
 
 $books:{ book |
     <div class="book-description">
-        <strong>$book.title$</strong>, <span class="book-price">$book.price$&nbsp;&euro;</span>
+        <strong>
+            $if(isAdmin)$<a class="modify-book" href="/book/details?book-id=$book.id$">$endif$
+            $book.title$$if(isAdmin)$</a>$endif$</strong>,
+        <span class="book-price">$book.price$&nbsp;&euro;</span>
         $if(currentUser)$
           $if(isAdmin)$
             <a href="/book/delete?book-id=$book.id$">delete</a>

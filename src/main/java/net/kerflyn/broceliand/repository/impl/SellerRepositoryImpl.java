@@ -21,7 +21,7 @@ public class SellerRepositoryImpl implements SellerRepository {
     @Transactional
     @SuppressWarnings("unchecked")
     public List<Seller> findAll() {
-        return entityManager.createQuery("select s from Seller s").getResultList();
+        return entityManager.createQuery("select s from Seller s order by s.name").getResultList();
     }
 
     @Override
