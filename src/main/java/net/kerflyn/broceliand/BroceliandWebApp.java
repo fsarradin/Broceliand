@@ -12,6 +12,8 @@ import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
 import org.simpleframework.http.Status;
 import org.simpleframework.http.core.Container;
+import org.simpleframework.http.core.ContainerServer;
+import org.simpleframework.transport.Server;
 import org.simpleframework.transport.connect.SocketConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,7 +80,8 @@ public class BroceliandWebApp extends AbstractService implements Container {
     @Override
     protected void doStart() {
         try {
-            socketConnection = new SocketConnection(this);
+            Server server = new ContainerServer(this, 1);
+            socketConnection = new SocketConnection(server);
             socketConnection.connect(new InetSocketAddress(port));
             notifyStarted();
             LOGGER.info("service running");
@@ -99,7 +102,8 @@ public class BroceliandWebApp extends AbstractService implements Container {
     }
 
     public static void main(String[] args) {
-        new BroceliandWebApp(8080).startAndWait();
+        final BroceliandWebApp application = new BroceliandWebApp(8080);
+        application.startAndWait();
     }
 
 }
