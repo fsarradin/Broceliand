@@ -1,10 +1,10 @@
 package net.kerflyn.broceliand.service.impl;
 
 import com.google.inject.Inject;
+import com.google.inject.persist.Transactional;
 import net.kerflyn.broceliand.model.User;
 import net.kerflyn.broceliand.repository.UserRepository;
 import net.kerflyn.broceliand.service.UserService;
-import net.kerflyn.broceliand.util.persist.Transactional;
 
 import java.util.List;
 

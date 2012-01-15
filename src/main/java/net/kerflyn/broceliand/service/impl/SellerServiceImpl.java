@@ -1,10 +1,10 @@
 package net.kerflyn.broceliand.service.impl;
 
 import com.google.inject.Inject;
+import com.google.inject.persist.Transactional;
 import net.kerflyn.broceliand.model.Seller;
 import net.kerflyn.broceliand.repository.SellerRepository;
 import net.kerflyn.broceliand.service.SellerService;
-import net.kerflyn.broceliand.util.persist.Transactional;
 
 import java.util.List;
 import java.util.SortedMap;

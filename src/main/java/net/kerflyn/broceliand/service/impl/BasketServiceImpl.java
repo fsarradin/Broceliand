@@ -1,6 +1,7 @@
 package net.kerflyn.broceliand.service.impl;
 
 import com.google.inject.Inject;
+import com.google.inject.persist.Transactional;
 import net.kerflyn.broceliand.model.BasketElement;
 import net.kerflyn.broceliand.model.Book;
 import net.kerflyn.broceliand.model.Invoice;
@@ -8,7 +9,6 @@ import net.kerflyn.broceliand.model.User;
 import net.kerflyn.broceliand.repository.BasketElementRepository;
 import net.kerflyn.broceliand.service.BasketService;
 import net.kerflyn.broceliand.service.BookService;
-import net.kerflyn.broceliand.util.persist.Transactional;
 import org.slf4j.LoggerFactory;
 
 import javax.persistence.NoResultException;
