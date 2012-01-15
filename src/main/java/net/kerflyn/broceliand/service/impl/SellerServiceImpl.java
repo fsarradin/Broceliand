@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import net.kerflyn.broceliand.model.Seller;
 import net.kerflyn.broceliand.repository.SellerRepository;
 import net.kerflyn.broceliand.service.SellerService;
+import net.kerflyn.broceliand.util.persist.Transactional;
 
 import java.util.List;
 import java.util.SortedMap;
@@ -21,11 +22,13 @@ public class SellerServiceImpl implements SellerService {
     }
 
     @Override
+    @Transactional
     public List<Seller> findAll() {
         return sellerRepository.findAll();
     }
 
     @Override
+    @Transactional
     public SortedMap<String, SortedMap<String, Seller>> findAllSorted() {
         List<Seller> sellers = sellerRepository.findAll();
         SortedMap<String, SortedMap<String, Seller>> sellerMap = newTreeMap();
@@ -41,11 +44,13 @@ public class SellerServiceImpl implements SellerService {
     }
 
     @Override
+    @Transactional
     public void save(Seller seller) {
         sellerRepository.save(seller);
     }
 
     @Override
+    @Transactional
     public void deleteById(Long sellerId) {
         sellerRepository.deleteById(sellerId);
     }

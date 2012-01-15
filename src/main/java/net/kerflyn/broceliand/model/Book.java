@@ -1,5 +1,7 @@
 package net.kerflyn.broceliand.model;
 
+import com.google.common.base.Objects;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -61,5 +63,24 @@ public class Book {
 
     public void setSellers(Set<Seller> sellers) {
         this.sellers = sellers;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Book book = (Book) o;
+
+        return Objects.equal(author, book.author)
+                && Objects.equal(id, book.id)
+                && Objects.equal(price, book.price)
+                && Objects.equal(sellers, book.sellers)
+                && Objects.equal(title, book.title);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id, title, author, price, sellers);
     }
 }

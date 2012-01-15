@@ -2,11 +2,11 @@ package net.kerflyn.broceliand.test.configuration;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
-import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Key;
-import com.google.inject.persist.PersistService;
-import com.google.inject.persist.jpa.JpaPersistModule;
+import net.kerflyn.broceliand.configuration.ControllerModule;
+import net.kerflyn.broceliand.configuration.RepositoryModule;
+import net.kerflyn.broceliand.configuration.ServiceModule;
 import net.kerflyn.broceliand.controller.BookController;
 import net.kerflyn.broceliand.controller.IndexController;
 import net.kerflyn.broceliand.controller.ResourceController;
@@ -23,37 +23,18 @@ import net.kerflyn.broceliand.service.UserService;
 import net.kerflyn.broceliand.service.impl.BasketServiceImpl;
 import net.kerflyn.broceliand.service.impl.BookServiceImpl;
 import net.kerflyn.broceliand.service.impl.UserServiceImpl;
+import net.kerflyn.broceliand.util.persist.PersistModule;
 
 import static com.google.inject.name.Names.named;
 
 public class BroceliandTestConfiguration {
 
     public static Injector newGuiceInjector() {
-        Injector injector = Guice.createInjector(new JpaPersistModule("test-manager-pu"),
-                new AbstractModule() {
-                    @Override
-                    protected void configure() {
-                        bind(UserRepository.class).to(UserRepositoryImpl.class);
-                        bind(UserService.class).to(UserServiceImpl.class);
-                        bind(BookRepository.class).to(BookRepositoryImpl.class);
-                        bind(BookService.class).to(BookServiceImpl.class);
-                        bind(BasketElementRepository.class).to(BasketElementRepositoryImpl.class);
-                        bind(BasketService.class).to(BasketServiceImpl.class);
-
-                        bind(Key.get(Object.class, named("resources"))).to(ResourceController.class);
-                        bind(Key.get(Object.class, named("index"))).to(IndexController.class);
-                        bind(Key.get(Object.class, named("book"))).to(BookController.class);
-                        bind(Key.get(Object.class, named("user"))).to(UserController.class);
-                    }
-                });
-        injector.getInstance(PersistenceInitializer.class);
+        Injector injector = Guice.createInjector(new PersistModule("test-manager-pu"),
+                new ControllerModule(),
+                new ServiceModule(),
+                new RepositoryModule());
         return injector;
     }
 
-    private static class PersistenceInitializer {
-        @Inject
-        public PersistenceInitializer(PersistService service) {
-            service.start();
-        }
-    }
 }

@@ -1,7 +1,6 @@
 package net.kerflyn.broceliand.repository.impl;
 
 import com.google.inject.Inject;
-import com.google.inject.persist.Transactional;
 import net.kerflyn.broceliand.model.BasketElement;
 import net.kerflyn.broceliand.model.Book;
 import net.kerflyn.broceliand.model.User;
@@ -17,7 +16,6 @@ public class BasketElementRepositoryImpl implements BasketElementRepository {
     EntityManager entityManager;
 
     @Override
-    @Transactional
     @SuppressWarnings("unchecked")
     public List<BasketElement> findByUser(User user) {
         final Query query = entityManager.createQuery("select be from BasketElement be where be.owner = :user");
@@ -26,7 +24,6 @@ public class BasketElementRepositoryImpl implements BasketElementRepository {
     }
 
     @Override
-    @Transactional
     public long countByUser(User user) {
         final Query query = entityManager.createQuery("select sum(be.quantity) from BasketElement be where be.owner = :user");
         query.setParameter("user", user);
@@ -35,7 +32,6 @@ public class BasketElementRepositoryImpl implements BasketElementRepository {
     }
 
     @Override
-    @Transactional
     public BasketElement findByUserAndBook(User user, Book book) {
         final Query query = entityManager.createQuery("select be from BasketElement be where be.owner = :user and be.book = :book");
         query.setParameter("user", user);
@@ -44,13 +40,11 @@ public class BasketElementRepositoryImpl implements BasketElementRepository {
     }
 
     @Override
-    @Transactional
     public void save(BasketElement basketElement) {
         entityManager.persist(basketElement);
     }
 
     @Override
-    @Transactional
     public void delete(BasketElement basketElement) {
         entityManager.remove(basketElement);
     }

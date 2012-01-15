@@ -3,6 +3,7 @@ package net.kerflyn.broceliand.service.impl;
 import com.google.inject.Injector;
 import net.kerflyn.broceliand.model.BasketElement;
 import net.kerflyn.broceliand.model.Book;
+import net.kerflyn.broceliand.model.Seller;
 import net.kerflyn.broceliand.model.User;
 import net.kerflyn.broceliand.service.BasketService;
 import net.kerflyn.broceliand.service.BookService;
@@ -12,6 +13,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.List;
 
 import static org.fest.assertions.Assertions.assertThat;
@@ -34,6 +36,7 @@ public class BasketServiceImplIntegrationTest {
 
         book = new Book();
         book.setPrice(new BigDecimal("40.0"));
+        book.setSellers(new HashSet<Seller>());
         injector.getInstance(BookService.class).save(book);
         basketService = injector.getInstance(BasketService.class);
     }

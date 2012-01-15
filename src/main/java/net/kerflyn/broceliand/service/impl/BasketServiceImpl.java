@@ -8,6 +8,7 @@ import net.kerflyn.broceliand.model.User;
 import net.kerflyn.broceliand.repository.BasketElementRepository;
 import net.kerflyn.broceliand.service.BasketService;
 import net.kerflyn.broceliand.service.BookService;
+import net.kerflyn.broceliand.util.persist.Transactional;
 import org.slf4j.LoggerFactory;
 
 import javax.persistence.NoResultException;
@@ -28,38 +29,32 @@ public class BasketServiceImpl implements BasketService {
     }
 
     @Override
+    @Transactional
     public List<BasketElement> findByUser(User user) {
         return basketElementRepository.findByUser(user);
     }
 
     @Override
+    @Transactional
     public long countByUser(User user) {
         return basketElementRepository.countByUser(user);
     }
 
     @Override
+    @Transactional
     public Invoice getCurrentInvoiceFor(User user) {
         Iterable<BasketElement> basketElements = findByUser(user);
         return new Invoice(basketElements);
     }
 
     @Override
+    @Transactional
     public void addBookById(User user, Long bookId) {
         Book book = bookService.findById(bookId);
         BasketElement element;
         try {
-            // FIXME: hack to refresh the book quantity for all dispatcher threads
             element = basketElementRepository.findByUserAndBook(user, book);
-//            element.setQuantity(element.getQuantity() + 1);
-            Integer quantity = element.getQuantity();
-            basketElementRepository.delete(element);
-
-            element = new BasketElement();
-            element.setOwner(user);
-            element.setBook(book);
-            element.setQuantity(quantity + 1);
-            basketElementRepository.save(element);
-            // end of hack
+            element.setQuantity(element.getQuantity() + 1);
         } catch (NoResultException e) {
             element = new BasketElement();
             element.setOwner(user);
@@ -71,6 +66,7 @@ public class BasketServiceImpl implements BasketService {
     }
 
     @Override
+    @Transactional
     public void deleteBookById(User user, Long bookId) {
         Book book = bookService.findById(bookId);
         BasketElement element = basketElementRepository.findByUserAndBook(user, book);
