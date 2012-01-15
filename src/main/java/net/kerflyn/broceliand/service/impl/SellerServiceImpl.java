@@ -55,4 +55,10 @@ public class SellerServiceImpl implements SellerService {
         sellerRepository.deleteById(sellerId);
     }
 
+    @Override
+    @Transactional
+    public Seller findById(Long sellerId) {
+        return sellerRepository.findById(sellerId);
+    }
+
 }

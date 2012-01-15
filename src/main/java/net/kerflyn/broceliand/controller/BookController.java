@@ -19,7 +19,9 @@ import org.stringtemplate.v4.ST;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Set;
 
+import static com.google.common.collect.Sets.newHashSet;
 import static net.kerflyn.broceliand.util.HttpUtils.redirectTo;
 import static net.kerflyn.broceliand.util.Templates.buildTemplate;
 
@@ -60,6 +62,17 @@ public class BookController {
             book.setTitle(form.get("title"));
             book.setAuthor(form.get("author"));
             book.setPrice(new BigDecimal(form.get("price")));
+            Set<Seller> sellers = book.getSellers();
+            if (sellers == null) {
+                sellers = newHashSet();
+                book.setSellers(sellers);
+            } else {
+                sellers.clear();
+            }
+            for (String sellerId : form.getAll("sellers")) {
+                sellers.add(sellerService.findById(Long.valueOf(sellerId)));
+            }
+
         } else if ("details".equals(action)) {
             Form form = request.getForm();
             final Long bookId = Long.valueOf(form.get("book-id"));
@@ -86,6 +99,12 @@ public class BookController {
         template.add("actionName", actionName);
         template.add("book", book);
         template.add("sellers", sellers);
+
+        for (Seller seller : sellers) {
+            final boolean isSelected = (book != null) && book.getSellers().contains(seller);
+            template.addAggr("sellerOptions.{seller, selected}", new Object[]{seller, isSelected});
+        }
+
         response.getPrintStream().append(template.render());
     }
 

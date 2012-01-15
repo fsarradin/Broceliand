@@ -45,8 +45,10 @@ $endif$
     <div>
         Sellers<br />
         <select name="sellers" multiple="multiple" size="10">
-            $sellers:{ seller |
-                <option value="$seller.id$">$seller.name$ - $seller.city$, $seller.country$</option>
+            $sellerOptions:{ sellerOption |
+                <option value="$sellerOption.seller.id$"
+                        $if(sellerOption.selected)$selected="selected"$endif$
+                        >$sellerOption.seller.name$ - $sellerOption.seller.city$, $sellerOption.seller.country$</option>
             }$
         </select>
     </div>
