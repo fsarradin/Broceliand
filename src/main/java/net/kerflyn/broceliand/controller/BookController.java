@@ -89,7 +89,7 @@ public class BookController {
 
     private void renderBookPage(Request request, Response response, String action, String actionName, Book book) throws LeaseException, IOException {
         User currentUser = Users.getConnectedUser(userService, request);
-        boolean isAdmin = Users.isAdmin(currentUser);
+        boolean isAdmin = currentUser.isAdmin();
         List<Seller> sellers = sellerService.findAll();
 
         ST template = buildTemplate("public/add-modify-book.html");

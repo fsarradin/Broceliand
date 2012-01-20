@@ -8,6 +8,8 @@ import javax.persistence.Id;
 @Entity
 public class User {
 
+    public static final String ADMIN = "ADMIN";
+
     @Id
     @GeneratedValue
     private Long id;
@@ -39,5 +41,14 @@ public class User {
 
     public void setLogin(String login) {
         this.login = login;
+    }
+
+    /**
+     * Check if the user is an admin
+     *
+     * @return
+     */
+    public boolean isAdmin() {
+        return ADMIN.equals(login);
     }
 }

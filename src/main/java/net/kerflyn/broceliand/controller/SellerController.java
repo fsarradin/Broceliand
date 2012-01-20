@@ -15,7 +15,6 @@ import org.stringtemplate.v4.ST;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.SortedMap;
 
 import static net.kerflyn.broceliand.util.HttpUtils.redirectTo;
 
@@ -32,7 +31,7 @@ public class SellerController {
 
     public void render(Request request, Response response) throws IOException, LeaseException {
         User currentUser = Users.getConnectedUser(userService, request);
-        boolean isAdmin = Users.isAdmin(currentUser);
+        boolean isAdmin = currentUser.isAdmin();
         ST template = Templates.buildTemplate("public/create-seller.html");
         template.add("currentUser", currentUser);
         template.add("isAdmin", isAdmin);
@@ -54,7 +53,7 @@ public class SellerController {
 
     private void listSellers(Request request, Response response) throws LeaseException, IOException {
         User currentUser = Users.getConnectedUser(userService, request);
-        boolean isAdmin = Users.isAdmin(currentUser);
+        boolean isAdmin = currentUser.isAdmin();
 
         List<Seller> sellers = sellerService.findAll();
 

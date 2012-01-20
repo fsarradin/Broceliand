@@ -1,0 +1,25 @@
+import "page-layout.stg"
+
+pageContent(metadata, user, basket, data) ::= <<
+$if(user)$
+<h2>Invoice</h2>
+<table id="invoice">
+    <tr><th></th><th>Unit price</th><th>Quantity</th><th>Price</th><th></th></tr>
+    $basket.elements:{ element |
+        <tr>
+            <td>$element.book.title$</td>
+            <td class="price">$element.book.price$&nbsp;&euro;</td>
+            <td>$element.quantity$</td>
+            <td class="price">$element.price$&nbsp;&euro;</td>
+            <td>
+                <a href="/user/basket-delete?book-id=$element.book.id$">del</a>
+            </td>
+        </tr>
+    }$
+</table>
+
+<div id="invoice-total">
+    Total: <span class="price">$data.invoice.total$&nbsp;&euro;</span>
+</div>
+$endif$
+>>

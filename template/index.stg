@@ -1,0 +1,20 @@
+import "page-layout.stg"
+
+pageContent(metadata, user, basket, data) ::= <<
+$if(user)$
+<p>Hi $user.name$, you have <a href="/user/invoice">$basket.size$ book(s)</a> in your basket.</p>
+$endif$
+<h2>Book</h2>
+<table class="zebra-striped">
+    <tr>
+        <th>Title</th><th>Author</th><th>Price</th>
+    </tr>
+    $data.books:{ book |
+        <tr>
+            <td>$book.title$</td>
+            <td><em>$book.author$</em></td>
+            <td><span class="price">$book.price$&nbsp;&euro;</span></td>
+        </tr>
+    }$
+</table>
+>>

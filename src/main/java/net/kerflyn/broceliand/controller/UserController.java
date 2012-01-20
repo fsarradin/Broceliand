@@ -17,11 +17,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.stringtemplate.v4.ST;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.concurrent.TimeUnit;
 
 import static net.kerflyn.broceliand.util.HttpUtils.redirectTo;
 import static net.kerflyn.broceliand.util.Templates.buildTemplate;
+import static net.kerflyn.broceliand.util.Templates.createTemplateWithUserAndBasket;
 import static net.kerflyn.broceliand.util.Users.CURRENT_USER_SESSION_KEY;
 
 public class UserController {
@@ -65,11 +68,13 @@ public class UserController {
             basketService.deleteBookById(currentUser, bookId);
             redirectTo(response, "/user/invoice");
         } else if ("invoice".equals(action)) {
-            User currentUser = Users.getConnectedUser(userService, request);
-            Invoice invoice = basketService.getCurrentInvoiceFor(currentUser);
-            ST template = buildTemplate("public/invoice.html");
-            template.add("currentUser", currentUser);
-            template.add("invoice", invoice);
+            final URL groupUrl = new File("template/invoice.stg").toURI().toURL();
+            ST template = createTemplateWithUserAndBasket(request, groupUrl, userService, basketService);
+
+            final User connectedUser = Users.getConnectedUser(userService, request);
+            final Invoice invoice = basketService.getCurrentInvoiceFor(connectedUser);
+            template.addAggr("data.{invoice}", new Object[] { invoice });
+
             response.getPrintStream().append(template.render());
         }
     }
