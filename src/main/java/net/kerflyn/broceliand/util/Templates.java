@@ -40,11 +40,15 @@ public class Templates {
             basketCount = basketService.countByUser(currentUser);
         }
 
-        STGroupFile group = new STGroupFile(groupUrl, "UTF-8", '$', '$');
-        ST template = group.getInstanceOf("page");
+        ST template = buildTemplate(groupUrl);
         template.addAggr("metadata.{title}", new Object[] { "Title" });
         template.add("user", currentUser);
         template.addAggr("basket.{elements, size}", new Object[]{basketElements, basketCount});
         return template;
+    }
+
+    public static ST buildTemplate(URL groupUrl) {
+        STGroupFile group = new STGroupFile(groupUrl, "UTF-8", '$', '$');
+        return group.getInstanceOf("page");
     }
 }

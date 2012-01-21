@@ -1,0 +1,16 @@
+page(metadata, data) ::= <<
+<!DOCTYPE html>
+<html>
+<head>
+    <title>$metadata.title$</title>
+</head>
+<body>
+<p><a href="/">Go back to main page.</a></p>
+<h1>$metadata.code$: $metadata.title$</h1>
+
+<pre>
+$data.stackTrace$
+</pre>
+</body>
+</html>
+>>
