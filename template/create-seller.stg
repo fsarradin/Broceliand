@@ -1,0 +1,29 @@
+import "page-layout.stg"
+
+pageContent(metadata, user, basket, data) ::= <<
+$if(user.admin)$
+<h2>New seller</h2>
+
+<form action="/seller/new" method="post">
+    <div>
+        Name<br />
+        <input type="text" name="name" />
+    </div>
+    <div>
+        Address<br />
+        <input type="text" name="address" />
+    </div>
+    <div>
+        City<br />
+        <input type="text" name="city" />
+    </div>
+    <div>
+        Country<br />
+        <input type="text" name="country" />
+    </div>
+    <div>
+        <input type="submit" title="Create" class="btn primary" />
+    </div>
+</form>
+$endif$
+>>

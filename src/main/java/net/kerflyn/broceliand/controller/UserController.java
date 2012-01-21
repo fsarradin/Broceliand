@@ -40,8 +40,9 @@ public class UserController {
         this.basketService = basketService;
     }
 
-    public void render(Request request, Response response) throws IOException {
-        ST template = Templates.buildTemplate("public/create-user.html");
+    public void render(Request request, Response response) throws IOException, LeaseException {
+        final URL groupUrl = new File("template/create-user.stg").toURI().toURL();
+        ST template = createTemplateWithUserAndBasket(request, groupUrl, userService, basketService);
         response.getPrintStream().append(template.render());
     }
 
@@ -49,7 +50,6 @@ public class UserController {
         if ("new".equals(action)) {
             createUser(request, response);
         } else if ("login".equals(action)) {
-//            ST template = buildTemplate("public/login.html");
             final URL groupUrl = new File("template/login.stg").toURI().toURL();
             ST template = createTemplateWithUserAndBasket(request, groupUrl, userService, basketService);
             response.getPrintStream().append(template.render());

@@ -1,0 +1,28 @@
+import "page-layout.stg"
+
+pageContent(metadata, user, basket, data) ::= <<
+$if(user.admin)$
+<div id="content">
+<h2>Seller</h2>
+
+<p>
+    <a href="/seller" class="btn large primary">Add a seller</a>
+</p>
+
+<table id="seller">
+    <tr><th></th><th>Address</th><th>City</th><th>Country</th><th></th></tr>
+    $data.sellers:{ seller |
+        <tr>
+            <td>$seller.name$</td>
+            <td>$seller.address$</td>
+            <td>$seller.city$</td>
+            <td>$seller.country$</td>
+            <td>
+                <a href="/seller/delete?seller-id=$seller.id$" class="btn large secondary">del</a>
+            </td>
+        </tr>
+    }$
+</table>
+</div>
+$endif$
+>>

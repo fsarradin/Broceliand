@@ -1,0 +1,19 @@
+import "page-layout.stg"
+
+pageContent(metadata, user, basket, data) ::= <<
+<h2>New account</h2>
+
+<form action="/user/new" method="post">
+    <div>
+        Login<br />
+        <input type="text" name="login" />
+    </div>
+    <div>
+        Real name<br />
+        <input type="text" name="name" />
+    </div>
+    <div>
+        <input type="submit" title="Create" class="btn primary" />
+    </div>
+</form>
+>>
