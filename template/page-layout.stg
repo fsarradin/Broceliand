@@ -41,8 +41,12 @@ pageHeader(metadata, user, basket, data) ::= <<
             <a class="brand" href="#">Broceliand</a>
             <ul class="nav">
                 <li><a href="/">Home</a></li>
-                $if(user && !user.admin)$
-                <li><a href="/user/invoice">Basket</a></li>
+                $if(user)$
+                    $if(user.admin)$
+                    <li><a href="/seller/list">Sellers</a></li>
+                    $else$
+                    <li><a href="/user/invoice">Basket</a></li>
+                    $endif$
                 $endif$
             </ul>
             $if(user)$
@@ -67,8 +71,7 @@ pageHeader(metadata, user, basket, data) ::= <<
 pageFooter() ::= <<
 <footer class="footer">
     <div class="container">
-        <p class="pull-right">
-            &copy; 2012, François Sarradin
+        <p>Condition of Use <span class="pull-right">&copy; 2012, François Sarradin</span>
         </p>
     </div>
 </footer>

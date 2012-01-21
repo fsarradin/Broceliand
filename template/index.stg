@@ -5,9 +5,15 @@ $if(user && !user.admin)$
 <p>Hi $user.name$, you have <a href="/user/invoice">$basket.size$ book(s)</a> in your basket.</p>
 $endif$
 <h2>Book</h2>
+$if(user.admin)$
+<p><a href="/book" class="btn large primary">Add</a></p>
+$endif$
 <table class="zebra-striped">
     <tr>
         <th>Title</th><th>Author</th><th>Price</th>
+        $if(user)$
+        <th>Action</th>
+        $endif$
     </tr>
     $data.books:{ book |
         <tr>
@@ -22,6 +28,13 @@ $endif$
             </td>
             <td><em>$book.author$</em></td>
             <td><span class="price">$book.price$&nbsp;&euro;</span></td>
+            $if(user)$
+                $if(user.admin)$
+                <td><a href="book/delete?book-id=$book.id$" class="btn large secondary">del</a></td>
+                $else$
+                <td><a href="user/basket-add?book-id=$book.id$" class="btn large secondary">add</a></td>
+                $endif$
+            $endif$
         </tr>
     }$
 </table>

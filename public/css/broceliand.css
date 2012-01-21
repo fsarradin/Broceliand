@@ -1,7 +1,7 @@
 body {
     padding-top: 60px;
 }
-body, p, em, a, span, li, table, tr, th, td, input, textarea, select {
+body, p, em, a, span, li, table, tr, table th, table td, input, textarea, select {
     font-size: 24px;
     line-height: normal;
 }
@@ -12,7 +12,6 @@ body, p, em, a, span, li, table, tr, th, td, input, textarea, select {
 }
 h2 {
     font-size: 42px;
-    line-height: 54px;
 }
 input {
     height: auto;

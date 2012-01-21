@@ -82,9 +82,14 @@ public class BookController {
             }
 
         } else if ("details".equals(action)) {
+            Book book = null;
+
             Form form = request.getForm();
-            final Long bookId = Long.valueOf(form.get("book-id"));
-            Book book = bookService.findById(bookId);
+            String bookIdStr = form.get("book-id");
+            if (bookIdStr != null) {
+                Long bookId = Long.valueOf(bookIdStr);
+                book = bookService.findById(bookId);
+            }
             renderBookPage(request, response, "modify", "Modify a book", book);
         } else if ("delete".equals(action)) {
             Form form = request.getForm();
