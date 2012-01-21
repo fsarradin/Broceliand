@@ -1,0 +1,21 @@
+import "page-layout.stg"
+
+pageContent(metadata, user, basket, data) ::= <<
+<form action="/user/connect" method="post">
+    <div>
+        Login<br />
+        <input type="text" name="login" id="login" />
+    </div>
+    <div>
+        Password<br />
+        <input type="password" name="password" disabled="true" />
+    </div>
+    <div>
+        <input type="submit" title="Create" class="btn primary" />
+    </div>
+</form>
+
+<script type="text/javascript">
+    document.getElementById('login').focus();
+</script>
+>>

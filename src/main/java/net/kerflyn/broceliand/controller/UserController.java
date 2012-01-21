@@ -49,7 +49,9 @@ public class UserController {
         if ("new".equals(action)) {
             createUser(request, response);
         } else if ("login".equals(action)) {
-            ST template = buildTemplate("public/login.html");
+//            ST template = buildTemplate("public/login.html");
+            final URL groupUrl = new File("template/login.stg").toURI().toURL();
+            ST template = createTemplateWithUserAndBasket(request, groupUrl, userService, basketService);
             response.getPrintStream().append(template.render());
         } else if ("connect".equals(action)) {
             login(request, response);

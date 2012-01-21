@@ -1,9 +1,9 @@
 body {
     padding-top: 60px;
 }
-body, p, li, tr, th, td {
+body, p, li, tr, th, td, input, textarea, select {
     font-size: 24px;
-    line-height: 32px;
+    line-height: normal;
 }
 .title h1 {
     font-size: 72px;
@@ -13,6 +13,13 @@ body, p, li, tr, th, td {
 h2 {
     font-size: 42px;
     line-height: 54px;
+}
+input {
+    height: auto;
+    margin: 5px;
+}
+.btn {
+    font-size: 24px;
 }
 .topbar .brand {
     font-size: 24px;

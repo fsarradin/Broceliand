@@ -23,11 +23,11 @@ public class Users {
 
     public static void checkForAdminAccount(UserService userService) {
         try{
-            userService.findByLogin(User.ADMIN);
+            userService.findByLogin(User.ADMIN_LOGIN);
         } catch (NoResultException e) {
             User adminUser = new User();
-            adminUser.setLogin(User.ADMIN);
-            adminUser.setName(User.ADMIN);
+            adminUser.setLogin(User.ADMIN_LOGIN);
+            adminUser.setName(User.ADMIN_LOGIN);
             userService.save(adminUser);
         }
     }

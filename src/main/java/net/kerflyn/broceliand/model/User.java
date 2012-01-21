@@ -8,7 +8,7 @@ import javax.persistence.Id;
 @Entity
 public class User {
 
-    public static final String ADMIN = "ADMIN";
+    public static final String ADMIN_LOGIN = "admin";
 
     @Id
     @GeneratedValue
@@ -49,6 +49,6 @@ public class User {
      * @return
      */
     public boolean isAdmin() {
-        return ADMIN.equals(login);
+        return ADMIN_LOGIN.equals(login);
     }
 }

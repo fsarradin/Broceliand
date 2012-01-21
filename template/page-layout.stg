@@ -1,15 +1,14 @@
-
 page(metadata, user, basket, data) ::= <<
 <!DOCTYPE html>
 <html>
 <head>
     <title>Broceliand: $metadata.title$</title>
 
-    <script type="text/javascript" src="/resource/js/jquery.js"></script>
-    <script type="text/javascript" src="/resource/js/bootstrap-dropdown.js"></script>
+    <script type="text/javascript" src="/resources/js/jquery.js"></script>
+    <script type="text/javascript" src="/resources/js/bootstrap-dropdown.js"></script>
 
-    <link rel="stylesheet" href="http://twitter.github.com/bootstrap/1.4.0/bootstrap.min.css">
-    <link rel="stylesheet" href="/resources/css/broceliand.css">
+    <link rel="stylesheet" href="http://twitter.github.com/bootstrap/1.4.0/bootstrap.min.css" />
+    <link rel="stylesheet" href="/resources/css/broceliand.css" />
 </head>
 <body>
 
@@ -17,7 +16,7 @@ $pageHeader(metadata, user, basket, data)$
 
 <div class="container-fluid">
     <div class="sidebar">
-        <img src="/resources/img/broceliand-Idylls_of_the_King.jpg" alt="Broceliand" width="100%">
+        <img src="/resources/img/broceliand-Idylls_of_the_King.jpg" alt="Broceliand" width="100%" />
     </div>
 
     <div class="content">
@@ -36,22 +35,21 @@ $pageFooter()$
 >>
 
 pageHeader(metadata, user, basket, data) ::= <<
-<div class="topbar">
+<div class="topbar" data-dropdown="dropdown">
     <div class="topbar-inner">
         <div class="container-fluid">
             <a class="brand" href="#">Broceliand</a>
             <ul class="nav">
                 <li><a href="/">Home</a></li>
-                $if(user)$
+                $if(user && !user.admin)$
                 <li><a href="/user/invoice">Basket</a></li>
                 $endif$
             </ul>
             $if(user)$
             <ul class="nav secondary-nav">
-                <li class="dropdown" data-dropdown="dropdown">
+                <li class="dropdown">
                     <a href="#" class="dropdown-toggle">$user.name$</a>
                     <ul class="dropdown-menu">
-                        <li><a href="#">Something</a></li>
                         <li><a href="/user/logout">Logout</a></li>
                     </ul>
                 </li>

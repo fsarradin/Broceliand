@@ -1,7 +1,7 @@
 import "page-layout.stg"
 
 pageContent(metadata, user, basket, data) ::= <<
-$if(user)$
+$if(user && !user.admin)$
 <p>Hi $user.name$, you have <a href="/user/invoice">$basket.size$ book(s)</a> in your basket.</p>
 $endif$
 <h2>Book</h2>
@@ -11,7 +11,15 @@ $endif$
     </tr>
     $data.books:{ book |
         <tr>
-            <td>$book.title$</td>
+            <td>
+                $if(user.admin)$
+                <a href="/book/details?book-id=$book.id$">
+                $endif$
+                $book.title$
+                $if(user.admin)$
+                </a>
+                $endif$
+            </td>
             <td><em>$book.author$</em></td>
             <td><span class="price">$book.price$&nbsp;&euro;</span></td>
         </tr>
