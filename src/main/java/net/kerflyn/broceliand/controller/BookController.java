@@ -54,49 +54,61 @@ public class BookController {
 
     public void render(Request request, Response response, String action) throws IOException, LeaseException {
         if ("new".equals(action)) {
-            Form form = request.getForm();
-
-            Book book = new Book();
-            book.setTitle(form.get("title"));
-            book.setAuthor(form.get("author"));
-            book.setPrice(new BigDecimal(form.get("price")));
-
-            bookService.save(book);
+            createBook(request, response);
         } else if ("modify".equals(action)) {
-            Form form = request.getForm();
-
-            Long bookId = Long.valueOf(form.get("book-id"));
-            Book book = bookService.findById(bookId);
-            book.setTitle(form.get("title"));
-            book.setAuthor(form.get("author"));
-            book.setPrice(new BigDecimal(form.get("price")));
-            Set<Seller> sellers = book.getSellers();
-            if (sellers == null) {
-                sellers = newHashSet();
-                book.setSellers(sellers);
-            } else {
-                sellers.clear();
-            }
-            for (String sellerId : form.getAll("sellers")) {
-                sellers.add(sellerService.findById(Long.valueOf(sellerId)));
-            }
-
+            modifyBook(request, response);
         } else if ("details".equals(action)) {
-            Book book = null;
-
-            Form form = request.getForm();
-            String bookIdStr = form.get("book-id");
-            if (bookIdStr != null) {
-                Long bookId = Long.valueOf(bookIdStr);
-                book = bookService.findById(bookId);
-            }
-            renderBookPage(request, response, "modify", "Modify a book", book);
+            showDetails(request, response);
         } else if ("delete".equals(action)) {
             Form form = request.getForm();
             final Long bookId = Long.valueOf(form.get("book-id"));
             bookService.deleteById(bookId);
+            redirectTo(response, "/");
         }
+    }
 
+    private void createBook(Request request, Response response) throws IOException {
+        Form form = request.getForm();
+
+        Book book = new Book();
+        book.setTitle(form.get("title"));
+        book.setAuthor(form.get("author"));
+        book.setPrice(new BigDecimal(form.get("price")));
+
+        bookService.save(book);
+        redirectTo(response, "/");
+    }
+
+    private void showDetails(Request request, Response response) throws IOException, LeaseException {
+        Book book = null;
+
+        Form form = request.getForm();
+        String bookIdStr = form.get("book-id");
+        if (bookIdStr != null) {
+            Long bookId = Long.valueOf(bookIdStr);
+            book = bookService.findById(bookId);
+        }
+        renderBookPage(request, response, "modify", "Modify a book", book);
+    }
+
+    private void modifyBook(Request request, Response response) throws IOException {
+        Form form = request.getForm();
+
+        Long bookId = Long.valueOf(form.get("book-id"));
+        Book book = bookService.findById(bookId);
+        book.setTitle(form.get("title"));
+        book.setAuthor(form.get("author"));
+        book.setPrice(new BigDecimal(form.get("price")));
+        Set<Seller> sellers = book.getSellers();
+        if (sellers == null) {
+            sellers = newHashSet();
+            book.setSellers(sellers);
+        } else {
+            sellers.clear();
+        }
+        for (String sellerId : form.getAll("sellers")) {
+            sellers.add(sellerService.findById(Long.valueOf(sellerId)));
+        }
         redirectTo(response, "/");
     }
 

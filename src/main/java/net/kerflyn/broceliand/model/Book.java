@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import java.math.BigDecimal;
 import java.util.Set;
 
@@ -21,6 +22,9 @@ public class Book {
     private String author;
 
     private BigDecimal price;
+
+    @OneToMany
+    private Set<SellerPrice> sellerPrices;
 
     @ManyToMany
     private Set<Seller> sellers;
@@ -65,22 +69,4 @@ public class Book {
         this.sellers = sellers;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Book book = (Book) o;
-
-        return Objects.equal(author, book.author)
-                && Objects.equal(id, book.id)
-                && Objects.equal(price, book.price)
-                && Objects.equal(sellers, book.sellers)
-                && Objects.equal(title, book.title);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(id, title, author, price, sellers);
-    }
 }

@@ -2,6 +2,7 @@ package net.kerflyn.broceliand.service.impl;
 
 import net.kerflyn.broceliand.model.Book;
 import net.kerflyn.broceliand.repository.BookRepository;
+import net.kerflyn.broceliand.repository.SellerPriceRepository;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -9,15 +10,17 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-public class BookServiceImplWhenDelete {
+public class BookServiceImplWhenDeleteTest {
 
     private BookRepository bookRepository;
     private BookServiceImpl bookService;
+    private SellerPriceRepository sellerPriceRepository;
 
     @Before
     public void setUp() throws Exception {
         bookRepository = mock(BookRepository.class);
-        bookService = new BookServiceImpl(bookRepository);
+        sellerPriceRepository = mock(SellerPriceRepository.class);
+        bookService = new BookServiceImpl(bookRepository, sellerPriceRepository);
     }
 
     @Test
