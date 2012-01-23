@@ -3,12 +3,11 @@ package net.kerflyn.broceliand.controller;
 import com.google.inject.Inject;
 import net.kerflyn.broceliand.model.Book;
 import net.kerflyn.broceliand.model.Seller;
-import net.kerflyn.broceliand.model.User;
+import net.kerflyn.broceliand.model.SellerPrice;
 import net.kerflyn.broceliand.service.BasketService;
 import net.kerflyn.broceliand.service.BookService;
 import net.kerflyn.broceliand.service.SellerService;
 import net.kerflyn.broceliand.service.UserService;
-import net.kerflyn.broceliand.util.Users;
 import org.simpleframework.http.Form;
 import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
@@ -17,7 +16,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.stringtemplate.v4.ST;
 
-import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -49,7 +47,7 @@ public class BookController {
     }
 
     public void render(Request request, Response response) throws IOException, LeaseException {
-        renderBookPage(request, response, "new", "Add a new book", null);
+        renderAddOrModifyBook(request, response, "new", "Add book", null);
     }
 
     public void render(Request request, Response response, String action) throws IOException, LeaseException {
@@ -88,7 +86,7 @@ public class BookController {
             Long bookId = Long.valueOf(bookIdStr);
             book = bookService.findById(bookId);
         }
-        renderBookPage(request, response, "modify", "Modify a book", book);
+        renderAddOrModifyBook(request, response, "modify", "Modify book", book);
     }
 
     private void modifyBook(Request request, Response response) throws IOException {
@@ -112,31 +110,26 @@ public class BookController {
         redirectTo(response, "/");
     }
 
-    private void renderBookPage(Request request, Response response, String action, String actionName, Book book) throws LeaseException, IOException {
+    private void renderAddOrModifyBook(Request request, Response response, String action, String actionName, Book book) throws LeaseException, IOException {
         final URL groupUrl = new File("template/add-modify-book.stg").toURI().toURL();
         ST template = createTemplateWithUserAndBasket(request, groupUrl, userService, basketService);
 
+        List<SellerPrice> prices = bookService.findPricesFor(book);
         List<Seller> sellers = sellerService.findAll();
 
-        List<SellerOption> sellerOptions = newArrayList();
-        for (Seller seller : sellers) {
-            boolean selected = (book != null) && book.getSellers().contains(seller);
-            sellerOptions.add(new SellerOption(seller, selected));
-        }
-
-        template.addAggr("data.{action, actionName, book, sellerOptions}",
-                new Object[] { action, actionName, book, sellerOptions });
+        template.addAggr("data.{action, actionName, book, sellers, prices}",
+                new Object[] { action, actionName, book, sellers, prices });
 
         response.getPrintStream().append(template.render());
     }
 
     public static class SellerOption {
         private Seller seller;
-        private boolean selected;
+        private SellerPrice price;
 
-        public SellerOption(Seller seller, boolean selected) {
+        public SellerOption(Seller seller, SellerPrice price) {
             this.seller = seller;
-            this.selected = selected;
+            this.price = price;
         }
 
         public Seller getSeller() {
@@ -147,12 +140,12 @@ public class BookController {
             this.seller = seller;
         }
 
-        public boolean isSelected() {
-            return selected;
+        public SellerPrice getPrice() {
+            return price;
         }
 
-        public void setSelected(boolean selected) {
-            this.selected = selected;
+        public void setPrice(SellerPrice price) {
+            this.price = price;
         }
     }
 

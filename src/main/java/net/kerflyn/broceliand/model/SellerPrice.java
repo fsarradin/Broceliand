@@ -3,6 +3,7 @@ package net.kerflyn.broceliand.model;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import java.math.BigDecimal;
 
 @Entity
@@ -12,8 +13,10 @@ public class SellerPrice {
     @GeneratedValue
     private Long id;
 
+    @ManyToOne
     private Book book;
 
+    @ManyToOne
     private Seller seller;
 
     private BigDecimal price;
