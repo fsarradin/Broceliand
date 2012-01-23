@@ -46,13 +46,11 @@ var SELLERS = {
     }$
 };
 
-\$(document).ready(
-    function (\$) {
+\$(document).ready(function (\$) {
 $data.prices:{ price |
     appendPrice($price.seller.id$, $price.price$, SELLERS);
 }$
-    }
-);
+});
 </script>
 <div id="price-modal" class="modal hide fade in" style="display: hide; ">
     <div class="modal-header">

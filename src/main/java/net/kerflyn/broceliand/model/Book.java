@@ -8,6 +8,8 @@ import java.math.BigDecimal;
 import java.util.Iterator;
 import java.util.Set;
 
+import static com.google.common.collect.Sets.newHashSet;
+
 @Entity
 public class Book {
 
@@ -20,7 +22,7 @@ public class Book {
     private String author;
 
     @OneToMany
-    private Set<SellerPrice> sellerPrices;
+    private Set<SellerPrice> sellerPrices = newHashSet();
 
     public long getId() {
         return id;

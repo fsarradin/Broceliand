@@ -4,7 +4,7 @@ jQuery.fn.exists = function() { return this.length > 0; }
 // add-modify-book.stg
 
 function priceModalDel(sellerId)  {
-    $('#price-table #seller-' + sellerId).empty();
+    $('#price-table #seller-' + sellerId).remove();
 }
 
 function appendPrice(sellerId, price, sellers) {
@@ -14,7 +14,7 @@ function appendPrice(sellerId, price, sellers) {
         + "<td class='price'><input type='text' name='seller-price-" + sellerId + "' value='" + price + "' class='span2' />&nbsp;&euro;</td>"
         + "<td>" + seller + "</td>"
         + "<td>"
-        + "<button class='btn large secondary' onclick='priceModalDel('" + sellerId + "')'>Del</button>"
+        + "<button class='btn large secondary' onclick='priceModalDel(" + sellerId + ")'>Del</button>"
         + "</td>"
         + "</tr>"
     );
