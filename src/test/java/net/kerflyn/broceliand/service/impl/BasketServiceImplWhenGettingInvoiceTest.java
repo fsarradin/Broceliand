@@ -31,7 +31,6 @@ public class BasketServiceImplWhenGettingInvoiceTest {
         book = new Book();
         book.setId(1L);
         book.setTitle("Toto");
-        book.setPrice(new BigDecimal("40.00"));
 
         BasketElementRepository basketElementRepository = mock(BasketElementRepository.class);
         BookService bookService = mock(BookService.class);

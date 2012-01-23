@@ -6,6 +6,8 @@ page(metadata, user, basket, data) ::= <<
 
     <script type="text/javascript" src="/resources/js/jquery.js"></script>
     <script type="text/javascript" src="/resources/js/bootstrap-dropdown.js"></script>
+    <script type="text/javascript" src="/resources/js/bootstrap-modal.js"></script>
+    <script type="text/javascript" src="/resources/js/broceliand.js"></script>
 
     <link rel="stylesheet" href="http://twitter.github.com/bootstrap/1.4.0/bootstrap.min.css" />
     <link rel="stylesheet" href="/resources/css/broceliand.css" />

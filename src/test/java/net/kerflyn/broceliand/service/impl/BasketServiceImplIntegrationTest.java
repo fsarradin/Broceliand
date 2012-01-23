@@ -35,8 +35,6 @@ public class BasketServiceImplIntegrationTest {
         injector.getInstance(UserService.class).save(user);
 
         book = new Book();
-        book.setPrice(new BigDecimal("40.0"));
-        book.setSellers(new HashSet<Seller>());
         injector.getInstance(BookService.class).save(book);
         basketService = injector.getInstance(BasketService.class);
     }

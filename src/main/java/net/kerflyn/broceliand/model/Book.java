@@ -1,13 +1,11 @@
 package net.kerflyn.broceliand.model;
 
-import com.google.common.base.Objects;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import java.math.BigDecimal;
+import java.util.Iterator;
 import java.util.Set;
 
 @Entity
@@ -21,13 +19,8 @@ public class Book {
 
     private String author;
 
-    private BigDecimal price;
-
     @OneToMany
     private Set<SellerPrice> sellerPrices;
-
-    @ManyToMany
-    private Set<Seller> sellers;
 
     public long getId() {
         return id;
@@ -35,6 +28,21 @@ public class Book {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public BigDecimal getPrice() {
+        BigDecimal price = BigDecimal.ZERO;
+        Iterator<SellerPrice> iterator = sellerPrices.iterator();
+        if (iterator.hasNext()) {
+            price = iterator.next().getPrice();
+            while (iterator.hasNext()) {
+                BigDecimal otherPrice = iterator.next().getPrice();
+                if (otherPrice.compareTo(price) < 0) {
+                    price = otherPrice;
+                }
+            }
+        }
+        return price;
     }
 
     public String getTitle() {
@@ -45,14 +53,6 @@ public class Book {
         this.title = title;
     }
 
-    public BigDecimal getPrice() {
-        return price;
-    }
-
-    public void setPrice(BigDecimal price) {
-        this.price = price;
-    }
-
     public String getAuthor() {
         return author;
     }
@@ -61,12 +61,11 @@ public class Book {
         this.author = author;
     }
 
-    public Set<Seller> getSellers() {
-        return sellers;
+    public void setSellerPrices(Set<SellerPrice> sellerPrices) {
+        this.sellerPrices = sellerPrices;
     }
 
-    public void setSellers(Set<Seller> sellers) {
-        this.sellers = sellers;
+    public Set<SellerPrice> getSellerPrices() {
+        return sellerPrices;
     }
-
 }

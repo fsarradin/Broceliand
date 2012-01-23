@@ -9,4 +9,7 @@ public interface SellerPriceRepository {
 
     List<SellerPrice> findAllByBook(Book book);
 
+    void save(SellerPrice sellerPrice);
+
+    void delete(SellerPrice sellerPrice);
 }

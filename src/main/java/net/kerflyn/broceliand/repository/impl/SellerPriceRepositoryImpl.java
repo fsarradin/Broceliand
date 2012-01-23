@@ -26,4 +26,14 @@ public class SellerPriceRepositoryImpl implements SellerPriceRepository {
         return query.getResultList();
     }
 
+    @Override
+    public void save(SellerPrice sellerPrice) {
+        entityManager.persist(sellerPrice);
+    }
+
+    @Override
+    public void delete(SellerPrice sellerPrice) {
+        entityManager.remove(sellerPrice);
+    }
+
 }

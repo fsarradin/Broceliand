@@ -33,6 +33,8 @@ public class BookController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BookController.class);
 
+    private static final String SELLER_PRICE_PREFIX = "seller-price-";
+
     private BookService bookService;
     private UserService userService;
     private SellerService sellerService;
@@ -71,7 +73,6 @@ public class BookController {
         Book book = new Book();
         book.setTitle(form.get("title"));
         book.setAuthor(form.get("author"));
-        book.setPrice(new BigDecimal(form.get("price")));
 
         bookService.save(book);
         redirectTo(response, "/");
@@ -91,22 +92,27 @@ public class BookController {
 
     private void modifyBook(Request request, Response response) throws IOException {
         Form form = request.getForm();
+        LOGGER.debug("form names: " + form.keySet());
 
         Long bookId = Long.valueOf(form.get("book-id"));
         Book book = bookService.findById(bookId);
         book.setTitle(form.get("title"));
         book.setAuthor(form.get("author"));
-        book.setPrice(new BigDecimal(form.get("price")));
-        Set<Seller> sellers = book.getSellers();
-        if (sellers == null) {
-            sellers = newHashSet();
-            book.setSellers(sellers);
-        } else {
-            sellers.clear();
+
+        Set<Seller> processedSellers = newHashSet();
+        for (Object obj: form.keySet()) {
+            String key = (String) obj;
+            if (key.startsWith(SELLER_PRICE_PREFIX)) {
+                Long sellerId = Long.valueOf(key.substring(SELLER_PRICE_PREFIX.length()));
+                Seller seller = sellerService.findById(sellerId);
+                processedSellers.add(seller);
+                BigDecimal price = new BigDecimal(form.get(key));
+                bookService.setPrice(book, seller, price);
+            }
         }
-        for (String sellerId : form.getAll("sellers")) {
-            sellers.add(sellerService.findById(Long.valueOf(sellerId)));
-        }
+
+        bookService.removeSellerPricesNotIn(processedSellers, book);
+
         redirectTo(response, "/");
     }
 

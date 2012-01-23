@@ -3,6 +3,7 @@ package net.kerflyn.broceliand.service.impl;
 import net.kerflyn.broceliand.model.Book;
 import net.kerflyn.broceliand.repository.BookRepository;
 import net.kerflyn.broceliand.repository.SellerPriceRepository;
+import net.kerflyn.broceliand.service.SellerService;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -15,12 +16,14 @@ public class BookServiceImplWhenDeleteTest {
     private BookRepository bookRepository;
     private BookServiceImpl bookService;
     private SellerPriceRepository sellerPriceRepository;
+    private SellerService sellerService;
 
     @Before
     public void setUp() throws Exception {
         bookRepository = mock(BookRepository.class);
         sellerPriceRepository = mock(SellerPriceRepository.class);
-        bookService = new BookServiceImpl(bookRepository, sellerPriceRepository);
+        sellerService = mock(SellerService.class);
+        bookService = new BookServiceImpl(bookRepository, sellerPriceRepository, sellerService);
     }
 
     @Test
