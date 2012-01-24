@@ -15,6 +15,7 @@
         <class>net.kerflyn.broceliand.model.User</class>
         <class>net.kerflyn.broceliand.model.BasketElement</class>
         <class>net.kerflyn.broceliand.model.Seller</class>
+        <class>net.kerflyn.broceliand.model.SellerPrice</class>
         <class>net.kerflyn.broceliand.model.charge.ShippingChargeStrategy</class>
         <class>net.kerflyn.broceliand.model.charge.FixedShippingCharge</class>
         <class>net.kerflyn.broceliand.model.charge.QuantityDependentShippingCharge</class>
@@ -27,7 +28,7 @@
             <property name="hibernate.show_sql" value="true" />
             <property name="hibernate.format_sql" value="true" />
 
-            <property name="hibernate.connection.url" value="jdbc:hsqldb:mem:data" />
+            <property name="hibernate.connection.url" value="jdbc:hsqldb:mem:test-data" />
             <property name="hibernate.connection.driver_class" value="org.hsqldb.jdbcDriver" />
             <property name="hibernate.connection.username" value="sa" />
             <property name="hibernate.connection.password" value="" />

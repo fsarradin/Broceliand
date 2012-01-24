@@ -24,7 +24,6 @@ import org.stringtemplate.v4.ST;
 import java.io.File;
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
@@ -41,9 +40,9 @@ public class BroceliandWebApp extends AbstractService implements Container {
     private int port;
     public Injector injector;
 
-    public BroceliandWebApp(int port) {
+    public BroceliandWebApp(int port, Injector injector) {
         this.port = port;
-        this.injector = BroceliandConfiguration.newGuiceInjector();
+        this.injector = injector;
         bootstrap();
     }
 
@@ -125,7 +124,8 @@ public class BroceliandWebApp extends AbstractService implements Container {
     }
 
     public static void main(String[] args) {
-        final BroceliandWebApp application = new BroceliandWebApp(8080);
+        final Injector injector = BroceliandConfiguration.newGuiceInjector();
+        final BroceliandWebApp application = new BroceliandWebApp(8080, injector);
         application.startAndWait();
     }
 
