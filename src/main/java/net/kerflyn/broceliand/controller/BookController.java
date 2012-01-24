@@ -67,17 +67,6 @@ public class BookController {
         }
     }
 
-    private void createBook(Request request, Response response) throws IOException {
-        Form form = request.getForm();
-
-        Book book = new Book();
-        book.setTitle(form.get("title"));
-        book.setAuthor(form.get("author"));
-
-        bookService.save(book);
-        redirectTo(response, "/");
-    }
-
     private void showDetails(Request request, Response response) throws IOException, LeaseException {
         Book book = null;
 
@@ -88,6 +77,27 @@ public class BookController {
             book = bookService.findById(bookId);
         }
         renderAddOrModifyBook(request, response, "modify", "Modify book", book);
+    }
+
+    private void createBook(Request request, Response response) throws IOException {
+        Form form = request.getForm();
+
+        Book book = new Book();
+        book.setTitle(form.get("title"));
+        book.setAuthor(form.get("author"));
+        bookService.save(book);
+
+        for (Object obj: form.keySet()) {
+            String key = (String) obj;
+            if (key.startsWith(SELLER_PRICE_PREFIX)) {
+                Long sellerId = Long.valueOf(key.substring(SELLER_PRICE_PREFIX.length()));
+                Seller seller = sellerService.findById(sellerId);
+                BigDecimal price = new BigDecimal(form.get(key));
+                bookService.setPrice(book, seller, price);
+            }
+        }
+
+        redirectTo(response, "/");
     }
 
     private void modifyBook(Request request, Response response) throws IOException {
@@ -127,32 +137,6 @@ public class BookController {
                 new Object[] { action, actionName, book, sellers, prices });
 
         response.getPrintStream().append(template.render());
-    }
-
-    public static class SellerOption {
-        private Seller seller;
-        private SellerPrice price;
-
-        public SellerOption(Seller seller, SellerPrice price) {
-            this.seller = seller;
-            this.price = price;
-        }
-
-        public Seller getSeller() {
-            return seller;
-        }
-
-        public void setSeller(Seller seller) {
-            this.seller = seller;
-        }
-
-        public SellerPrice getPrice() {
-            return price;
-        }
-
-        public void setPrice(SellerPrice price) {
-            this.price = price;
-        }
     }
 
 }
