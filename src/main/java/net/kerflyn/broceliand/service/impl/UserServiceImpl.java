@@ -2,9 +2,9 @@ package net.kerflyn.broceliand.service.impl;
 
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
-import net.kerflyn.broceliand.model.ConnectedUser;
+import net.kerflyn.broceliand.model.Connection;
 import net.kerflyn.broceliand.model.User;
-import net.kerflyn.broceliand.repository.ConnectedUserRepository;
+import net.kerflyn.broceliand.repository.ConnectionRepository;
 import net.kerflyn.broceliand.repository.UserRepository;
 import net.kerflyn.broceliand.service.UserService;
 import org.joda.time.DateTime;
@@ -16,12 +16,12 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 
     private UserRepository userRepository;
-    private ConnectedUserRepository connectedUserRepository;
+    private ConnectionRepository connectionRepository;
 
     @Inject
-    public UserServiceImpl(UserRepository userRepository, ConnectedUserRepository connectedUserRepository) {
+    public UserServiceImpl(UserRepository userRepository, ConnectionRepository connectionRepository) {
         this.userRepository = userRepository;
-        this.connectedUserRepository = connectedUserRepository;
+        this.connectionRepository = connectionRepository;
     }
 
     @Override
@@ -45,17 +45,17 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public User checkConnectedAt(InetAddress address) {
-        ConnectedUser connectedUser = null;
+        Connection connection = null;
         try {
-            connectedUser = connectedUserRepository.findByAddress(address.getHostAddress());
+            connection = connectionRepository.findByAddress(address.getHostAddress());
         } catch (NoResultException e) {
             return null;
         }
         User user = null;
-        if (connectedUser.getExpirationDate().isAfterNow()) {
-            user = connectedUser.getUser();
+        if (connection.getExpirationDate().isAfterNow()) {
+            user = connection.getUser();
         } else {
-            connectedUserRepository.delete(connectedUser);
+            connectionRepository.delete(connection);
         }
         return user;
     }
@@ -63,18 +63,18 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void saveConnection(User user, InetAddress address, DateTime expirationDate) {
-        ConnectedUser connectedUser = new ConnectedUser();
-        connectedUser.setUser(user);
-        connectedUser.setExpirationDate(expirationDate);
-        connectedUser.setHostAddress(address.getHostAddress());
+        Connection connection = new Connection();
+        connection.setUser(user);
+        connection.setExpirationDate(expirationDate);
+        connection.setHostAddress(address.getHostAddress());
 
-        connectedUserRepository.save(connectedUser);
+        connectionRepository.save(connection);
     }
 
     @Override
     @Transactional
     public void deleteAllConnectionsFor(User user) {
-        connectedUserRepository.deleteAllFor(user);
+        connectionRepository.deleteAllFor(user);
     }
 
 }

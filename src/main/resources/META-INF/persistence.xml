@@ -10,7 +10,7 @@
         <!-- Entities -->
         <class>net.kerflyn.broceliand.model.Book</class>
         <class>net.kerflyn.broceliand.model.User</class>
-        <class>net.kerflyn.broceliand.model.ConnectedUser</class>
+        <class>net.kerflyn.broceliand.model.Connection</class>
         <class>net.kerflyn.broceliand.model.BasketElement</class>
         <class>net.kerflyn.broceliand.model.Seller</class>
         <class>net.kerflyn.broceliand.model.SellerPrice</class>

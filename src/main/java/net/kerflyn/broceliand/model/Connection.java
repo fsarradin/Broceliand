@@ -9,7 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
 @Entity
-public class ConnectedUser {
+public class Connection {
 
     @Id
     @GeneratedValue
