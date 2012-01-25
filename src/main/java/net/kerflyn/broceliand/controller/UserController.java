@@ -5,9 +5,8 @@ import net.kerflyn.broceliand.model.Invoice;
 import net.kerflyn.broceliand.model.User;
 import net.kerflyn.broceliand.service.BasketService;
 import net.kerflyn.broceliand.service.UserService;
-import net.kerflyn.broceliand.util.HttpUtils;
-import net.kerflyn.broceliand.util.Templates;
 import net.kerflyn.broceliand.util.Users;
+import org.joda.time.DateTime;
 import org.simpleframework.http.Form;
 import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
@@ -20,7 +19,6 @@ import org.stringtemplate.v4.ST;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.concurrent.TimeUnit;
 
 import static net.kerflyn.broceliand.util.HttpUtils.redirectTo;
 import static net.kerflyn.broceliand.util.Templates.buildTemplate;
@@ -84,6 +82,10 @@ public class UserController {
     private void logout(Request request, Response response) throws LeaseException {
         Session session = request.getSession(false);
         if (session != null) {
+            User user = Users.getConnectedUser(userService, request);
+            if (user != null) {
+                userService.deleteAllConnectionsFor(user);
+            }
             session.remove(CURRENT_USER_SESSION_KEY);
         }
         redirectTo(response, "/");
@@ -92,11 +94,12 @@ public class UserController {
     @SuppressWarnings("unchecked")
     private void login(Request request, Response response) throws IOException, LeaseException {
         Form form = request.getForm();
-        User user = userService.findByLogin(form.get("login"));
+        String login = form.get("login");
+        User user = userService.findByLogin(login);
         if (user != null) {
-            Session session = request.getSession(true);
-            session.getLease().renew(30, TimeUnit.DAYS);
-            session.put(CURRENT_USER_SESSION_KEY, user.getLogin());
+            Users.login(user, request);
+            final DateTime expirationDate = new DateTime().plusDays(30);
+            userService.saveConnection(user, request.getClientAddress().getAddress(), expirationDate);
         }
         redirectTo(response, "/");
     }

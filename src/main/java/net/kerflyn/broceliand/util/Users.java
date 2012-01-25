@@ -7,18 +7,27 @@ import org.simpleframework.http.session.Session;
 import org.simpleframework.util.lease.LeaseException;
 
 import javax.persistence.NoResultException;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.util.concurrent.TimeUnit;
 
 public class Users {
 
     public static final String CURRENT_USER_SESSION_KEY = "current-user";
 
     public static User getConnectedUser(UserService userService, Request request) throws LeaseException {
-        User connectedUser = null;
+        User user = null;
         Session session = request.getSession(false);
         if (session != null && session.containsKey(CURRENT_USER_SESSION_KEY)) {
-            connectedUser = userService.findByLogin((String) session.get(CURRENT_USER_SESSION_KEY));
+            user = userService.findByLogin((String) session.get(CURRENT_USER_SESSION_KEY));
+        } else {
+            InetAddress address = request.getClientAddress().getAddress();
+            user = userService.checkConnectedAt(address);
+            if (user != null) {
+                login(user, request);
+            }
         }
-        return connectedUser;
+        return user;
     }
 
     public static void checkForAdminAccount(UserService userService) {
@@ -32,4 +41,10 @@ public class Users {
         }
     }
 
+    @SuppressWarnings("unchecked")
+    public static void login(User user, Request request) throws LeaseException {
+        Session session = request.getSession(true);
+        session.getLease().renew(30, TimeUnit.DAYS);
+        session.put(CURRENT_USER_SESSION_KEY, user.getLogin());
+    }
 }
