@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<sellers>
+    <seller>
+
+        <name>A</name>
+        <address>a</address>
+        <city>New York</city>
+        <country>USA</country>
+
+        <books>
+            <book>
+                <title>Java Web Services: Up and Running</title>
+                <author>Martin Kalin</author>
+                <price>30.00</price>
+            </book>
+            <book>
+                <title>Pro Git</title>
+                <author>Scott Chacon</author>
+                <price>20.00</price>
+            </book>
+        </books>
+
+    </seller>
+
+    <seller>
+
+        <name>B</name>
+        <address>a</address>
+        <city>London</city>
+        <country>UK</country>
+
+        <books>
+            <book>
+                <title>Pragmatic Programmer: From Journeyman to Master</title>
+                <author>Andrew Hunt, David Thomas</author>
+                <price>40.00</price>
+            </book>
+            <book>
+                <title>Pro Git</title>
+                <author>Scott Chacon</author>
+                <price>21.99</price>
+            </book>
+        </books>
+
+    </seller>
+</sellers>
