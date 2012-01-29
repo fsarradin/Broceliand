@@ -1,40 +1,53 @@
 package net.kerflyn.broceliand.route;
 
-import com.google.inject.Binding;
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import com.google.inject.spi.DefaultBindingTargetVisitor;
+import org.junit.Before;
 import org.junit.Test;
+
+import java.lang.reflect.Method;
 
 import static org.fest.assertions.Assertions.assertThat;
 
 public class BindingTest {
 
-    private Injector injector;
+    private Routes routes;
 
-    @Test
-    public void should() {
-        injector = Guice.createInjector(new RouteModule() {
+    @Before
+    public void setUp() throws Exception {
+        routes = Routes.create(new RoutesConfiguration() {
             @Override
-            protected void configureRoutes() {
-                serveRegexp(".*\\.html").with(MyController.class);
+            public void configure() {
+                serve("/user").with(MyUserController.class);
             }
         });
-
-        boolean containsRouteBinding = false;
-
-        for (Binding<?> binding: injector.getAllBindings().values()) {
-            if (binding.getProvider().get() instanceof RouteDefinition) {
-                containsRouteBinding = true;
-            }
-        }
-
-        assertThat(containsRouteBinding).isTrue();
-
-//        Object controller = injector.getInstance(Key.get(Object.class, Names.named("index.html")));
     }
 
-    private static class MyController {
+    @Test
+    public void should_get_controller_instance() throws Exception {
+        Object controller = routes.getControllerFor("/user");
+
+        assertThat(controller).isNotNull();
+        assertThat(controller).isInstanceOf(MyUserController.class);
     }
 
+    @Test
+    public void should_get_controller_method() throws Exception {
+        Method controllerMethod = routes.getControllerMethodFor("/user/index");
+
+        assertThat(controllerMethod).isNotNull();
+        assertThat(controllerMethod.getName()).isEqualTo("index");
+    }
+
+    @Test
+    public void should_get_default_controller_method_without_name() throws Exception {
+        Method controllerMethod = routes.getControllerMethodFor("/user/");
+
+        assertThat(controllerMethod).isNotNull();
+        assertThat(controllerMethod.getName()).isEqualTo("index");
+    }
+
+    public static class MyUserController {
+
+        public void index() {}
+
+    }
 }
