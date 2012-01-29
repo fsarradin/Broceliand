@@ -1,4 +1,4 @@
-package net.kerflyn.broceliand.route;
+package net.kerflyn.broceliand.guiceroute;
 
 import com.google.inject.Key;
 import com.google.inject.spi.BindingTargetVisitor;

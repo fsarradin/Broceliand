@@ -1,4 +1,4 @@
-package net.kerflyn.broceliand.route;
+package net.kerflyn.broceliand.guiceroute;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Key;
