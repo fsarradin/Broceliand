@@ -1,7 +1,6 @@
 package net.kerflyn.broceliand.util;
 
 import com.google.common.base.Predicate;
-import com.google.common.base.Throwables;
 
 import java.lang.reflect.Method;
 import java.util.List;
