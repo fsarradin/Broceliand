@@ -1,6 +1,7 @@
 package net.kerflyn.broceliand.route;
 
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 import static com.google.common.collect.Maps.newHashMap;
 
@@ -16,7 +17,11 @@ public abstract class RoutesConfiguration {
         return routeBuilder;
     }
 
-    public Class<?> getControllerClassFor(String route) {
-        return routes.get(route).getControllerClass();
+    public Class<?> getControllerClassFor(String path) {
+        RouteBuilder routeBuilder = routes.get(path);
+        if (routeBuilder == null) {
+            throw new NoSuchElementException("no controller bound to \"" + path + "\"");
+        }
+        return routeBuilder.getControllerClass();
     }
 }

@@ -1,6 +1,13 @@
 package net.kerflyn.broceliand.route;
 
+import org.simpleframework.http.Path;
+import org.simpleframework.http.Request;
+import org.simpleframework.http.Response;
+
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.NoSuchElementException;
+import java.util.regex.Pattern;
 
 public class Routes {
 
@@ -15,36 +22,64 @@ public class Routes {
         return new Routes(configuration);
     }
 
-    public Object getControllerFor(String route) {
-        Class<?> controllerClass = configuration.getControllerClassFor(route);
+    public void handle(Request request, Response response) {
+        Path path = request.getPath();
+        Class<?> controllerClass = configuration.getControllerClassFor(path.getDirectory());
+        Method method = getMethodOf(controllerClass, path);
+        Object controller = instantiate(controllerClass);
+
+        try {
+            method.invoke(controller, request, response);
+        } catch (IllegalAccessException e) {
+            throw new IllegalStateException(e);
+        } catch (InvocationTargetException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    public static Object instantiate(Class<?> controllerClass) {
         Object controller = null;
         try {
             controller = controllerClass.newInstance();
         } catch (InstantiationException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            throw new IllegalStateException(e);
         } catch (IllegalAccessException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            throw new IllegalStateException(e);
         }
         return controller;
     }
 
-    public Method getControllerMethodFor(String route) {
-        Method method = null;
-        int lastSeparator = route.lastIndexOf('/');
-        String dirRoute = route.substring(0, lastSeparator);
-        String resRoute = route.substring(lastSeparator + 1);
-        if ("".equals(resRoute)) {
-            resRoute = "index";
+    public static Method getMethodOf(Class<?> controllerClass, Path path) {
+        String methodName = path.getName();
+
+        if (methodName == null || "".equals(methodName)) {
+            methodName = "index";
         }
 
-        Class<?> controllerClass = configuration.getControllerClassFor(dirRoute);
+        Method method = findMethodIn(controllerClass, methodName);
+
+        if (method == null) {
+            throw new NoSuchElementException("no method bind to \"" + path.getPath() + "\"");
+        }
+
+        return method;
+    }
+
+    public static Method findMethodIn(Class<?> controllerClass, String methodName) {
+        Method method = null;
+
         Method[] methods = controllerClass.getMethods();
+
         for (Method m : methods) {
-            if (m.getName().equals(resRoute)) {
+            PathName pathName = m.getAnnotation(PathName.class);
+            if (pathName != null && Pattern.matches(pathName.value(), methodName)) {
+                method = m;
+            } else if (m.getName().equals(methodName)) {
                 method = m;
             }
         }
 
         return method;
     }
+
 }

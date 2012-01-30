@@ -2,52 +2,108 @@ package net.kerflyn.broceliand.route;
 
 import org.junit.Before;
 import org.junit.Test;
-
-import java.lang.reflect.Method;
+import org.simpleframework.http.Path;
+import org.simpleframework.http.Request;
+import org.simpleframework.http.Response;
+import org.simpleframework.http.parse.PathParser;
 
 import static org.fest.assertions.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class BindingTest {
 
     private Routes routes;
+    private Response response;
+    private Request request;
 
     @Before
     public void setUp() throws Exception {
+        MyUserController.indexCalled = false;
+        MyUserController.loginCalled = false;
+        MyUserController.getUserCalled = false;
+
         routes = Routes.create(new RoutesConfiguration() {
             @Override
             public void configure() {
-                serve("/user").with(MyUserController.class);
+                serve("/user/").with(MyUserController.class);
             }
         });
+
+        response = mock(Response.class);
+        request = mock(Request.class);
+    }
+
+    private void initRequestFor(String path) {
+        Path requestPath = new PathParser(path);
+        when(request.getMethod()).thenReturn("GET");
+        when(request.getPath()).thenReturn(requestPath);
     }
 
     @Test
-    public void should_get_controller_instance() throws Exception {
-        Object controller = routes.getControllerFor("/user");
+    public void should_call_the_method_index() {
+        initRequestFor("/user/");
 
-        assertThat(controller).isNotNull();
-        assertThat(controller).isInstanceOf(MyUserController.class);
+        assertThat(MyUserController.indexCalled).isFalse();
+        assertThat(MyUserController.loginCalled).isFalse();
+        assertThat(MyUserController.getUserCalled).isFalse();
+
+        routes.handle(request, response);
+
+        assertThat(MyUserController.indexCalled).isTrue();
+        assertThat(MyUserController.loginCalled).isFalse();
+        assertThat(MyUserController.getUserCalled).isFalse();
     }
 
     @Test
-    public void should_get_controller_method() throws Exception {
-        Method controllerMethod = routes.getControllerMethodFor("/user/index");
+    public void should_call_the_method_login() {
+        initRequestFor("/user/login");
 
-        assertThat(controllerMethod).isNotNull();
-        assertThat(controllerMethod.getName()).isEqualTo("index");
+        assertThat(MyUserController.indexCalled).isFalse();
+        assertThat(MyUserController.loginCalled).isFalse();
+        assertThat(MyUserController.getUserCalled).isFalse();
+
+        routes.handle(request, response);
+
+        assertThat(MyUserController.indexCalled).isFalse();
+        assertThat(MyUserController.loginCalled).isTrue();
+        assertThat(MyUserController.getUserCalled).isFalse();
     }
 
     @Test
-    public void should_get_default_controller_method_without_name() throws Exception {
-        Method controllerMethod = routes.getControllerMethodFor("/user/");
+    public void should_call_the_method_getUser() {
+        initRequestFor("/user/42");
 
-        assertThat(controllerMethod).isNotNull();
-        assertThat(controllerMethod.getName()).isEqualTo("index");
+        assertThat(MyUserController.indexCalled).isFalse();
+        assertThat(MyUserController.loginCalled).isFalse();
+        assertThat(MyUserController.getUserCalled).isFalse();
+
+        routes.handle(request, response);
+
+        assertThat(MyUserController.indexCalled).isFalse();
+        assertThat(MyUserController.loginCalled).isFalse();
+        assertThat(MyUserController.getUserCalled).isTrue();
     }
 
     public static class MyUserController {
 
-        public void index() {}
+        public static boolean indexCalled = false;
+        public static boolean loginCalled = false;
+        public static boolean getUserCalled = false;
+
+        public void index(Request request, Response response) {
+            indexCalled = true;
+        }
+
+        @PathName("login")
+        public void doLogin(Request request, Response response) {
+            loginCalled = true;
+        }
+
+        @PathName("[0-9]+")
+        public void getUser(Request request, Response response) {
+            getUserCalled = true;
+        }
 
     }
 }
