@@ -2,12 +2,10 @@ package net.kerflyn.broceliand.controller;
 
 import com.google.inject.Inject;
 import net.kerflyn.broceliand.model.Seller;
-import net.kerflyn.broceliand.model.User;
+import net.kerflyn.broceliand.route.PathName;
 import net.kerflyn.broceliand.service.BasketService;
 import net.kerflyn.broceliand.service.SellerService;
 import net.kerflyn.broceliand.service.UserService;
-import net.kerflyn.broceliand.util.Templates;
-import net.kerflyn.broceliand.util.Users;
 import org.simpleframework.http.Form;
 import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
@@ -35,36 +33,31 @@ public class SellerController {
         this.basketService = basketService;
     }
 
-    public void render(Request request, Response response) throws IOException, LeaseException {
+    public void index(Request request, Response response) throws IOException, LeaseException {
         final URL groupUrl = new File("template/create-seller.stg").toURI().toURL();
         ST template = createTemplateWithUserAndBasket(request, groupUrl, userService, basketService);
         response.getPrintStream().append(template.render());
     }
 
-    public void render(Request request, Response response, String action) throws IOException, LeaseException {
-        if ("new".equals(action)) {
-            createSeller(request, response);
-        } else if ("list".equals(action)) {
-            listSellers(request, response);
-        } else if ("delete".equals(action)) {
-            Form form = request.getForm();
-            Long sellerId = Long.valueOf(form.get("seller-id"));
-            sellerService.deleteById(sellerId);
-            redirectTo(response, "/seller/list");
-        }
+    public void delete(Request request, Response response, String action) throws IOException, LeaseException {
+        Form form = request.getForm();
+        Long sellerId = Long.valueOf(form.get("seller-id"));
+        sellerService.deleteById(sellerId);
+        redirectTo(response, "/seller/list");
     }
 
-    private void listSellers(Request request, Response response) throws LeaseException, IOException {
+    public void list(Request request, Response response) throws LeaseException, IOException {
         final URL groupUrl = new File("template/list-sellers.stg").toURI().toURL();
         ST template = createTemplateWithUserAndBasket(request, groupUrl, userService, basketService);
 
         List<Seller> sellers = sellerService.findAll();
 
-        template.addAggr("data.{sellers}", new Object[] { sellers });
+        template.addAggr("data.{sellers}", new Object[]{sellers});
         response.getPrintStream().append(template.render());
     }
 
-    private void createSeller(Request request, Response response) throws IOException {
+    @PathName("new")
+    public void createSeller(Request request, Response response) throws IOException {
         Form form = request.getForm();
 
         Seller seller = new Seller();

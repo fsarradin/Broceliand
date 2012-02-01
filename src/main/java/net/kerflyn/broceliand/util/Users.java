@@ -8,7 +8,6 @@ import org.simpleframework.util.lease.LeaseException;
 
 import javax.persistence.NoResultException;
 import java.net.InetAddress;
-import java.net.InetSocketAddress;
 import java.util.concurrent.TimeUnit;
 
 public class Users {
