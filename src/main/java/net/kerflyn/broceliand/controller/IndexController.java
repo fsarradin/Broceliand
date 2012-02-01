@@ -5,7 +5,6 @@ import net.kerflyn.broceliand.model.Book;
 import net.kerflyn.broceliand.service.BasketService;
 import net.kerflyn.broceliand.service.BookService;
 import net.kerflyn.broceliand.service.UserService;
-import net.kerflyn.broceliand.util.Templates;
 import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
 import org.simpleframework.util.lease.LeaseException;
@@ -27,6 +26,7 @@ public class IndexController {
     private BookService bookService;
 
     private UserService userService;
+
     private BasketService basketService;
 
     @Inject
@@ -36,7 +36,7 @@ public class IndexController {
         this.basketService = basketService;
     }
 
-    public void render(Request request, Response response) throws IOException, LeaseException {
+    public void index(Request request, Response response) throws IOException, LeaseException {
 //        final URL groupUrl = Resources.getResource("template/index.stg");
         final URL groupUrl = new File("template/index.stg").toURI().toURL();
         ST template = createTemplateWithUserAndBasket(request, groupUrl, userService, basketService);

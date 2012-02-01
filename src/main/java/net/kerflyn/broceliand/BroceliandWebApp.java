@@ -1,12 +1,10 @@
 package net.kerflyn.broceliand;
 
 import com.google.common.base.Throwables;
-import com.google.common.collect.ImmutableList;
 import com.google.common.util.concurrent.AbstractService;
 import com.google.inject.Injector;
-import com.google.inject.Key;
-import com.google.inject.name.Names;
 import net.kerflyn.broceliand.configuration.BroceliandConfiguration;
+import net.kerflyn.broceliand.route.Routes;
 import net.kerflyn.broceliand.service.UserService;
 import net.kerflyn.broceliand.util.Templates;
 import net.kerflyn.broceliand.util.Users;
@@ -25,12 +23,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.URL;
-import java.util.List;
-
-import static com.google.common.collect.Iterables.getFirst;
-import static com.google.common.collect.Iterables.skip;
-import static java.util.Arrays.asList;
-import static net.kerflyn.broceliand.util.Reflections.invoke;
 
 public class BroceliandWebApp extends AbstractService implements Container {
 
@@ -39,10 +31,12 @@ public class BroceliandWebApp extends AbstractService implements Container {
     private SocketConnection socketConnection;
     private int port;
     public Injector injector;
+    private Routes routes;
 
     public BroceliandWebApp(int port, Injector injector) {
         this.port = port;
         this.injector = injector;
+        this.routes = this.injector.getInstance(Routes.class);
         bootstrap();
     }
 
@@ -53,11 +47,8 @@ public class BroceliandWebApp extends AbstractService implements Container {
 
     @Override
     public void handle(Request request, Response response) {
-        List<String> path = asList(request.getPath().getSegments());
-        String action = getFirst(path, "index");
         try {
-            LOGGER.info("action: " + action + ", path: " + path);
-            invoke(getController(action), "render", getArguments(request, response, path));
+            routes.handle(request, response, injector);
         } catch (Throwable e) {
             LOGGER.error("Error during invocation", e);
             final Status status = Status.INTERNAL_SERVER_ERROR;
@@ -86,17 +77,6 @@ public class BroceliandWebApp extends AbstractService implements Container {
                 e.printStackTrace();
             }
         }
-    }
-
-    private List<Object> getArguments(Request request, Response response, List<String> path) {
-        return ImmutableList.builder()
-                .add(request).add(response)
-                .addAll(skip(path, 1))
-                .build();
-    }
-
-    private Object getController(String action) {
-        return injector.getInstance(Key.get(Object.class, Names.named(action)));
     }
 
     @Override

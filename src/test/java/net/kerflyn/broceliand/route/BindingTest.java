@@ -1,5 +1,9 @@
 package net.kerflyn.broceliand.route;
 
+import com.google.inject.AbstractModule;
+import com.google.inject.Binder;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import org.junit.Before;
 import org.junit.Test;
 import org.simpleframework.http.Path;
@@ -16,6 +20,7 @@ public class BindingTest {
     private Routes routes;
     private Response response;
     private Request request;
+    private Injector injector;
 
     @Before
     public void setUp() throws Exception {
@@ -23,12 +28,19 @@ public class BindingTest {
         MyUserController.loginCalled = false;
         MyUserController.getUserCalled = false;
 
-        routes = Routes.create(new RoutesConfiguration() {
+        injector = Guice.createInjector(new AbstractModule() {
             @Override
-            public void configure() {
-                serve("/user/").with(MyUserController.class);
+            protected void configure() {
+                bind(Routes.class).toInstance(Routes.create(binder(), new RoutesConfiguration() {
+                    @Override
+                    public void configure() {
+                        serve("/user/").with(MyUserController.class);
+                    }
+                }));
             }
         });
+
+        routes = injector.getInstance(Routes.class);
 
         response = mock(Response.class);
         request = mock(Request.class);
@@ -48,7 +60,7 @@ public class BindingTest {
         assertThat(MyUserController.loginCalled).isFalse();
         assertThat(MyUserController.getUserCalled).isFalse();
 
-        routes.handle(request, response);
+        routes.handle(request, response, injector);
 
         assertThat(MyUserController.indexCalled).isTrue();
         assertThat(MyUserController.loginCalled).isFalse();
@@ -63,7 +75,7 @@ public class BindingTest {
         assertThat(MyUserController.loginCalled).isFalse();
         assertThat(MyUserController.getUserCalled).isFalse();
 
-        routes.handle(request, response);
+        routes.handle(request, response, injector);
 
         assertThat(MyUserController.indexCalled).isFalse();
         assertThat(MyUserController.loginCalled).isTrue();
@@ -78,7 +90,7 @@ public class BindingTest {
         assertThat(MyUserController.loginCalled).isFalse();
         assertThat(MyUserController.getUserCalled).isFalse();
 
-        routes.handle(request, response);
+        routes.handle(request, response, injector);
 
         assertThat(MyUserController.indexCalled).isFalse();
         assertThat(MyUserController.loginCalled).isFalse();

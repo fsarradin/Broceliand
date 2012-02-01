@@ -6,7 +6,7 @@ $if(user.admin)$
 <h2>Seller</h2>
 
 <p>
-    <a href="/seller" class="btn large primary">Add a seller</a>
+    <a href="/seller/" class="btn large primary">Add a seller</a>
 </p>
 
 <table id="seller">

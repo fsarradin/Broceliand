@@ -1,8 +1,12 @@
 package net.kerflyn.broceliand.route;
 
+import com.google.inject.Binder;
+import com.google.inject.Injector;
 import org.simpleframework.http.Path;
 import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -11,22 +15,31 @@ import java.util.regex.Pattern;
 
 public class Routes {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(Routes.class);
+
     private RoutesConfiguration configuration;
 
     public Routes(RoutesConfiguration configuration) {
         this.configuration = configuration;
     }
 
-    public static Routes create(RoutesConfiguration configuration) {
+    public static Routes create(Binder binder, RoutesConfiguration configuration) {
+        configuration.setBinder(binder);
         configuration.configure();
         return new Routes(configuration);
     }
 
-    public void handle(Request request, Response response) {
+    public void handle(Request request, Response response, Injector injector) {
         Path path = request.getPath();
+        LOGGER.info("handle \"{}\"", path.toString());
+
         Class<?> controllerClass = configuration.getControllerClassFor(path.getDirectory());
+        LOGGER.info("controller class name: {}", controllerClass.getName());
+
         Method method = getMethodOf(controllerClass, path);
-        Object controller = instantiate(controllerClass);
+        LOGGER.info("controller method name: {}", method.getName());
+
+        Object controller = injector.getInstance(controllerClass);
 
         try {
             method.invoke(controller, request, response);

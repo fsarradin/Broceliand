@@ -46,7 +46,7 @@ pageHeader(metadata, user, basket, data) ::= <<
                 $if(user)$
                     $if(user.admin)$
                     <li><a href="/seller/list">Sellers</a></li>
-                    <li><a href="/user">New user</a></li>
+                    <li><a href="/user/">New user</a></li>
                     $else$
                     <li><a href="/user/invoice">Basket</a></li>
                     $endif$

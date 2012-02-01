@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import net.kerflyn.broceliand.model.Book;
 import net.kerflyn.broceliand.model.Seller;
 import net.kerflyn.broceliand.model.SellerPrice;
+import net.kerflyn.broceliand.route.PathName;
 import net.kerflyn.broceliand.service.BasketService;
 import net.kerflyn.broceliand.service.BookService;
 import net.kerflyn.broceliand.service.SellerService;
@@ -23,10 +24,8 @@ import java.net.URL;
 import java.util.List;
 import java.util.Set;
 
-import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Sets.newHashSet;
 import static net.kerflyn.broceliand.util.HttpUtils.redirectTo;
-import static net.kerflyn.broceliand.util.Templates.buildTemplate;
 import static net.kerflyn.broceliand.util.Templates.createTemplateWithUserAndBasket;
 
 public class BookController {
@@ -48,26 +47,18 @@ public class BookController {
         this.basketService = basketService;
     }
 
-    public void render(Request request, Response response) throws IOException, LeaseException {
+    public void index(Request request, Response response) throws IOException, LeaseException {
         renderAddOrModifyBook(request, response, "new", "Add book", null);
     }
 
-    public void render(Request request, Response response, String action) throws IOException, LeaseException {
-        if ("new".equals(action)) {
-            createBook(request, response);
-        } else if ("modify".equals(action)) {
-            modifyBook(request, response);
-        } else if ("details".equals(action)) {
-            showDetails(request, response);
-        } else if ("delete".equals(action)) {
-            Form form = request.getForm();
-            final Long bookId = Long.valueOf(form.get("book-id"));
-            bookService.deleteById(bookId);
-            redirectTo(response, "/");
-        }
+    public void delete(Request request, Response response, String action) throws IOException, LeaseException {
+        Form form = request.getForm();
+        final Long bookId = Long.valueOf(form.get("book-id"));
+        bookService.deleteById(bookId);
+        redirectTo(response, "/");
     }
 
-    private void showDetails(Request request, Response response) throws IOException, LeaseException {
+    public void details(Request request, Response response) throws IOException, LeaseException {
         Book book = null;
 
         Form form = request.getForm();
@@ -79,7 +70,8 @@ public class BookController {
         renderAddOrModifyBook(request, response, "modify", "Modify book", book);
     }
 
-    private void createBook(Request request, Response response) throws IOException {
+    @PathName("new")
+    public void createBook(Request request, Response response) throws IOException {
         Form form = request.getForm();
 
         Book book = new Book();
@@ -87,7 +79,7 @@ public class BookController {
         book.setAuthor(form.get("author"));
         bookService.save(book);
 
-        for (Object obj: form.keySet()) {
+        for (Object obj : form.keySet()) {
             String key = (String) obj;
             if (key.startsWith(SELLER_PRICE_PREFIX)) {
                 Long sellerId = Long.valueOf(key.substring(SELLER_PRICE_PREFIX.length()));
@@ -100,7 +92,7 @@ public class BookController {
         redirectTo(response, "/");
     }
 
-    private void modifyBook(Request request, Response response) throws IOException {
+    public void modify(Request request, Response response) throws IOException {
         Form form = request.getForm();
         LOGGER.debug("form names: " + form.keySet());
 
@@ -110,7 +102,7 @@ public class BookController {
         book.setAuthor(form.get("author"));
 
         Set<Seller> processedSellers = newHashSet();
-        for (Object obj: form.keySet()) {
+        for (Object obj : form.keySet()) {
             String key = (String) obj;
             if (key.startsWith(SELLER_PRICE_PREFIX)) {
                 Long sellerId = Long.valueOf(key.substring(SELLER_PRICE_PREFIX.length()));
@@ -134,7 +126,7 @@ public class BookController {
         List<Seller> sellers = sellerService.findAll();
 
         template.addAggr("data.{action, actionName, book, sellers, prices}",
-                new Object[] { action, actionName, book, sellers, prices });
+                new Object[]{action, actionName, book, sellers, prices});
 
         response.getPrintStream().append(template.render());
     }
