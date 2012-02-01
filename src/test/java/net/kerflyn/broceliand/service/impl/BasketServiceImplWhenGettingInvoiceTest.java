@@ -3,6 +3,7 @@ package net.kerflyn.broceliand.service.impl;
 import net.kerflyn.broceliand.model.BasketElement;
 import net.kerflyn.broceliand.model.Book;
 import net.kerflyn.broceliand.model.Invoice;
+import net.kerflyn.broceliand.model.SellerPrice;
 import net.kerflyn.broceliand.model.User;
 import net.kerflyn.broceliand.repository.BasketElementRepository;
 import net.kerflyn.broceliand.service.BookService;
@@ -31,6 +32,11 @@ public class BasketServiceImplWhenGettingInvoiceTest {
         book = new Book();
         book.setId(1L);
         book.setTitle("Toto");
+
+        SellerPrice sellerPrice = new SellerPrice();
+        sellerPrice.setPrice(new BigDecimal("40.00"));
+        sellerPrice.setBook(book);
+        book.getSellerPrices().add(sellerPrice);
 
         BasketElementRepository basketElementRepository = mock(BasketElementRepository.class);
         BookService bookService = mock(BookService.class);

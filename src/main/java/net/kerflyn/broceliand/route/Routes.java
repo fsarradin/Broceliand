@@ -50,18 +50,6 @@ public class Routes {
         }
     }
 
-    public static Object instantiate(Class<?> controllerClass) {
-        Object controller = null;
-        try {
-            controller = controllerClass.newInstance();
-        } catch (InstantiationException e) {
-            throw new IllegalStateException(e);
-        } catch (IllegalAccessException e) {
-            throw new IllegalStateException(e);
-        }
-        return controller;
-    }
-
     public static Method getMethodOf(Class<?> controllerClass, Path path) {
         String methodName = path.getName();
 
