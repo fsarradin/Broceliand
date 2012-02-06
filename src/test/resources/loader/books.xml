@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<book-import-file>
+<catalog>
 
     <country name="USA">
         <city name="New York">
+
             <seller name="A">
                 <books>
                     <book>
@@ -18,12 +19,24 @@
                     </book>
                 </books>
             </seller>
+
+            <seller name="B">
+                <books>
+                    <book>
+                        <title>Pragmatic Programmer: From Journeyman to Master</title>
+                        <author>Andrew Hunt, David Thomas</author>
+                        <price>39.00</price>
+                    </book>
+                </books>
+            </seller>
+
         </city>
     </country>
 
     <country name="UK">
         <city name="London">
-            <seller name="B">
+
+            <seller name="C">
                 <books>
                     <book>
                         <title>Pragmatic Programmer: From Journeyman to Master</title>
@@ -37,7 +50,8 @@
                     </book>
                 </books>
             </seller>
+
         </city>
     </country>
 
-</book-import-file>
+</catalog>

@@ -1,10 +1,11 @@
 package net.kerflyn.broceliand.loader;
 
-import net.kerflyn.broceliand.model.Book;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.StringReader;
+import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Set;
 
@@ -17,11 +18,11 @@ public class BookLoaderTest {
     @Before
     public void setUp() throws Exception {
         String content = "<?xml version='1.0' encoding='UTF-8'?>" +
-                "<book-import-file>" +
+                "<catalog>" +
                 "<country name='A Country'><city name='A City'><seller name='A Seller'><books><book>" +
                 "<title>A Title</title><author>An Author</author><price>1.00</price>" +
                 "</book></books></seller></city></country>" +
-                "</book-import-file>";
+                "</catalog>";
         reader = new StringReader(content);
     }
 
@@ -38,6 +39,10 @@ public class BookLoaderTest {
         Map<String, Set<BookObject>> sellers = cities.get("A City");
         assertThat(sellers.containsKey("A Seller")).isTrue();
 
+        Set<BookObject> books = sellers.get("A Seller");
+        assertThat(books).hasSize(1);
+        assertThat(books).onProperty("title").isEqualTo(Arrays.asList("A Title"));
+        assertThat(books).onProperty("price").isEqualTo(Arrays.asList(new BigDecimal("1.00")));
     }
 
 }

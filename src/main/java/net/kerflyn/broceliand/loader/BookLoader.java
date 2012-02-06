@@ -1,12 +1,9 @@
 package net.kerflyn.broceliand.loader;
 
-import com.google.common.base.Strings;
 import com.google.common.collect.Iterables;
-import net.kerflyn.broceliand.model.Book;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import java.io.Reader;
@@ -19,11 +16,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Lists.newLinkedList;
 import static com.google.common.collect.Maps.newHashMap;
 import static com.google.common.collect.Sets.newHashSet;
-import static javax.xml.stream.XMLStreamConstants.CHARACTERS;
 import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
 import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
 
@@ -123,14 +118,17 @@ public class BookLoader {
         streamReader.next(); // CHARACTER: title
         book.setTitle(streamReader.getText().trim());
         streamReader.next(); // END_ELEMENT: title
+
         streamReader.next(); // START_ELEMENT: author
         streamReader.next(); // CHARACTERS: author
         book.setAuthor(streamReader.getText().trim());
         streamReader.next(); // END_ELEMENT: author
+
         streamReader.next(); // START_ELEMENT: price
         streamReader.next(); // CHARACTERS: price
         book.setPrice(new BigDecimal(streamReader.getText().trim()));
         streamReader.next(); // END_ELEMENT: price
+
         streamReader.next(); // END_ELEMENT: book
 
         return book;
