@@ -2,6 +2,7 @@ package net.kerflyn.broceliand.loader;
 
 import com.google.common.collect.Iterables;
 
+import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
@@ -22,16 +23,16 @@ import static com.google.common.collect.Sets.newHashSet;
 import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
 import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
 
-public class BookLoader {
+public class SellerLoader {
 
     /**
-     * Get books by country, city, and seller.
+     * Get addresses by country, city, and seller.
      *
      * @param reader
      * @return
      */
-    public Map<String, Map<String, Map<String, Set<BookObject>>>> parse(Reader reader) {
-        Map<String, Map<String, Map<String, Set<BookObject>>>> result = newHashMap();
+    public Map<String, Map<String, Map<String, Set<String>>>> parse(Reader reader) {
+        Map<String, Map<String, Map<String, Set<String>>>> result = newHashMap();
         XMLInputFactory factory = XMLInputFactory.newInstance();
         XMLStreamReader streamReader = null;
 
@@ -43,9 +44,9 @@ public class BookLoader {
                 int eventType = streamReader.next();
                 switch (eventType) {
                     case START_ELEMENT:
-                        if ("books".equals(streamReader.getName().toString())) {
-                            Set<BookObject> books = readBooks(streamReader);
-                            addBooks(books, result, currentPath);
+                        if ("addresses".equals(streamReader.getName().toString())) {
+                            Set<String> addresses = readBooks(streamReader);
+                            addBooks(addresses, result, currentPath);
                         }
                         if (isInteresting(streamReader.getName())) {
                             currentPath.push(streamReader.getAttributeValue("", "name"));
@@ -72,66 +73,51 @@ public class BookLoader {
         return result;
     }
 
-    private void addBooks(Set<BookObject> books, Map<String, Map<String, Map<String, Set<BookObject>>>> storage, List<String> path) {
+    private void addBooks(Set<String> books, Map<String, Map<String, Map<String, Set<String>>>> storage, List<String> path) {
         createPath(storage, path);
         storage.get(path.get(2)).get(path.get(1)).get(path.get(0)).addAll(books);
     }
 
-    private void createPath(Map<String, Map<String, Map<String, Set<BookObject>>>> storage, List<String> path) {
+    private void createPath(Map<String, Map<String, Map<String, Set<String>>>> storage, List<String> path) {
         String country = path.get(2);
         if (!storage.containsKey(country)) {
-            storage.put(country, new HashMap<String, Map<String, Set<BookObject>>>());
+            storage.put(country, new HashMap<String, Map<String, Set<String>>>());
         }
 
-        Map<String, Map<String, Set<BookObject>>> cities = storage.get(country);
+        Map<String, Map<String, Set<String>>> cities = storage.get(country);
         String city = path.get(1);
         if (!cities.containsKey(city)) {
-            cities.put(city, new HashMap<String, Set<BookObject>>());
+            cities.put(city, new HashMap<String, Set<String>>());
         }
 
-        Map<String, Set<BookObject>> sellers = cities.get(city);
+        Map<String, Set<String>> sellers = cities.get(city);
         String seller = path.get(0);
         if (!sellers.containsKey(seller)) {
-            sellers.put(seller, new HashSet<BookObject>());
+            sellers.put(seller, new HashSet<String>());
         }
     }
 
-    private Set<BookObject> readBooks(XMLStreamReader streamReader) throws XMLStreamException {
-        Set<BookObject> books = newHashSet();
+    private Set<String> readBooks(XMLStreamReader streamReader) throws XMLStreamException {
+        Set<String> addresses = newHashSet();
 
-        int eventType = streamReader.next();
-        while (eventType != END_ELEMENT && !"books".equals(streamReader.getName().toString())) {
-            if (eventType == START_ELEMENT && "book".equals(streamReader.getName().toString())) {
-                BookObject book = readBook(streamReader);
-                books.add(book);
+        int eventType = streamReader.nextTag();
+        while (eventType != END_ELEMENT && !"addresses".equals(streamReader.getName().toString())) {
+            if (eventType == START_ELEMENT && "address".equals(streamReader.getName().toString())) {
+                String address = readBook(streamReader);
+                addresses.add(address);
             }
-            eventType = streamReader.next();
+            eventType = streamReader.nextTag();
         }
 
-        return books;
+        return addresses;
     }
 
-    private BookObject readBook(XMLStreamReader streamReader) throws XMLStreamException {
-        BookObject book = new BookObject();
+    private String readBook(XMLStreamReader streamReader) throws XMLStreamException {
+        streamReader.next(); // CHARACTER: address
+        String address = streamReader.getText().trim();
+        streamReader.next(); // END_ELEMENT: address
 
-        streamReader.next(); // START_ELEMENT: title
-        streamReader.next(); // CHARACTER: title
-        book.setTitle(streamReader.getText().trim());
-        streamReader.next(); // END_ELEMENT: title
-
-        streamReader.next(); // START_ELEMENT: author
-        streamReader.next(); // CHARACTERS: author
-        book.setAuthor(streamReader.getText().trim());
-        streamReader.next(); // END_ELEMENT: author
-
-        streamReader.next(); // START_ELEMENT: price
-        streamReader.next(); // CHARACTERS: price
-        book.setPrice(new BigDecimal(streamReader.getText().trim()));
-        streamReader.next(); // END_ELEMENT: price
-
-        streamReader.next(); // END_ELEMENT: book
-
-        return book;
+        return address;
     }
 
     private boolean isInteresting(QName name) {
