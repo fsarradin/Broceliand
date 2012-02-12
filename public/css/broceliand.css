@@ -5,6 +5,11 @@ body, p, em, a, span, li, table, tr, table th, table td, input, textarea, select
     font-size: 24px;
     line-height: normal;
 }
+.title {
+    background-image: url('/resources/img/broceliand-bg.jpg');
+    background-repeat: no-repeat;
+    background-position: 100% 25%;
+}
 .title h1, .title span {
     font-size: 72px;
     line-height: 72px;
