@@ -6,11 +6,11 @@ $if(user.admin)$
 <h2>Seller</h2>
 
 <p>
-    <a href="/seller/" class="btn large primary">Add a seller</a>
+    <a href="/seller/" class="btn btn-success"><i class="icon-plus icon-white"></i> Add Seller</a>
 </p>
 
-<table id="seller">
-    <tr><th></th><th>Address</th><th>City</th><th>Country</th><th></th></tr>
+<table id="seller" class="table table-striped table-bordered">
+    <tr><th>Name</th><th>Address</th><th>City</th><th>Country</th><th>Action</th></tr>
     $data.sellers:{ seller |
         <tr>
             <td>$seller.name$</td>
@@ -18,7 +18,7 @@ $if(user.admin)$
             <td>$seller.city$</td>
             <td>$seller.country$</td>
             <td>
-                <a href="/seller/delete?seller-id=$seller.id$" class="btn large secondary">del</a>
+                <a href="/seller/delete?seller-id=$seller.id$" class="btn btn-danger"><i class="icon-trash icon-white"></i> Del</a>
             </td>
         </tr>
     }$

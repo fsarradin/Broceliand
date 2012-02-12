@@ -2,13 +2,13 @@ import "page-layout.stg"
 
 pageContent(metadata, user, basket, data) ::= <<
 $if(user && !user.admin)$
-<p>Hi $user.name$, you have <a href="/user/invoice">$basket.size$ book(s)</a> in your basket.</p>
+<div class="well">Hi $user.name$, you have <a href="/user/invoice">$basket.size$ book(s)</a> in your basket.</div>
 $endif$
 <h2>Book</h2>
 $if(user.admin)$
-<p><a href="/book/" class="btn large primary">Add</a></p>
+<p><a href="/book/" class="btn btn-success"><i class="icon-book icon-white"></i> Add</a></p>
 $endif$
-<table class="zebra-striped">
+<table class="table table-striped table-bordered">
     <tr>
         <th>Title</th><th>Author</th><th>Price</th>
         $if(user)$
@@ -27,12 +27,12 @@ $endif$
                 $endif$
             </td>
             <td><em>$book.author$</em></td>
-            <td><span class="price">$book.price$&nbsp;&euro;</span></td>
+            <td class="price">$book.price$&nbsp;&euro;</td>
             $if(user)$
                 $if(user.admin)$
-                <td><a href="/book/delete?book-id=$book.id$" class="btn large secondary">del</a></td>
+                <td><a href="/book/delete?book-id=$book.id$" class="btn btn-danger"><i class="icon-trash icon-white"></i> Del</a></td>
                 $else$
-                <td><a href="/user/basket-add?book-id=$book.id$" class="btn large secondary">add</a></td>
+                <td><a href="/user/basket-add?book-id=$book.id$" class="btn btn-success"><i class="icon-shopping-cart icon-white"></i> Add</a></td>
                 $endif$
             $endif$
         </tr>

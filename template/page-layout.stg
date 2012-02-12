@@ -5,22 +5,17 @@ page(metadata, user, basket, data) ::= <<
     <title>Broceliand: $metadata.title$</title>
 
     <script type="text/javascript" src="/resources/js/jquery.js"></script>
-    <script type="text/javascript" src="/resources/js/bootstrap-dropdown.js"></script>
-    <script type="text/javascript" src="/resources/js/bootstrap-modal.js"></script>
+    <script type="text/javascript" src="/resources/js/bootstrap.js"></script>
     <script type="text/javascript" src="/resources/js/broceliand.js"></script>
 
-    <link rel="stylesheet" href="http://twitter.github.com/bootstrap/1.4.0/bootstrap.min.css" />
+    <link rel="stylesheet" href="/resources/css/bootstrap.css" />
     <link rel="stylesheet" href="/resources/css/broceliand.css" />
 </head>
 <body>
 
 $pageHeader(metadata, user, basket, data)$
 
-<div class="container-fluid">
-    <div class="sidebar">
-        <img src="/resources/img/broceliand-Idylls_of_the_King.jpg" alt="Broceliand" width="100%" />
-    </div>
-
+<div class="container">
     <div class="content">
         <div class="page-header title">
             <h1><span style="color: #50A050">Broce</span>liand</h1>
@@ -37,10 +32,10 @@ $pageFooter()$
 >>
 
 pageHeader(metadata, user, basket, data) ::= <<
-<div class="topbar" data-dropdown="dropdown">
-    <div class="topbar-inner">
-        <div class="container-fluid">
-            <a class="brand" href="#">Broceliand</a>
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="brand" href="#"><span style="color: #50A050">Broce</span>liand</a>
             <ul class="nav">
                 <li><a href="/">Home</a></li>
                 $if(user)$
@@ -53,18 +48,20 @@ pageHeader(metadata, user, basket, data) ::= <<
                 $endif$
             </ul>
             $if(user)$
-            <ul class="nav secondary-nav">
+            <ul class="nav pull-right">
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle">$user.name$</a>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">$user.name$<b class="caret"></b></a>
                     <ul class="dropdown-menu">
                         <li><a href="/user/logout">Logout</a></li>
                     </ul>
                 </li>
             </ul>
             $else$
-            <p class="pull-right">
-                <a href="/user/login">Please login</a>
-            </p>
+            <ul class="nav pull-right">
+                <li>
+                    <a href="/user/login">Please login</a>
+                </li>
+            </ul>
             $endif$
         </div>
     </div>

@@ -6,7 +6,7 @@ body, p, em, a, span, li, table, tr, table th, table td, input, textarea, select
     line-height: normal;
 }
 .title {
-    background-image: url('/resources/img/broceliand-bg.jpg');
+    background-image: url(/resources/img/broceliand-bg.jpg);
     background-repeat: no-repeat;
     background-position: 100% 25%;
 }
@@ -17,25 +17,37 @@ body, p, em, a, span, li, table, tr, table th, table td, input, textarea, select
 }
 h2 {
     font-size: 42px;
+    margin-top: 12pt;
+    margin-bottom: 6pt;
+}
+h3 {
+    margin-top: 12pt;
+    margin-bottom: 6pt;
 }
 input {
     height: auto;
     margin: 5px;
 }
 .btn {
+    font-size: 16px;
+}
+.navbar .brand {
     font-size: 24px;
 }
-.topbar .brand {
-    font-size: 24px;
-}
-.container-fluid > .sidebar {
-    width: 20%;
-}
-.container-fluid > .content {
-    margin-left: 23%;
+.table td {
+    line-height: normal;
 }
 .price {
     color: #A00000;
+}
+td.price {
+    text-align: right;
+}
+.price input {
+    text-align: right;
+}
+label {
+    font-size: 24px;
 }
 .footer {
     border-top: 1px solid #E5E5E5;

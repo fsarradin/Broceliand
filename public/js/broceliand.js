@@ -14,7 +14,7 @@ function appendPrice(sellerId, price, sellers) {
         + "<td class='price'><input type='text' name='seller-price-" + sellerId + "' value='" + price + "' class='span2' />&nbsp;&euro;</td>"
         + "<td>" + seller + "</td>"
         + "<td>"
-        + "<button class='btn large secondary' onclick='priceModalDel(" + sellerId + ")'>Del</button>"
+        + "<button class='btn btn-danger' onclick='priceModalDel(" + sellerId + ")'><i class='icon-trash icon-white'></i> Del</button>"
         + "</td>"
         + "</tr>"
     );

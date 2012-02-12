@@ -6,26 +6,24 @@ pageContent(metadata, user, basket, data) ::= <<
     <input type="hidden" name="book-id" value="$data.book.id$"/>
     $endif$
     <div>
-        Title<br/>
-        <input type="text" name="title" value="$data.book.title$" class="span16"/>
+        <label>Title</label>
+        <input type="text" name="title" value="$data.book.title$" class="span12"/>
     </div>
     <div>
-        Author<br/>
-        <input type="text" name="author" value="$data.book.author$" class="span16"/>
+        <label>Author</label>
+        <input type="text" name="author" value="$data.book.author$" class="span12"/>
     </div>
+
     <h3>Price</h3>
 
     <p>
-        <button id="open-price-modal"
-                class="btn large secondary"
-                data-controls-modal="price-modal"
-                data-backdrop="static"
-                data-keyboard="true">Add
-        </button>
+        <a id="open-price-modal"
+                class="btn btn-success"
+                data-toggle="modal" href="#price-modal"><i class="icon-plus icon-white"></i> Add</a>
         <br/>
     </p>
     $priceModal(data)$
-    <table id="price-table">
+    <table id="price-table" class="table table-striped table-bordered">
         <tr>
             <th>Price</th>
             <th>Seller</th>
@@ -33,7 +31,7 @@ pageContent(metadata, user, basket, data) ::= <<
         </tr>
     </table>
     <div>
-        <input type="submit" value="$data.actionName$" class="btn primary"/>
+        <input type="submit" value="$data.actionName$" class="btn btn-primary"/>
     </div>
 </form>
 >>
@@ -52,15 +50,15 @@ $data.prices:{ price |
 }$
 });
 </script>
-<div id="price-modal" class="modal hide fade in" style="display: hide; ">
+<div id="price-modal" class="modal hide fade">
     <div class="modal-header">
-        <a href="#" class="close" onclick="\$('#price-modal').modal('hide')">×</a>
+        <a class="close" data-dismiss="modal">×</a>
         <h3>Enter a price</h3>
     </div>
     <div class="modal-body">
         <div>
-            Seller<br />
-            <select id="seller" class="span8">
+            <label>Seller</label>
+            <select id="seller" class="span6">
                 $data.sellers:{ seller |
                     <option value="$seller.id$">$seller.name$ ($seller.city$, $seller.country$)</option>
                 }$
@@ -70,10 +68,10 @@ $data.prices:{ price |
     <div class="modal-footer">
         <button
                 onclick="\$('#price-modal').modal('hide'); priceModalSet(SELLERS);"
-                class="btn primary">Add</button>
+                class="btn btn-primary">Add</button>
         <button
                 onclick="\$('#price-modal').modal('hide');"
-                class="btn secondary">Cancel</button>
+                class="btn">Cancel</button>
     </div>
 </div>
 >>
