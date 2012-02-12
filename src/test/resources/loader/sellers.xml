@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<catalog>
+
+    <country name="USA">
+        <city name="New York">
+
+            <seller name="A">
+                <addresses>
+                    <address>aaa-aaa</address>
+                    <address>aaa-bbb</address>
+                </addresses>
+            </seller>
+
+            <seller name="B">
+                <addresses>
+                    <address>bbb</address>
+                </addresses>
+            </seller>
+
+        </city>
+    </country>
+
+    <country name="UK">
+        <city name="London">
+
+            <seller name="C">
+                <addresses>
+                    <address>ccc-aaa</address>
+                    <address>ccc-bbb</address>
+                </addresses>
+            </seller>
+
+        </city>
+    </country>
+
+</catalog>
