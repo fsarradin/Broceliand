@@ -15,7 +15,7 @@ public class Users {
     public static final String CURRENT_USER_SESSION_KEY = "current-user";
 
     public static User getConnectedUser(UserService userService, Request request) throws LeaseException {
-        User user = null;
+        User user;
         Session session = request.getSession(false);
         if (session != null && session.containsKey(CURRENT_USER_SESSION_KEY)) {
             user = userService.findByLogin((String) session.get(CURRENT_USER_SESSION_KEY));

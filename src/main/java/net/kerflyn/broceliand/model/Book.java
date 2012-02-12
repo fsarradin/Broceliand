@@ -1,6 +1,5 @@
 package net.kerflyn.broceliand.model;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;

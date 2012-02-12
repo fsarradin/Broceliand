@@ -51,7 +51,7 @@ public class BookController {
         renderAddOrModifyBook(request, response, "new", "Add book", null);
     }
 
-    public void delete(Request request, Response response, String action) throws IOException, LeaseException {
+    public void delete(Request request, Response response) throws IOException, LeaseException {
         Form form = request.getForm();
         final Long bookId = Long.valueOf(form.get("book-id"));
         bookService.deleteById(bookId);

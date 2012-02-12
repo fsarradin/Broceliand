@@ -8,7 +8,6 @@ import net.kerflyn.broceliand.model.SellerPrice;
 import net.kerflyn.broceliand.repository.BookRepository;
 import net.kerflyn.broceliand.repository.SellerPriceRepository;
 import net.kerflyn.broceliand.service.BookService;
-import net.kerflyn.broceliand.service.SellerService;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -18,15 +17,12 @@ public class BookServiceImpl implements BookService {
 
     private BookRepository bookRepository;
     private SellerPriceRepository sellerPriceRepository;
-    private SellerService sellerService;
 
     @Inject
     public BookServiceImpl(BookRepository bookRepository,
-                           SellerPriceRepository sellerPriceRepository,
-                           SellerService sellerService) {
+                           SellerPriceRepository sellerPriceRepository) {
         this.bookRepository = bookRepository;
         this.sellerPriceRepository = sellerPriceRepository;
-        this.sellerService = sellerService;
     }
 
     @Override

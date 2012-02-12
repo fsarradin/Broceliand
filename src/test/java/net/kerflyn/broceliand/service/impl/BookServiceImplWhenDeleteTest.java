@@ -23,7 +23,7 @@ public class BookServiceImplWhenDeleteTest {
         bookRepository = mock(BookRepository.class);
         sellerPriceRepository = mock(SellerPriceRepository.class);
         sellerService = mock(SellerService.class);
-        bookService = new BookServiceImpl(bookRepository, sellerPriceRepository, sellerService);
+        bookService = new BookServiceImpl(bookRepository, sellerPriceRepository);
     }
 
     @Test
