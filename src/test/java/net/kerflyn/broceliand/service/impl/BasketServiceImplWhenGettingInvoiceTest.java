@@ -3,6 +3,7 @@ package net.kerflyn.broceliand.service.impl;
 import net.kerflyn.broceliand.model.BasketElement;
 import net.kerflyn.broceliand.model.Book;
 import net.kerflyn.broceliand.model.Invoice;
+import net.kerflyn.broceliand.model.Seller;
 import net.kerflyn.broceliand.model.SellerPrice;
 import net.kerflyn.broceliand.model.User;
 import net.kerflyn.broceliand.repository.BasketElementRepository;
@@ -23,6 +24,7 @@ public class BasketServiceImplWhenGettingInvoiceTest {
     private BasketServiceImpl basketService;
     private Book book;
     private User user;
+    private Seller seller;
 
     @Before
     public void setUp() {
@@ -33,9 +35,12 @@ public class BasketServiceImplWhenGettingInvoiceTest {
         book.setId(1L);
         book.setTitle("Toto");
 
+        seller = new Seller();
+
         SellerPrice sellerPrice = new SellerPrice();
         sellerPrice.setPrice(new BigDecimal("40.00"));
         sellerPrice.setBook(book);
+        sellerPrice.setSeller(seller);
         book.getSellerPrices().add(sellerPrice);
 
         BasketElementRepository basketElementRepository = mock(BasketElementRepository.class);
@@ -50,15 +55,16 @@ public class BasketServiceImplWhenGettingInvoiceTest {
         BasketElement basketElement1 = new BasketElement();
         basketElement1.setOwner(user);
         basketElement1.setBook(book);
+        basketElement1.setSeller(seller);
         basketElement1.setQuantity(5);
 
         when(basketService.findByUser(eq(user))).thenReturn(Arrays.asList(basketElement1));
 
         Invoice invoice = basketService.getCurrentInvoiceFor(user);
-        assertThat(invoice.getTotal()).isEqualTo(new BigDecimal("200.00"));
+        assertThat(invoice.getSubTotal()).isEqualTo(new BigDecimal("200.00"));
 
         basketElement1.setQuantity(1);
         invoice = basketService.getCurrentInvoiceFor(user);
-        assertThat(invoice.getTotal()).isEqualTo(new BigDecimal("40.00"));
+        assertThat(invoice.getSubTotal()).isEqualTo(new BigDecimal("40.00"));
     }
 }

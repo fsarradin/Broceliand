@@ -1,5 +1,9 @@
 package net.kerflyn.broceliand.model;
 
+import net.kerflyn.broceliand.model.charge.FixedShippingCharge;
+import net.kerflyn.broceliand.model.charge.ProportionalShippingCharge;
+import net.kerflyn.broceliand.model.charge.ShippingChargeStrategy;
+
 import java.math.BigDecimal;
 
 public class Invoice {
@@ -14,15 +18,34 @@ public class Invoice {
         return basketElements;
     }
 
-    public BigDecimal getTotal() {
-        BigDecimal total = BigDecimal.ZERO;
+    public BigDecimal getSubTotal() {
+        BigDecimal subTotal = BigDecimal.ZERO;
 
         for (BasketElement element : basketElements) {
-            final BigDecimal bookUnitPrice = element.getBook().getPrice();
-            final BigDecimal quantity = new BigDecimal(element.getQuantity());
-            total = total.add(bookUnitPrice.multiply(quantity));
+            subTotal = subTotal.add(element.getPrice());
         }
 
-        return total;
+        return subTotal;
+    }
+
+    public BigDecimal getShippingCharge() {
+        BigDecimal charge = BigDecimal.ZERO;
+
+        for (BasketElement element : basketElements) {
+            ShippingChargeStrategy strategy = element.getSeller().getShippingChargeStrategyFor(element.getQuantity());
+            if (strategy instanceof FixedShippingCharge) {
+                FixedShippingCharge fixed = (FixedShippingCharge) strategy;
+                charge = charge.add(fixed.getCharge());
+            } else if (strategy instanceof ProportionalShippingCharge) {
+                ProportionalShippingCharge proportional = (ProportionalShippingCharge) strategy;
+                charge = charge.add(proportional.getPriceRate().multiply(element.getPrice()));
+            }
+        }
+
+        return charge;
+    }
+
+    public BigDecimal getTotal() {
+        return getSubTotal().add(getShippingCharge());
     }
 }

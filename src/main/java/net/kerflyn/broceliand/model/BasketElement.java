@@ -19,6 +19,9 @@ public class BasketElement {
     @ManyToOne
     private Book book;
 
+    @ManyToOne
+    private Seller seller;
+
     private Integer quantity;
 
     public Long getId() {
@@ -54,6 +57,14 @@ public class BasketElement {
     }
 
     public BigDecimal getPrice() {
-        return book.getPrice().multiply(new BigDecimal(quantity));
+        return book.getPriceFor(seller).multiply(new BigDecimal(quantity));
+    }
+
+    public void setSeller(Seller seller) {
+        this.seller = seller;
+    }
+
+    public Seller getSeller() {
+        return seller;
     }
 }

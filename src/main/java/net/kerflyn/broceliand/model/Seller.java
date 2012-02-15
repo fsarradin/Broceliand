@@ -6,7 +6,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.OneToMany;
+import java.math.BigDecimal;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -27,8 +30,8 @@ public class Seller {
     @ManyToMany
     private Set<Book> books;
 
-    @OneToOne
-    private ShippingChargeStrategy shippingChargeStrategy;
+    @OneToMany
+    private List<ShippingChargeStrategy> shippingChargeStrategies;
 
     public Long getId() {
         return id;
@@ -70,12 +73,12 @@ public class Seller {
         this.country = country;
     }
 
-    public ShippingChargeStrategy getShippingChargeStrategy() {
-        return shippingChargeStrategy;
+    public List<? extends ShippingChargeStrategy> getShippingChargeStrategies() {
+        return shippingChargeStrategies;
     }
 
-    public void setShippingChargeStrategy(ShippingChargeStrategy shippingChargeStrategy) {
-        this.shippingChargeStrategy = shippingChargeStrategy;
+    public void setShippingChargeStrategies(List<ShippingChargeStrategy> shippingChargeStrategies) {
+        this.shippingChargeStrategies = shippingChargeStrategies;
     }
 
     public Set<Book> getBooks() {
@@ -85,4 +88,29 @@ public class Seller {
     public void setBooks(Set<Book> books) {
         this.books = books;
     }
+
+    public ShippingChargeStrategy getShippingChargeStrategyFor(int quantity) {
+        Iterator<? extends ShippingChargeStrategy> iterator = shippingChargeStrategies.iterator();
+        ShippingChargeStrategy strategy = null;
+        
+        while (iterator.hasNext()) {
+            ShippingChargeStrategy current = iterator.next();
+            Integer currentUpToQuantity = current.getUpToQuantity();
+            if (mustUpdateStrategy(quantity, currentUpToQuantity, strategy)) {
+                strategy = current;
+            }
+        }
+
+        return strategy;
+    }
+
+    private boolean mustUpdateStrategy(int quantity, Integer currentUpToQuantity, ShippingChargeStrategy strategy) {
+        if (currentUpToQuantity == null) {
+            return strategy == null;
+        } else if (quantity <= currentUpToQuantity)  {
+            return strategy == null || strategy.getUpToQuantity() == null || currentUpToQuantity < strategy.getUpToQuantity();
+        }
+        return false;
+    }
+
 }

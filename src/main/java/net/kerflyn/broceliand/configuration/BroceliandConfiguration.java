@@ -11,7 +11,7 @@ public class BroceliandConfiguration {
     public static Injector newGuiceInjector() {
         Injector injector = Guice.createInjector(
                 new JpaPersistModule("hsqldb-pu"),
-                new RouteModule() ,
+                new RouteModule(),
                 new ServiceModule(),
                 new RepositoryModule());
         injector.getInstance(PersistenceInitializer.class);
@@ -24,4 +24,5 @@ public class BroceliandConfiguration {
             service.start();
         }
     }
+
 }

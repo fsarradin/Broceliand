@@ -6,6 +6,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import java.math.BigDecimal;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.Set;
 
 import static com.google.common.collect.Sets.newHashSet;
@@ -32,21 +33,6 @@ public class Book {
         this.id = id;
     }
 
-    public BigDecimal getPrice() {
-        BigDecimal price = BigDecimal.ZERO;
-        Iterator<SellerPrice> iterator = sellerPrices.iterator();
-        if (iterator.hasNext()) {
-            price = iterator.next().getPrice();
-            while (iterator.hasNext()) {
-                BigDecimal otherPrice = iterator.next().getPrice();
-                if (otherPrice.compareTo(price) < 0) {
-                    price = otherPrice;
-                }
-            }
-        }
-        return price;
-    }
-
     public String getTitle() {
         return title;
     }
@@ -69,5 +55,30 @@ public class Book {
 
     public Set<SellerPrice> getSellerPrices() {
         return sellerPrices;
+    }
+
+    public BigDecimal getPrice() {
+        BigDecimal price = BigDecimal.ZERO;
+        Iterator<SellerPrice> iterator = sellerPrices.iterator();
+        if (iterator.hasNext()) {
+            price = iterator.next().getPrice();
+            while (iterator.hasNext()) {
+                BigDecimal otherPrice = iterator.next().getPrice();
+                if (otherPrice.compareTo(price) < 0) {
+                    price = otherPrice;
+                }
+            }
+        }
+        return price;
+    }
+
+    public BigDecimal getPriceFor(Seller seller) {
+        for (SellerPrice sellerPrice : sellerPrices) {
+            if (sellerPrice.getSeller().equals(seller)) {
+                return sellerPrice.getPrice();
+            }
+        }
+
+        throw new NoSuchElementException();
     }
 }

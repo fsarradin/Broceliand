@@ -2,8 +2,9 @@
 
 <persistence xmlns="http://java.sun.com/xml/ns/persistence"
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-             xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
-             version="2.0">
+             version="2.0"
+             xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
+
     <persistence-unit name="hsqldb-pu" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.ejb.HibernatePersistence</provider>
 
@@ -16,19 +17,20 @@
         <class>net.kerflyn.broceliand.model.SellerPrice</class>
         <class>net.kerflyn.broceliand.model.charge.ShippingChargeStrategy</class>
         <class>net.kerflyn.broceliand.model.charge.FixedShippingCharge</class>
-        <class>net.kerflyn.broceliand.model.charge.QuantityDependentShippingCharge</class>
+        <class>net.kerflyn.broceliand.model.charge.ProportionalShippingCharge</class>
 
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
-        <properties>
-            <property name="hibernate.dialect" value="org.hibernate.dialect.HSQLDialect" />
-            <property name="hibernate.hbm2ddl.auto" value="update" />
-            <property name="hibernate.show_sql" value="true" />
-            <property name="hibernate.format_sql" value="true" />
 
-            <property name="hibernate.connection.url" value="jdbc:hsqldb:file:db/data.db;hsqldb.write_delay=false" />
-            <property name="hibernate.connection.driver_class" value="org.hsqldb.jdbcDriver" />
-            <property name="hibernate.connection.username" value="sa" />
-            <property name="hibernate.connection.password" value="" />
+        <properties>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.HSQLDialect"/>
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.format_sql" value="true"/>
+
+            <property name="hibernate.connection.url" value="jdbc:hsqldb:file:db/data.db;hsqldb.write_delay=false"/>
+            <property name="hibernate.connection.driver_class" value="org.hsqldb.jdbcDriver"/>
+            <property name="hibernate.connection.username" value="sa"/>
+            <property name="hibernate.connection.password" value=""/>
         </properties>
     </persistence-unit>
 </persistence>
