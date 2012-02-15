@@ -37,7 +37,8 @@ public class BookTest {
 
     @Test
     public void should_get_minimum_price_by_default() {
-        assertThat(book.getPrice()).isEqualTo(new BigDecimal("30"));
+        assertThat(book.getMinimumPrice().getSeller()).isEqualTo(seller2);
+        assertThat(book.getMinimumPrice().getPrice()).isEqualTo(new BigDecimal("30"));
     }
 
     @Test

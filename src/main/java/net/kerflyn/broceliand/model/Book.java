@@ -57,19 +57,19 @@ public class Book {
         return sellerPrices;
     }
 
-    public BigDecimal getPrice() {
-        BigDecimal price = BigDecimal.ZERO;
+    public SellerPrice getMinimumPrice() {
+        SellerPrice sellerPrice = null;
         Iterator<SellerPrice> iterator = sellerPrices.iterator();
         if (iterator.hasNext()) {
-            price = iterator.next().getPrice();
+            sellerPrice = iterator.next();
             while (iterator.hasNext()) {
-                BigDecimal otherPrice = iterator.next().getPrice();
-                if (otherPrice.compareTo(price) < 0) {
-                    price = otherPrice;
+                SellerPrice otherSellerPrice = iterator.next();
+                if (otherSellerPrice.getPrice().compareTo(sellerPrice.getPrice()) < 0) {
+                    sellerPrice = otherSellerPrice;
                 }
             }
         }
-        return price;
+        return sellerPrice;
     }
 
     public BigDecimal getPriceFor(Seller seller) {

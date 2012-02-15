@@ -5,6 +5,7 @@ import com.google.inject.persist.Transactional;
 import net.kerflyn.broceliand.model.BasketElement;
 import net.kerflyn.broceliand.model.Book;
 import net.kerflyn.broceliand.model.Invoice;
+import net.kerflyn.broceliand.model.SellerPrice;
 import net.kerflyn.broceliand.model.User;
 import net.kerflyn.broceliand.repository.BasketElementRepository;
 import net.kerflyn.broceliand.service.BasketService;
@@ -59,6 +60,8 @@ public class BasketServiceImpl implements BasketService {
             element = new BasketElement();
             element.setOwner(user);
             element.setBook(book);
+            SellerPrice sellerPrice = book.getMinimumPrice();
+            element.setSeller(sellerPrice.getSeller());
             element.setQuantity(1);
             basketElementRepository.save(element);
         }

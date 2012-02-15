@@ -27,7 +27,7 @@ $endif$
                 $endif$
             </td>
             <td><em>$book.author$</em></td>
-            <td class="price">$book.price$&nbsp;&euro;</td>
+            <td class="price">$book.minimumPrice.price$&nbsp;&euro;</td>
             $if(user)$
                 $if(user.admin)$
                 <td><a href="/book/delete?book-id=$book.id$" class="btn btn-danger"><i class="icon-trash icon-white"></i> Del</a></td>

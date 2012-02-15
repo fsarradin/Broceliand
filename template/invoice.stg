@@ -8,7 +8,7 @@ $if(user)$
     $basket.elements:{ element |
         <tr>
             <td>$element.book.title$</td>
-            <td class="price">$element.book.price$&nbsp;&euro;</td>
+            <td class="price">$element.unitPrice$&nbsp;&euro;</td>
             <td>$element.quantity$</td>
             <td class="price">$element.price$&nbsp;&euro;</td>
             <td>

@@ -56,8 +56,12 @@ public class BasketElement {
         this.quantity = quantity;
     }
 
+    public BigDecimal getUnitPrice() {
+        return book.getPriceFor(seller);
+    }
+
     public BigDecimal getPrice() {
-        return book.getPriceFor(seller).multiply(new BigDecimal(quantity));
+        return getUnitPrice().multiply(new BigDecimal(quantity));
     }
 
     public void setSeller(Seller seller) {
