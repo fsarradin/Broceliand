@@ -1,5 +1,6 @@
 package net.kerflyn.broceliand.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -22,7 +23,7 @@ public class Book {
 
     private String author;
 
-    @OneToMany
+    @OneToMany(mappedBy = "book", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private Set<SellerPrice> sellerPrices = newHashSet();
 
     public long getId() {

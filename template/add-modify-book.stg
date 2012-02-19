@@ -66,12 +66,12 @@ $data.prices:{ price |
         </div>
     </div>
     <div class="modal-footer">
-        <button
-                onclick="\$('#price-modal').modal('hide'); priceModalSet(SELLERS);"
-                class="btn btn-primary">Add</button>
-        <button
-                onclick="\$('#price-modal').modal('hide');"
-                class="btn">Cancel</button>
+        <a href="#"
+           class="btn btn-primary"
+           onclick="\$('#price-modal').modal('hide'); priceModalSet(SELLERS);">Add</a>
+        <a href="#"
+           class="btn"
+           onclick="\$('#price-modal').modal('hide');">Cancel</a>
     </div>
 </div>
 >>
