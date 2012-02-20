@@ -29,7 +29,12 @@ public class Users {
         return user;
     }
 
-    public static void checkForAdminAccount(UserService userService) {
+    /**
+     * Check if there is an administrator account available. If not the account is automatically created.
+     *
+     * @param userService user service where the administrator account should exist
+     */
+    public static void checkForAdministratorAccount(UserService userService) {
         try{
             userService.findByLogin(User.ADMIN_LOGIN);
         } catch (NoResultException e) {

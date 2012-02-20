@@ -42,7 +42,7 @@ public class BroceliandWebApp extends AbstractService implements Container {
 
     private void bootstrap() {
         UserService userService = injector.getInstance(UserService.class);
-        Users.checkForAdminAccount(userService);
+        Users.checkForAdministratorAccount(userService);
     }
 
     @Override
