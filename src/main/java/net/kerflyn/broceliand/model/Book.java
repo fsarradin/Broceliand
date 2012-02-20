@@ -58,7 +58,12 @@ public class Book {
         return sellerPrices;
     }
 
-    public SellerPrice getMinimumPrice() {
+    /**
+     * Get the lowest price among sellers for this book.
+     *
+     * @return
+     */
+    public SellerPrice getLowestSellerPrice() {
         SellerPrice sellerPrice = null;
         Iterator<SellerPrice> iterator = sellerPrices.iterator();
         if (iterator.hasNext()) {
@@ -73,7 +78,13 @@ public class Book {
         return sellerPrice;
     }
 
-    public BigDecimal getPriceFor(Seller seller) {
+    /**
+     * Find the price of this book for a given seller.
+     *
+     * @param seller seller to get the price for
+     * @return a price
+     */
+    public BigDecimal findPriceOf(Seller seller) {
         for (SellerPrice sellerPrice : sellerPrices) {
             if (sellerPrice.getSeller().equals(seller)) {
                 return sellerPrice.getPrice();

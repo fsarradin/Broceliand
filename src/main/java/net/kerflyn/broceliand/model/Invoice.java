@@ -6,6 +6,13 @@ import net.kerflyn.broceliand.model.charge.ShippingChargeStrategy;
 
 import java.math.BigDecimal;
 
+/**
+ * Invoice value object.
+ *
+ * <p>
+ * This object is not intended to be persisted.
+ * </p>
+ */
 public class Invoice {
 
     private Iterable<BasketElement> basketElements;
@@ -18,6 +25,11 @@ public class Invoice {
         return basketElements;
     }
 
+    /**
+     * Get the total without shipping charges.
+     *
+     * @return
+     */
     public BigDecimal getSubTotal() {
         BigDecimal subTotal = BigDecimal.ZERO;
 
@@ -28,6 +40,11 @@ public class Invoice {
         return subTotal;
     }
 
+    /**
+     * Shipping charge only.
+     *
+     * @return
+     */
     public BigDecimal getShippingCharge() {
         BigDecimal charge = BigDecimal.ZERO;
 
@@ -45,6 +62,11 @@ public class Invoice {
         return charge;
     }
 
+    /**
+     * Get invoice total.
+     *
+     * @return
+     */
     public BigDecimal getTotal() {
         return getSubTotal().add(getShippingCharge());
     }

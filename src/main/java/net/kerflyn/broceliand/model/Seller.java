@@ -7,7 +7,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
-import java.math.BigDecimal;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -89,26 +88,42 @@ public class Seller {
         this.books = books;
     }
 
+    /**
+     * Get the shipping charge strategy for the given quantity.
+     *
+     * @param quantity
+     * @return
+     */
     public ShippingChargeStrategy getShippingChargeStrategyFor(int quantity) {
         Iterator<? extends ShippingChargeStrategy> iterator = shippingChargeStrategies.iterator();
         ShippingChargeStrategy strategy = null;
         
         while (iterator.hasNext()) {
-            ShippingChargeStrategy current = iterator.next();
-            Integer currentUpToQuantity = current.getUpToQuantity();
-            if (mustUpdateStrategy(quantity, currentUpToQuantity, strategy)) {
-                strategy = current;
+            ShippingChargeStrategy newStrategy = iterator.next();
+            if (isNextStrategyMoreAppropriateFor(quantity, newStrategy, strategy)) {
+                strategy = newStrategy;
             }
         }
 
         return strategy;
     }
 
-    private boolean mustUpdateStrategy(int quantity, Integer currentUpToQuantity, ShippingChargeStrategy strategy) {
-        if (currentUpToQuantity == null) {
-            return strategy == null;
-        } else if (quantity <= currentUpToQuantity)  {
-            return strategy == null || strategy.getUpToQuantity() == null || currentUpToQuantity < strategy.getUpToQuantity();
+    /**
+     * Check is the next strategy is more appropriate than the previous one according to the given quantity.
+     *
+     * @param quantity
+     * @param nextStrategy
+     * @param previousStrategy
+     * @return
+     */
+    private boolean isNextStrategyMoreAppropriateFor(int quantity, ShippingChargeStrategy nextStrategy, ShippingChargeStrategy previousStrategy) {
+        Integer nextUpToQuantity = nextStrategy.getUpToQuantity();
+        if (nextUpToQuantity == null) {
+            return previousStrategy == null;
+        } else if (quantity <= nextUpToQuantity)  {
+            return previousStrategy == null
+                    || previousStrategy.getUpToQuantity() == null
+                    || nextUpToQuantity < previousStrategy.getUpToQuantity();
         }
         return false;
     }

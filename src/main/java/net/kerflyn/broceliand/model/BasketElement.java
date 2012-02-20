@@ -57,7 +57,7 @@ public class BasketElement {
     }
 
     public BigDecimal getUnitPrice() {
-        return book.getPriceFor(seller);
+        return book.findPriceOf(seller);
     }
 
     public BigDecimal getPrice() {

@@ -4,6 +4,9 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import java.math.BigDecimal;
 
+/**
+ * Fixed shipping charge whatever quantity you have to ship.
+ */
 @Entity
 @DiscriminatorValue(value = "FIXED")
 public class FixedShippingCharge extends ShippingChargeStrategy {

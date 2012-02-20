@@ -60,7 +60,7 @@ public class BasketServiceImpl implements BasketService {
             element = new BasketElement();
             element.setOwner(user);
             element.setBook(book);
-            SellerPrice sellerPrice = book.getMinimumPrice();
+            SellerPrice sellerPrice = book.getLowestSellerPrice();
             element.setSeller(sellerPrice.getSeller());
             element.setQuantity(1);
             basketElementRepository.save(element);

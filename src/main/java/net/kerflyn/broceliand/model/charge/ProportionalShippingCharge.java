@@ -4,6 +4,9 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import java.math.BigDecimal;
 
+/**
+ * Shipping charge proportional to the quantity you have to ship.
+ */
 @Entity
 @DiscriminatorValue("PROPORTIONAL")
 public class ProportionalShippingCharge extends ShippingChargeStrategy {
