@@ -17,10 +17,11 @@ $if(user)$
             </td>
         </tr>
     }$
+    <tr><td></td><td colspan="2">Shipping charge</td><td class="price">$data.invoice.shippingCharge$&nbsp;&euro;</td><td></td></tr>
+    <tr><td></td><td colspan="2"><strong>Total</strong></td><td class="price">$data.invoice.total$&nbsp;&euro;</td><td></td></tr>
 </table>
 
 <div id="invoice-total">
-    Total: <span class="price">$data.invoice.total$&nbsp;&euro;</span>
 </div>
 $endif$
 >>
