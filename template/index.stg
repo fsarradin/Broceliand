@@ -18,16 +18,10 @@ $endif$
     $data.books:{ book |
         <tr>
             <td>
-                $if(user.admin)$
-                <a href="/book/details?book-id=$book.id$">
-                $endif$
-                $book.title$
-                $if(user.admin)$
-                </a>
-                $endif$
+                <a href="/book/details?book-id=$book.id$">$book.title$</a>
             </td>
             <td><em>$book.author$</em></td>
-            <td class="price">$book.minimumPrice.price$&nbsp;&euro;</td>
+            <td class="price">$book.lowestSellerPrice.price$&nbsp;&euro;</td>
             $if(user)$
                 $if(user.admin)$
                 <td><a href="/book/delete?book-id=$book.id$" class="btn btn-danger"><i class="icon-trash icon-white"></i> Del</a></td>

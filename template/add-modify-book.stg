@@ -45,8 +45,8 @@ var SELLERS = {
 };
 
 \$(document).ready(function (\$) {
-$data.prices:{ price |
-    appendPrice($price.seller.id$, $price.price$, SELLERS);
+$data.prices:{ sellerPrice |
+    appendPrice($sellerPrice.seller.id$, $sellerPrice.price$, SELLERS);
 }$
 });
 </script>

@@ -4,11 +4,13 @@ import com.google.inject.Inject;
 import net.kerflyn.broceliand.model.Book;
 import net.kerflyn.broceliand.model.Seller;
 import net.kerflyn.broceliand.model.SellerPrice;
+import net.kerflyn.broceliand.model.User;
 import net.kerflyn.broceliand.route.PathName;
 import net.kerflyn.broceliand.service.BasketService;
 import net.kerflyn.broceliand.service.BookService;
 import net.kerflyn.broceliand.service.SellerService;
 import net.kerflyn.broceliand.service.UserService;
+import net.kerflyn.broceliand.util.Users;
 import org.simpleframework.http.Form;
 import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
@@ -53,7 +55,7 @@ public class BookController {
 
     public void delete(Request request, Response response) throws IOException, LeaseException {
         Form form = request.getForm();
-        final Long bookId = Long.valueOf(form.get("book-id"));
+        Long bookId = Long.valueOf(form.get("book-id"));
         bookService.deleteById(bookId);
         redirectTo(response, "/");
     }
@@ -67,7 +69,20 @@ public class BookController {
             Long bookId = Long.valueOf(bookIdStr);
             book = bookService.findById(bookId);
         }
-        renderAddOrModifyBook(request, response, "modify", "Modify book", book);
+
+        final User user = Users.getConnectedUser(userService, request);
+        if (user != null && user.isAdmin()) {
+            renderAddOrModifyBook(request, response, "modify", "Modify book", book);
+        } else {
+            URL groupUrl = new File("template/details-book.stg").toURI().toURL();
+            ST template = createTemplateWithUserAndBasket(request, groupUrl, userService, basketService);
+
+            List<SellerPrice> prices = bookService.findPricesFor(book);
+
+            template.addAggr("data.{book, prices}", new Object[]{book, prices});
+
+            response.getPrintStream().append(template.render());
+        }
     }
 
     @PathName("new")
@@ -119,7 +134,7 @@ public class BookController {
     }
 
     private void renderAddOrModifyBook(Request request, Response response, String action, String actionName, Book book) throws LeaseException, IOException {
-        final URL groupUrl = new File("template/add-modify-book.stg").toURI().toURL();
+        URL groupUrl = new File("template/add-modify-book.stg").toURI().toURL();
         ST template = createTemplateWithUserAndBasket(request, groupUrl, userService, basketService);
 
         List<SellerPrice> prices = bookService.findPricesFor(book);

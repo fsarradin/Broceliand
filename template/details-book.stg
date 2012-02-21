@@ -1,0 +1,28 @@
+import "page-layout.stg"
+
+pageContent(metadata, user, basket, data) ::= <<
+<div id="content">
+<h2>$data.book.title$</h2>
+
+<p>by $data.book.author$</p>
+
+<p>From <span class="price">$data.book.lowestSellerPrice.price$&nbsp;&euro;</span></p>
+
+<table class="table table-striped table-bordered">
+    <tr>
+        <th>Seller</th>
+        <th>Price</th>
+    </tr>
+    $data.prices:{ sellerPrice |
+        <tr>
+            <td>
+                <strong>$sellerPrice.seller.name$</strong><br/>
+                $sellerPrice.seller.address$<br/>
+                $sellerPrice.seller.city$, $sellerPrice.seller.country$
+            </td>
+            <td class="price">$sellerPrice.price$&nbsp;&euro;</td>
+        </tr>
+    }$
+</table>
+</div>
+>>
