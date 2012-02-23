@@ -30,8 +30,5 @@ $if(user)$
         <td></td>
     </tr>
 </table>
-
-<div id="invoice-total">
-</div>
 $endif$
 >>
