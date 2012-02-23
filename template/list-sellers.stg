@@ -13,7 +13,7 @@ $if(user.admin)$
     <tr><th>Name</th><th>Address</th><th>City</th><th>Country</th><th>Action</th></tr>
     $data.sellers:{ seller |
         <tr>
-            <td>$seller.name$</td>
+            <td><a href="/seller/details?seller-id=$seller.id$">$seller.name$</a></td>
             <td>$seller.address$</td>
             <td>$seller.city$</td>
             <td>$seller.country$</td>

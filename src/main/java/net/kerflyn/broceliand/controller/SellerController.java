@@ -14,6 +14,7 @@ import org.stringtemplate.v4.ST;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
@@ -34,12 +35,25 @@ public class SellerController {
     }
 
     public void index(Request request, Response response) throws IOException, LeaseException {
-        final URL groupUrl = new File("template/create-seller.stg").toURI().toURL();
+        URL groupUrl = new File("template/add-modify-seller.stg").toURI().toURL();
         ST template = createTemplateWithUserAndBasket(request, groupUrl, userService, basketService);
+        template.addAggr("data.{action, actionName}", new Object[] { "new", "Create" });
         response.getPrintStream().append(template.render());
     }
 
-    public void delete(Request request, Response response, String action) throws IOException, LeaseException {
+    public void details(Request request, Response response) throws IOException, LeaseException {
+        Form form = request.getForm();
+        Long sellerId = Long.valueOf(form.get("seller-id"));
+
+        Seller seller = sellerService.findById(sellerId);
+        
+        URL groupUrl = new File("template/add-modify-seller.stg").toURI().toURL();
+        ST template = createTemplateWithUserAndBasket(request, groupUrl, userService, basketService);
+        template.addAggr("data.{action, actionName, seller}", new Object[] { "modify", "Modify", seller });
+        response.getPrintStream().append(template.render());
+    }
+    
+    public void delete(Request request, Response response) throws IOException, LeaseException {
         Form form = request.getForm();
         Long sellerId = Long.valueOf(form.get("seller-id"));
         sellerService.deleteById(sellerId);
@@ -67,6 +81,19 @@ public class SellerController {
         seller.setCountry(form.get("country"));
 
         sellerService.save(seller);
+
+        redirectTo(response, "/seller/list");
+    }
+
+    public void modify(Request request, Response response) throws IOException {
+        Form form = request.getForm();
+        Long sellerId = Long.valueOf(form.get("seller-id"));
+
+        Seller seller = sellerService.findById(sellerId);
+        seller.setName(form.get("name"));
+        seller.setAddress(form.get("address"));
+        seller.setCity(form.get("city"));
+        seller.setCountry(form.get("country"));
 
         redirectTo(response, "/seller/list");
     }

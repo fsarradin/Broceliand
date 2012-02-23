@@ -1,0 +1,32 @@
+import "page-layout.stg"
+
+pageContent(metadata, user, basket, data) ::= <<
+$if(user.admin)$
+<h2>New seller</h2>
+
+<form action="/seller/$data.action$" method="post">
+    $if(data.seller)$
+    <input type="hidden" name="seller-id" value="$data.seller.id$"/>
+    $endif$
+    <div>
+        <label>Name</label>
+        <input type="text" name="name" value="$data.seller.name$" class="span12"/>
+    </div>
+    <div>
+        <label>Address</label>
+        <input type="text" name="address" value="$data.seller.address$" class="span12"/>
+    </div>
+    <div>
+        <label>City</label>
+        <input type="text" name="city" value="$data.seller.city$" />
+    </div>
+    <div>
+        <label>Country</label>
+        <input type="text" name="country" value="$data.seller.country$" />
+    </div>
+    <div>
+        <input type="submit" value="$data.actionName$" class="btn btn-primary" />
+    </div>
+</form>
+$endif$
+>>
