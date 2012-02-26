@@ -5,6 +5,14 @@ body, p, em, a, span, li, table, tr, table th, table td, input, textarea, select
     font-size: 24px;
     line-height: normal;
 }
+select {
+    height: 40px;
+}
+legend {
+    font-size: 32px;
+    line-height: normal;
+}
+
 .title {
     background-image: url(/resources/img/broceliand-bg.jpg);
     background-repeat: no-repeat;
