@@ -52,4 +52,9 @@ public abstract class ShippingChargeStrategy {
     public void setUpToQuantity(Integer upToQuantity) {
         this.upToQuantity = upToQuantity;
     }
+
+    public boolean hasUpToQuantity() {
+        return upToQuantity != null;
+    }
+
 }
