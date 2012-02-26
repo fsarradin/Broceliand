@@ -20,7 +20,6 @@ pageContent(metadata, user, basket, data) ::= <<
         <a id="open-price-modal"
                 class="btn btn-success"
                 data-toggle="modal" href="#price-modal"><i class="icon-plus icon-white"></i> Add</a>
-        <br/>
     </p>
     $priceModal(data)$
     <table id="price-table" class="table table-striped table-bordered">
