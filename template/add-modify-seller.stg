@@ -42,12 +42,6 @@ $if(user.admin)$
                 <th>Up to quantity</th>
                 <th>Action</th>
             </tr>
-            <tr>
-                <td>Fixed</td>
-                <td><label>Price</label><input type="text"/></td>
-                <td><input type="text" class="span1"/></td>
-                <td><a href="#" class="btn btn-danger"><i class="icon-trash icon-white"></i> Delete</a></td>
-            </tr>
         </table>
     </fieldset>
 
