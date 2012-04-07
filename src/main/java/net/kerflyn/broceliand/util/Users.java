@@ -17,6 +17,7 @@ public class Users {
     public static User getConnectedUser(UserService userService, Request request) throws LeaseException {
         User user;
         Session session = request.getSession(false);
+
         if (session != null && session.containsKey(CURRENT_USER_SESSION_KEY)) {
             user = userService.findByLogin((String) session.get(CURRENT_USER_SESSION_KEY));
         } else {
@@ -34,7 +35,7 @@ public class Users {
      *
      * @param userService user service where the administrator account should exist
      */
-    public static void checkForAdministratorAccount(UserService userService) {
+    public static void autoCreateAdministratorAccount(UserService userService) {
         try{
             userService.findByLogin(User.ADMIN_LOGIN);
         } catch (NoResultException e) {

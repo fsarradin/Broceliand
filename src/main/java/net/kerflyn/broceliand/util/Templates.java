@@ -29,11 +29,13 @@ public class Templates {
         template.addAggr("metadata.{title}", new Object[] { "Title" });
         template.add("user", currentUser);
         template.addAggr("basket.{elements, size}", new Object[]{basketElements, basketCount});
+
         return template;
     }
 
     public static ST buildTemplate(URL groupUrl) {
         STGroupFile group = new STGroupFile(groupUrl, "UTF-8", '$', '$');
+
         return group.getInstanceOf("page");
     }
 }

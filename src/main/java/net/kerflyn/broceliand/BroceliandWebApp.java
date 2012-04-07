@@ -22,6 +22,7 @@ import org.stringtemplate.v4.ST;
 import java.io.File;
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 public class BroceliandWebApp extends AbstractService implements Container {
@@ -29,20 +30,26 @@ public class BroceliandWebApp extends AbstractService implements Container {
     private static final Logger LOGGER = LoggerFactory.getLogger(BroceliandWebApp.class);
 
     private SocketConnection socketConnection;
+
+    /** Connection port. */
     private int port;
-    public Injector injector;
+
+    private Injector injector;
+
     private Routes routes;
 
     public BroceliandWebApp(int port, Injector injector) {
         this.port = port;
         this.injector = injector;
         this.routes = this.injector.getInstance(Routes.class);
+
         bootstrap();
     }
 
     private void bootstrap() {
         UserService userService = injector.getInstance(UserService.class);
-        Users.checkForAdministratorAccount(userService);
+
+        Users.autoCreateAdministratorAccount(userService);
     }
 
     @Override
@@ -50,33 +57,37 @@ public class BroceliandWebApp extends AbstractService implements Container {
         try {
             routes.handle(request, response, injector);
         } catch (Throwable e) {
-            LOGGER.error("Error during invocation", e);
+            LOGGER.error("Error while routing", e);
             final Status status = Status.INTERNAL_SERVER_ERROR;
             response.setCode(status.getCode());
-            URL groupUrl = null;
             try {
-                groupUrl = new File("template/error.stg").toURI().toURL();
-                ST template = Templates.buildTemplate(groupUrl);
-                template.addAggr("metadata.{title, code}",
-                        new Object[] { status.getDescription(), status.getCode() });
-                template.addAggr("data.{stackTrace}",
-                        new Object[] { Throwables.getStackTraceAsString(e) });
+                ST template = buildErrorTemplate(e, status);
                 response.getPrintStream().append(template.render());
             } catch (IOException e1) {
                 LOGGER.error("Error while getting error page", e1);
             }
             if (e instanceof RuntimeException) {
                 throw (RuntimeException) e;
-            } else  if (e instanceof Error) {
+            } else if (e instanceof Error) {
                 throw (Error) e;
             }
         } finally {
             try {
                 response.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                LOGGER.error("Error while closing response stream", e);
             }
         }
+    }
+
+    private ST buildErrorTemplate(Throwable e, Status status) throws MalformedURLException {
+        URL groupUrl = new File("template/error.stg").toURI().toURL();
+        ST template = Templates.buildTemplate(groupUrl);
+        template.addAggr("metadata.{title, code}",
+                new Object[] { status.getDescription(), status.getCode() });
+        template.addAggr("data.{stackTrace}",
+                new Object[] { Throwables.getStackTraceAsString(e) });
+        return template;
     }
 
     @Override
@@ -106,6 +117,7 @@ public class BroceliandWebApp extends AbstractService implements Container {
     public static void main(String[] args) {
         final Injector injector = BroceliandConfiguration.newGuiceInjector();
         final BroceliandWebApp application = new BroceliandWebApp(8080, injector);
+
         application.startAndWait();
     }
 

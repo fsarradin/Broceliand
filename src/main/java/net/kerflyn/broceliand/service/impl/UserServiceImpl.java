@@ -45,7 +45,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public User checkConnectedAt(InetAddress address) {
-        Connection connection = null;
+        Connection connection;
         try {
             connection = connectionRepository.findByAddress(address.getHostAddress());
         } catch (NoResultException e) {

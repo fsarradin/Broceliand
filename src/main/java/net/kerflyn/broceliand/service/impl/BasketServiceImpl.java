@@ -53,16 +53,19 @@ public class BasketServiceImpl implements BasketService {
     public void addBookById(User user, Long bookId) {
         Book book = bookService.findById(bookId);
         BasketElement element;
+
         try {
             element = basketElementRepository.findByUserAndBook(user, book);
             element.setQuantity(element.getQuantity() + 1);
         } catch (NoResultException e) {
+            SellerPrice sellerPrice = book.getLowestSellerPrice();
+
             element = new BasketElement();
             element.setOwner(user);
             element.setBook(book);
-            SellerPrice sellerPrice = book.getLowestSellerPrice();
             element.setSeller(sellerPrice.getSeller());
             element.setQuantity(1);
+
             basketElementRepository.save(element);
         }
 

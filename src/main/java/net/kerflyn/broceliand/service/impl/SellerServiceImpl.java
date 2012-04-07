@@ -32,6 +32,7 @@ public class SellerServiceImpl implements SellerService {
     public SortedMap<String, SortedMap<String, Seller>> findAllSorted() {
         List<Seller> sellers = sellerRepository.findAll();
         SortedMap<String, SortedMap<String, Seller>> sellerMap = newTreeMap();
+
         for (Seller seller : sellers) {
             SortedMap<String, Seller> sellersByCity = sellerMap.get(seller.getCountry());
             if (sellersByCity == null) {

@@ -71,7 +71,9 @@ public class BookServiceImpl implements BookService {
             sellerPrice = new SellerPrice();
             sellerPrice.setBook(book);
             sellerPrice.setSeller(seller);
+
             sellerPriceRepository.save(sellerPrice);
+
             book.getSellerPrices().add(sellerPrice);
         }
         sellerPrice.setPrice(price);
