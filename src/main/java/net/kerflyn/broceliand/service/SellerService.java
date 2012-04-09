@@ -1,8 +1,10 @@
 package net.kerflyn.broceliand.service;
 
 import net.kerflyn.broceliand.model.Seller;
+import net.kerflyn.broceliand.model.charge.ShippingChargeStrategy;
 
 import java.util.List;
+import java.util.Set;
 import java.util.SortedMap;
 
 public interface SellerService {
@@ -16,4 +18,6 @@ public interface SellerService {
     void deleteById(Long sellerId);
 
     Seller findById(Long sellerId);
+
+    void setShippingChargeStrategy(Seller seller, Set<ShippingChargeStrategy> strategies);
 }

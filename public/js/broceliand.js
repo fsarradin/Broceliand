@@ -1,15 +1,6 @@
 
 jQuery.fn.exists = function() { return this.length > 0; }
 
-var IdGenerator = function() {
-    var id = 0;
-    this.newId = function() {
-        return id++;
-    };
-};
-
-var sessionIdGenerator = new IdGenerator();
-
 // add-modify-book.stg
 
 function priceModalDel(sellerId)  {
@@ -62,24 +53,28 @@ function appendPolicy(policy) {
 }
 
 function generatePriceInput(id) {
-    return "<label>Price</label><input id='shipping-charge-price-" + id + "' type='text'>";
+    return "<label>Price</label><input name='shipping-charge-price-" + id + "' type='text'/>";
 }
 
 function generateRateInput(id) {
-    return "<label>Rate</label><input id='shipping-charge-rate-" + id + "' type='text'>";
+    return "<label>Rate</label><input name='shipping-charge-rate-" + id + "' type='text'/>";
 }
 
 function shippingChargeDel(id) {
     $('#policy-table #' + id).remove();
 }
 
+function getNextId() {
+    return $("table#policy-table tr").length - 1;
+}
+
 function appendPolicyRow(policy, parameterGenerator) {
-    var id = sessionIdGenerator.newId();
+    var id = getNextId();
     var scId = "shipping-charge-" + id;
     $("#policy-table").append("<tr id='" + scId + "'>"
-        + "<td><input id='shipping-charge-policy-" + id + "' type='hidden' value='" + policy + "'>" + policy + "</td>"
+        + "<td><input name='shipping-charge-policy-" + id + "' type='hidden' value='" + policy + "'>" + policy + "</td>"
         + "<td>" + parameterGenerator(id) + "</td>"
-        + "<td><input id='shipping-charge-quantity-" + id + "' type='text' class='span1'/></td>"
+        + "<td><input name='shipping-charge-quantity-" + id + "' type='text' class='span1'/></td>"
         + "<td><a href='#' class='btn btn-danger' onclick=\"shippingChargeDel('" + scId + "')\"><i class='icon-trash icon-white'></i> Delete</a></td>"
         + "</tr>");
 }

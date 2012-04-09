@@ -72,7 +72,7 @@ public class Seller {
         this.country = country;
     }
 
-    public List<? extends ShippingChargeStrategy> getShippingChargeStrategies() {
+    public List<ShippingChargeStrategy> getShippingChargeStrategies() {
         return shippingChargeStrategies;
     }
 

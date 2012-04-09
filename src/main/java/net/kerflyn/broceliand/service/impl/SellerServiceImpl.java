@@ -3,10 +3,13 @@ package net.kerflyn.broceliand.service.impl;
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
 import net.kerflyn.broceliand.model.Seller;
+import net.kerflyn.broceliand.model.charge.ShippingChargeStrategy;
 import net.kerflyn.broceliand.repository.SellerRepository;
 import net.kerflyn.broceliand.service.SellerService;
+import net.kerflyn.broceliand.service.ShippingChargeStrategyService;
 
 import java.util.List;
+import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -16,9 +19,12 @@ public class SellerServiceImpl implements SellerService {
 
     private SellerRepository sellerRepository;
 
+    private ShippingChargeStrategyService shippingChargeStrategyService;
+
     @Inject
-    public SellerServiceImpl(SellerRepository sellerRepository) {
+    public SellerServiceImpl(SellerRepository sellerRepository, ShippingChargeStrategyService shippingChargeStrategyService) {
         this.sellerRepository = sellerRepository;
+        this.shippingChargeStrategyService = shippingChargeStrategyService;
     }
 
     @Override
@@ -60,6 +66,16 @@ public class SellerServiceImpl implements SellerService {
     @Transactional
     public Seller findById(Long sellerId) {
         return sellerRepository.findById(sellerId);
+    }
+
+    @Override
+    @Transactional
+    public void setShippingChargeStrategy(Seller seller, Set<ShippingChargeStrategy> strategies) {
+            for (ShippingChargeStrategy strategy: seller.getShippingChargeStrategies()) {
+                shippingChargeStrategyService.remove(strategy);
+            }
+            seller.getShippingChargeStrategies().clear();
+            seller.getShippingChargeStrategies().addAll(strategies);
     }
 
 }

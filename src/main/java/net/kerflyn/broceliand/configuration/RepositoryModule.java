@@ -6,12 +6,14 @@ import net.kerflyn.broceliand.repository.BookRepository;
 import net.kerflyn.broceliand.repository.ConnectionRepository;
 import net.kerflyn.broceliand.repository.SellerPriceRepository;
 import net.kerflyn.broceliand.repository.SellerRepository;
+import net.kerflyn.broceliand.repository.ShippingChargeStrategyRepository;
 import net.kerflyn.broceliand.repository.UserRepository;
 import net.kerflyn.broceliand.repository.impl.BasketElementRepositoryImpl;
 import net.kerflyn.broceliand.repository.impl.BookRepositoryImpl;
 import net.kerflyn.broceliand.repository.impl.ConnectionRepositoryImpl;
 import net.kerflyn.broceliand.repository.impl.SellerPriceRepositoryImpl;
 import net.kerflyn.broceliand.repository.impl.SellerRepositoryImpl;
+import net.kerflyn.broceliand.repository.impl.ShippingChargeStrategyRepositoryImpl;
 import net.kerflyn.broceliand.repository.impl.UserRepositoryImpl;
 
 public class RepositoryModule extends AbstractModule {
@@ -24,6 +26,7 @@ public class RepositoryModule extends AbstractModule {
         bind(SellerRepository.class).to(SellerRepositoryImpl.class);
         bind(SellerPriceRepository.class).to(SellerPriceRepositoryImpl.class);
         bind(ConnectionRepository.class).to(ConnectionRepositoryImpl.class);
+        bind(ShippingChargeStrategyRepository.class).to(ShippingChargeStrategyRepositoryImpl.class);
     }
 
 }

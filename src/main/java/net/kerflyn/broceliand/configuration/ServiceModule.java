@@ -4,10 +4,12 @@ import com.google.inject.AbstractModule;
 import net.kerflyn.broceliand.service.BasketService;
 import net.kerflyn.broceliand.service.BookService;
 import net.kerflyn.broceliand.service.SellerService;
+import net.kerflyn.broceliand.service.ShippingChargeStrategyService;
 import net.kerflyn.broceliand.service.UserService;
 import net.kerflyn.broceliand.service.impl.BasketServiceImpl;
 import net.kerflyn.broceliand.service.impl.BookServiceImpl;
 import net.kerflyn.broceliand.service.impl.SellerServiceImpl;
+import net.kerflyn.broceliand.service.impl.ShippingChargeStrategyServiceImpl;
 import net.kerflyn.broceliand.service.impl.UserServiceImpl;
 
 public class ServiceModule extends AbstractModule {
@@ -18,6 +20,7 @@ public class ServiceModule extends AbstractModule {
         bind(BookService.class).to(BookServiceImpl.class);
         bind(BasketService.class).to(BasketServiceImpl.class);
         bind(SellerService.class).to(SellerServiceImpl.class);
+        bind(ShippingChargeStrategyService.class).to(ShippingChargeStrategyServiceImpl.class);
     }
 
 }

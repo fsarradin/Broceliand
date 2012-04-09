@@ -10,19 +10,19 @@ $if(user.admin)$
     $endif$
     <p>
         <label for="name">Name</label>
-        <input type="text" id="name" value="$data.seller.name$" class="span12"/>
+        <input type="text" id="name" name="name" value="$data.seller.name$" class="span12"/>
     </p>
     <p>
         <label for="address">Address</label>
-        <input type="text" id="address" value="$data.seller.address$" class="span12"/>
+        <input type="text" id="address"  name="address" value="$data.seller.address$" class="span12"/>
     </p>
     <p>
         <label for="city">City</label>
-        <input type="text" id="city" value="$data.seller.city$"/>
+        <input type="text" id="city" name="city" value="$data.seller.city$"/>
     </p>
     <p>
         <label for="country">Country</label>
-        <input type="text" id="country" value="$data.seller.country$"/>
+        <input type="text" id="country" name="country" value="$data.seller.country$"/>
     </p>
 
     <fieldset>
@@ -42,6 +42,21 @@ $if(user.admin)$
                 <th>Up to quantity</th>
                 <th>Action</th>
             </tr>
+            $data.shippingChargeStrategies:{ strategy |
+                <tr id="shipping-charge-$strategy.id$">
+                    $if(strategy.price)$
+                    <td><input name='shipping-charge-policy-$strategy.id$' type='hidden' value='Fixed'/>$strategy.policy$</td>
+                    <td><label>Price</label><input name='shipping-charge-price-$strategy.id$' type='text' value="$strategy.price$" /></td>
+                    $else$
+                    <td><input name='shipping-charge-policy-$strategy.id$' type='hidden' value='Rate' />$strategy.policy$</td>
+                    <td><label>Rate</label><input name='shipping-charge-rate-$strategy.id$' type='text' value="$strategy.rate$" /></td>
+                    $endif$
+
+                    <td><input name='shipping-charge-quantity-$strategy.id$' type='text' value="$strategy.quantity$" class='span1'/></td>
+
+                    <td><a href='#' class='btn btn-danger' onclick="shippingChargeDel('shipping-charge-$strategy.id$')"><i class='icon-trash icon-white'></i> Delete</a></td>
+                </tr>
+            }$
         </table>
     </fieldset>
 
