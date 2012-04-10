@@ -43,12 +43,12 @@ $if(user.admin)$
                 <th>Action</th>
             </tr>
             $data.shippingChargeStrategies:{ strategy |
-                <tr id="shipping-charge-$strategy.id$">
+                    <tr id="shipping-charge-$strategy.id$">
+                    <td><input name='shipping-charge-policy-$strategy.id$' type='hidden' value='$strategy.policy$'/>$strategy.policy$</td>
+
                     $if(strategy.price)$
-                    <td><input name='shipping-charge-policy-$strategy.id$' type='hidden' value='Fixed'/>$strategy.policy$</td>
                     <td><label>Price</label><input name='shipping-charge-price-$strategy.id$' type='text' value="$strategy.price$" /></td>
                     $else$
-                    <td><input name='shipping-charge-policy-$strategy.id$' type='hidden' value='Rate' />$strategy.policy$</td>
                     <td><label>Rate</label><input name='shipping-charge-rate-$strategy.id$' type='text' value="$strategy.rate$" /></td>
                     $endif$
 

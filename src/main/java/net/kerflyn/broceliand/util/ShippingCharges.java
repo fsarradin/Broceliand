@@ -20,6 +20,8 @@ public final class ShippingCharges {
 
     public static final String POLICY_PROPORTIONAL = "Proportional";
 
+    private static final BigDecimal BIGDECIMAL_HUNDRED = new BigDecimal("100.00");
+
     private ShippingCharges() {
         throw new UnsupportedOperationException();
     }
@@ -85,7 +87,7 @@ public final class ShippingCharges {
 
     private static ProportionalShippingCharge createProportionalShippingChargeFrom(Map<String, String> data) {
         ProportionalShippingCharge strategy = new ProportionalShippingCharge();
-        strategy.setPriceRate(new BigDecimal(data.get("rate")));
+        strategy.setPriceRate(new BigDecimal(data.get("rate")).divide(BIGDECIMAL_HUNDRED));
         strategy.setUpToQuantity(Integer.parseInt(data.get("quantity")));
         return strategy;
     }
@@ -106,7 +108,7 @@ public final class ShippingCharges {
             }
             else if (strategy instanceof ProportionalShippingCharge) {
                 valueObject.setPolicy(POLICY_PROPORTIONAL);
-                valueObject.setRate(((ProportionalShippingCharge) strategy).getPriceRate());
+                valueObject.setRate(((ProportionalShippingCharge) strategy).getPriceRate().multiply(BIGDECIMAL_HUNDRED));
             }
 
             strategies.add(valueObject);
