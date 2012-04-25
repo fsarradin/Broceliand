@@ -53,7 +53,6 @@ public class IndexController {
     }
 
     public void index(Request request, Response response) throws IOException, LeaseException {
-//        final URL groupUrl = Resources.getResource("template/index.stg");
         final URL groupUrl = new File("template/index.stg").toURI().toURL();
         ST template = createTemplateWithUserAndBasket(request, groupUrl, userService, basketService);
 

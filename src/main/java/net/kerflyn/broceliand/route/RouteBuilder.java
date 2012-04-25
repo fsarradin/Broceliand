@@ -33,6 +33,7 @@ public class RouteBuilder {
 
     public void with(Class<?> controllerClass) {
         this.controllerClass = controllerClass;
+
         binder.bind(this.controllerClass);
     }
 

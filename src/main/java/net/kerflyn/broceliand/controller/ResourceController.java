@@ -46,13 +46,10 @@ public class ResourceController {
     public void index(Request request, Response response) throws IOException {
         String[] segments = request.getPath().getSegments();
 
-        String mimeType = getMimeType(segments[1]);
+        LOGGER.info("getting resource at \"{}\"", getResourcePath(segments));
 
-        String resourcePath = getResourcePath(segments);
-        LOGGER.info("getting resource at \"{}\"", resourcePath);
-
-        response.set("Content-Type", mimeType);
-        Files.copy(new File(resourcePath), response.getOutputStream());
+        response.set("Content-Type", getMimeType(segments[1]));
+        Files.copy(new File(getResourcePath(segments)), response.getOutputStream());
     }
 
     private String getResourcePath(String[] segments) {
@@ -60,8 +57,7 @@ public class ResourceController {
     }
 
     private String getMimeType(String segment) {
-        String type = segment.toLowerCase();
-        return CONVERTER.get(type);
+        return CONVERTER.get(segment.toLowerCase());
     }
 
 }

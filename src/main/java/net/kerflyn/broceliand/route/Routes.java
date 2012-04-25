@@ -42,6 +42,7 @@ public class Routes {
     public static Routes create(Binder binder, RoutesConfiguration configuration) {
         configuration.setBinder(binder);
         configuration.configure();
+
         return new Routes(configuration);
     }
 
@@ -58,7 +59,9 @@ public class Routes {
         Object controller = injector.getInstance(controllerClass);
 
         try {
+
             method.invoke(controller, request, response);
+
         } catch (IllegalAccessException e) {
             throw new IllegalStateException(e);
         } catch (InvocationTargetException e) {

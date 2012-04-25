@@ -40,7 +40,11 @@ public class Book {
     private String author;
 
     @OneToMany(mappedBy = "book", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private Set<SellerPrice> sellerPrices = newHashSet();
+    private Set<SellerPrice> sellerPrices;
+
+    public Book() {
+        sellerPrices = newHashSet();
+    }
 
     public long getId() {
         return id;

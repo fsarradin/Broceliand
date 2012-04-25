@@ -35,14 +35,17 @@ public class Users {
         Session session = request.getSession(false);
 
         if (session != null && session.containsKey(CURRENT_USER_SESSION_KEY)) {
+
             user = userService.findByLogin((String) session.get(CURRENT_USER_SESSION_KEY));
+
         } else {
-            InetAddress address = request.getClientAddress().getAddress();
-            user = userService.checkConnectedAt(address);
+            user = userService.checkConnectedAt(request.getClientAddress().getAddress());
+
             if (user != null) {
                 login(user, request);
             }
         }
+
         return user;
     }
 
@@ -53,11 +56,15 @@ public class Users {
      */
     public static void autoCreateAdministratorAccount(UserService userService) {
         try{
+
             userService.findByLogin(User.ADMIN_LOGIN);
+
         } catch (NoResultException e) {
             User adminUser = new User();
+
             adminUser.setLogin(User.ADMIN_LOGIN);
             adminUser.setName(User.ADMIN_LOGIN);
+
             userService.save(adminUser);
         }
     }
@@ -65,6 +72,7 @@ public class Users {
     @SuppressWarnings("unchecked")
     public static void login(User user, Request request) throws LeaseException {
         Session session = request.getSession(true);
+
         session.getLease().renew(30, TimeUnit.DAYS);
         session.put(CURRENT_USER_SESSION_KEY, user.getLogin());
     }

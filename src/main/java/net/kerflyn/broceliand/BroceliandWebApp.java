@@ -71,17 +71,22 @@ public class BroceliandWebApp extends AbstractService implements Container {
     @Override
     public void handle(Request request, Response response) {
         try {
+
             routes.handle(request, response, injector);
+
         } catch (Throwable e) {
             LOGGER.error("Error while routing", e);
-            final Status status = Status.INTERNAL_SERVER_ERROR;
+            Status status = Status.INTERNAL_SERVER_ERROR;
             response.setCode(status.getCode());
+
             try {
-                ST template = buildErrorTemplate(e, status);
-                response.getPrintStream().append(template.render());
+
+                response.getPrintStream().append(buildErrorTemplate(e, status).render());
+
             } catch (IOException e1) {
                 LOGGER.error("Error while getting error page", e1);
             }
+
             if (e instanceof RuntimeException) {
                 throw (RuntimeException) e;
             } else if (e instanceof Error) {
@@ -89,7 +94,9 @@ public class BroceliandWebApp extends AbstractService implements Container {
             }
         } finally {
             try {
+
                 response.close();
+
             } catch (IOException e) {
                 LOGGER.error("Error while closing response stream", e);
             }
@@ -99,20 +106,24 @@ public class BroceliandWebApp extends AbstractService implements Container {
     private ST buildErrorTemplate(Throwable e, Status status) throws MalformedURLException {
         URL groupUrl = new File("template/error.stg").toURI().toURL();
         ST template = Templates.buildTemplate(groupUrl);
+
         template.addAggr("metadata.{title, code}",
                 new Object[] { status.getDescription(), status.getCode() });
+
         template.addAggr("data.{stackTrace}",
                 new Object[] { Throwables.getStackTraceAsString(e) });
+
         return template;
     }
 
     @Override
     protected void doStart() {
         try {
-            Server server = new ContainerServer(this, 1);
-            socketConnection = new SocketConnection(server);
+            socketConnection = new SocketConnection(new ContainerServer(this, 1));
             socketConnection.connect(new InetSocketAddress(port));
+
             notifyStarted();
+
             LOGGER.info("service running");
         } catch (IOException e) {
             notifyFailed(e);
@@ -131,10 +142,9 @@ public class BroceliandWebApp extends AbstractService implements Container {
     }
 
     public static void main(String[] args) {
-        final Injector injector = BroceliandConfiguration.newGuiceInjector();
-        final BroceliandWebApp application = new BroceliandWebApp(8080, injector);
+        Injector injector = BroceliandConfiguration.newInjector();
 
-        application.startAndWait();
+        new BroceliandWebApp(8080, injector).startAndWait();
     }
 
 }

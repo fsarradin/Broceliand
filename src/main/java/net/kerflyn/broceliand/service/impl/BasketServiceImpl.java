@@ -71,8 +71,10 @@ public class BasketServiceImpl implements BasketService {
         BasketElement element;
 
         try {
+
             element = basketElementRepository.findByUserAndBook(user, book);
             element.setQuantity(element.getQuantity() + 1);
+
         } catch (NoResultException e) {
             SellerPrice sellerPrice = book.getLowestSellerPrice();
 
@@ -92,6 +94,7 @@ public class BasketServiceImpl implements BasketService {
     public void deleteBookById(User user, Long bookId) {
         Book book = bookService.findById(bookId);
         BasketElement element = basketElementRepository.findByUserAndBook(user, book);
+
         basketElementRepository.delete(element);
     }
 }

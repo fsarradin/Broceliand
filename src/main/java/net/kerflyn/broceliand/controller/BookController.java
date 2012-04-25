@@ -71,31 +71,32 @@ public class BookController {
 
     public void delete(Request request, Response response) throws IOException, LeaseException {
         Form form = request.getForm();
-        Long bookId = Long.valueOf(form.get("book-id"));
-        bookService.deleteById(bookId);
+        bookService.deleteById(Long.valueOf(form.get("book-id")));
         redirectTo(response, "/");
     }
 
     public void details(Request request, Response response) throws IOException, LeaseException {
+        Form form = request.getForm();
+
+        String bookIdStr = form.get("book-id");
+
         Book book = null;
 
-        Form form = request.getForm();
-        String bookIdStr = form.get("book-id");
         if (bookIdStr != null) {
-            Long bookId = Long.valueOf(bookIdStr);
-            book = bookService.findById(bookId);
+            book = bookService.findById(Long.valueOf(bookIdStr));
         }
 
-        final User user = Users.getConnectedUser(userService, request);
+        User user = Users.getConnectedUser(userService, request);
+
         if (user != null && user.isAdmin()) {
             renderAddOrModifyBook(request, response, "modify", "Modify book", book);
         } else {
             URL groupUrl = new File("template/details-book.stg").toURI().toURL();
+
             ST template = createTemplateWithUserAndBasket(request, groupUrl, userService, basketService);
 
-            List<SellerPrice> prices = bookService.findPricesFor(book);
-
-            template.addAggr("data.{book, prices}", new Object[]{book, prices});
+            template.addAggr("data.{book, prices}",
+                    new Object[]{book, bookService.findPricesFor(book)});
 
             response.getPrintStream().append(template.render());
         }
@@ -112,11 +113,12 @@ public class BookController {
 
         for (Object obj : form.keySet()) {
             String key = (String) obj;
+
             if (key.startsWith(SELLER_PRICE_PREFIX)) {
-                Long sellerId = Long.valueOf(key.substring(SELLER_PRICE_PREFIX.length()));
-                Seller seller = sellerService.findById(sellerId);
                 BigDecimal price = new BigDecimal(form.get(key));
-                bookService.setPrice(book, seller, price);
+                Long sellerId = Long.valueOf(key.substring(SELLER_PRICE_PREFIX.length()));
+
+                bookService.setPrice(book, sellerService.findById(sellerId), price);
             }
         }
 
@@ -125,21 +127,24 @@ public class BookController {
 
     public void modify(Request request, Response response) throws IOException {
         Form form = request.getForm();
+
         LOGGER.debug("form names: " + form.keySet());
 
-        Long bookId = Long.valueOf(form.get("book-id"));
-        Book book = bookService.findById(bookId);
+        Book book = bookService.findById(Long.valueOf(form.get("book-id")));
         book.setTitle(form.get("title"));
         book.setAuthor(form.get("author"));
 
         Set<Seller> processedSellers = newHashSet();
+
         for (Object obj : form.keySet()) {
             String key = (String) obj;
             if (key.startsWith(SELLER_PRICE_PREFIX)) {
+                BigDecimal price = new BigDecimal(form.get(key));
+
                 Long sellerId = Long.valueOf(key.substring(SELLER_PRICE_PREFIX.length()));
                 Seller seller = sellerService.findById(sellerId);
                 processedSellers.add(seller);
-                BigDecimal price = new BigDecimal(form.get(key));
+
                 bookService.setPrice(book, seller, price);
             }
         }
@@ -153,11 +158,8 @@ public class BookController {
         URL groupUrl = new File("template/add-modify-book.stg").toURI().toURL();
         ST template = createTemplateWithUserAndBasket(request, groupUrl, userService, basketService);
 
-        List<SellerPrice> prices = bookService.findPricesFor(book);
-        List<Seller> sellers = sellerService.findAll();
-
         template.addAggr("data.{action, actionName, book, sellers, prices}",
-                new Object[]{action, actionName, book, sellers, prices});
+                new Object[]{action, actionName, book, sellerService.findAll(), bookService.findPricesFor(book)});
 
         response.getPrintStream().append(template.render());
     }

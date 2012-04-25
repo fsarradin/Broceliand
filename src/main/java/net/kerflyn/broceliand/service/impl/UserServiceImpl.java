@@ -62,24 +62,26 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public User checkConnectedAt(InetAddress address) {
         Connection connection;
+
         try {
             connection = connectionRepository.findByAddress(address.getHostAddress());
         } catch (NoResultException e) {
             return null;
         }
-        User user = null;
+
         if (connection.getExpirationDate().isAfterNow()) {
-            user = connection.getUser();
+            return connection.getUser();
         } else {
             connectionRepository.delete(connection);
+            return null;
         }
-        return user;
     }
 
     @Override
     @Transactional
     public void saveConnection(User user, InetAddress address, DateTime expirationDate) {
         Connection connection = new Connection();
+
         connection.setUser(user);
         connection.setExpirationDate(expirationDate);
         connection.setHostAddress(address.getHostAddress());

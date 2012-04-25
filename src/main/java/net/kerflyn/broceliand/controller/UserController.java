@@ -46,6 +46,7 @@ public class UserController {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
     private UserService userService;
+
     private BasketService basketService;
 
     @Inject
@@ -55,18 +56,19 @@ public class UserController {
     }
 
     public void index(Request request, Response response) throws IOException, LeaseException {
-        final URL groupUrl = new File("template/create-user.stg").toURI().toURL();
+        URL groupUrl = new File("template/create-user.stg").toURI().toURL();
         ST template = createTemplateWithUserAndBasket(request, groupUrl, userService, basketService);
+
         response.getPrintStream().append(template.render());
     }
 
     public void invoice(Request request, Response response) throws LeaseException, IOException {
-        final URL groupUrl = new File("template/invoice.stg").toURI().toURL();
+        URL groupUrl = new File("template/invoice.stg").toURI().toURL();
         ST template = createTemplateWithUserAndBasket(request, groupUrl, userService, basketService);
 
-        final User connectedUser = Users.getConnectedUser(userService, request);
-        final Invoice invoice = basketService.getCurrentInvoiceFor(connectedUser);
-        template.addAggr("data.{invoice}", new Object[] { invoice });
+        User connectedUser = Users.getConnectedUser(userService, request);
+
+        template.addAggr("data.{invoice}", new Object[] {basketService.getCurrentInvoiceFor(connectedUser)});
 
         response.getPrintStream().append(template.render());
     }
@@ -74,29 +76,35 @@ public class UserController {
     @PathName("basket-delete")
     public void basketDelete(Request request, Response response) throws IOException, LeaseException {
         Form form = request.getForm();
-        Long bookId = Long.valueOf(form.get("book-id"));
-        User currentUser = Users.getConnectedUser(userService, request);
-        basketService.deleteBookById(currentUser, bookId);
+
+        User connectedUser = Users.getConnectedUser(userService, request);
+
+        basketService.deleteBookById(connectedUser, Long.valueOf(form.get("book-id")));
+
         redirectTo(response, "/user/invoice");
     }
 
     @PathName("basket-add")
     public void basketAdd(Request request, Response response) throws IOException, LeaseException {
         Form form = request.getForm();
-        Long bookId = Long.valueOf(form.get("book-id"));
-        User currentUser = Users.getConnectedUser(userService, request);
-        basketService.addBookById(currentUser, bookId);
+
+        User connectedUser = Users.getConnectedUser(userService, request);
+
+        basketService.addBookById(connectedUser, Long.valueOf(form.get("book-id")));
+
         redirectTo(response, "/");
     }
 
     public void login(Request request, Response response) throws LeaseException, IOException {
-        final URL groupUrl = new File("template/login.stg").toURI().toURL();
+        URL groupUrl = new File("template/login.stg").toURI().toURL();
         ST template = createTemplateWithUserAndBasket(request, groupUrl, userService, basketService);
+
         response.getPrintStream().append(template.render());
     }
 
     public void logout(Request request, Response response) throws LeaseException {
         Session session = request.getSession(false);
+
         if (session != null) {
             User user = Users.getConnectedUser(userService, request);
             if (user != null) {
@@ -104,19 +112,23 @@ public class UserController {
             }
             session.remove(CURRENT_USER_SESSION_KEY);
         }
+
         redirectTo(response, "/");
     }
 
     @SuppressWarnings("unchecked")
     public void connect(Request request, Response response) throws IOException, LeaseException {
         Form form = request.getForm();
-        String login = form.get("login");
-        User user = userService.findByLogin(login);
+
+        User user = userService.findByLogin(form.get("login"));
+
         if (user != null) {
             Users.login(user, request);
-            final DateTime expirationDate = new DateTime().plusDays(30);
+
+            DateTime expirationDate = new DateTime().plusDays(30);
             userService.saveConnection(user, request.getClientAddress().getAddress(), expirationDate);
         }
+
         redirectTo(response, "/");
     }
 

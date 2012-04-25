@@ -44,8 +44,11 @@ import static net.kerflyn.broceliand.util.Templates.createTemplateWithUserAndBas
 public class SellerController {
 
     private SellerService sellerService;
+
     private UserService userService;
+
     private BasketService basketService;
+
     private ShippingChargeStrategyService shippingChargeStrategyService;
 
     @Inject
@@ -59,40 +62,40 @@ public class SellerController {
     public void index(Request request, Response response) throws IOException, LeaseException {
         URL groupUrl = new File("template/add-modify-seller.stg").toURI().toURL();
         ST template = createTemplateWithUserAndBasket(request, groupUrl, userService, basketService);
+
         template.addAggr("data.{action, actionName}", new Object[] { "new", "Create" });
+
         response.getPrintStream().append(template.render());
     }
 
     public void details(Request request, Response response) throws IOException, LeaseException {
         Form form = request.getForm();
-        Long sellerId = Long.valueOf(form.get("seller-id"));
 
-        Seller seller = sellerService.findById(sellerId);
+        Seller seller = sellerService.findById(Long.valueOf(form.get("seller-id")));
         
         URL groupUrl = new File("template/add-modify-seller.stg").toURI().toURL();
         ST template = createTemplateWithUserAndBasket(request, groupUrl, userService, basketService);
 
-        List<ShippingChargeStrategyValueObject> strategies = ShippingCharges.getShippingChargeStrategyFrom(seller);
         template.addAggr("data.{action, actionName, seller, shippingChargeStrategies}",
-                new Object[] { "modify", "Modify", seller, strategies });
+                new Object[] { "modify", "Modify", seller, ShippingCharges.getShippingChargeStrategyFrom(seller)});
 
         response.getPrintStream().append(template.render());
     }
 
     public void delete(Request request, Response response) throws IOException, LeaseException {
         Form form = request.getForm();
-        Long sellerId = Long.valueOf(form.get("seller-id"));
-        sellerService.deleteById(sellerId);
+
+        sellerService.deleteById(Long.valueOf(form.get("seller-id")));
+
         redirectTo(response, "/seller/list");
     }
 
     public void list(Request request, Response response) throws LeaseException, IOException {
-        final URL groupUrl = new File("template/list-sellers.stg").toURI().toURL();
+        URL groupUrl = new File("template/list-sellers.stg").toURI().toURL();
         ST template = createTemplateWithUserAndBasket(request, groupUrl, userService, basketService);
 
-        List<Seller> sellers = sellerService.findAll();
+        template.addAggr("data.{sellers}", new Object[]{sellerService.findAll()});
 
-        template.addAggr("data.{sellers}", new Object[]{sellers});
         response.getPrintStream().append(template.render());
     }
 
@@ -107,10 +110,10 @@ public class SellerController {
         seller.setCountry(form.get("country"));
 
         Set<ShippingChargeStrategy> strategies = ShippingCharges.instantiateFrom(form);
+
         shippingChargeStrategyService.saveAll(strategies);
 
         sellerService.setShippingChargeStrategy(seller, strategies);
-
         sellerService.save(seller);
 
         redirectTo(response, "/seller/list");
@@ -118,15 +121,15 @@ public class SellerController {
 
     public void modify(Request request, Response response) throws IOException {
         Form form = request.getForm();
-        Long sellerId = Long.valueOf(form.get("seller-id"));
 
-        Seller seller = sellerService.findById(sellerId);
+        Seller seller = sellerService.findById(Long.valueOf(form.get("seller-id")));
         seller.setName(form.get("name"));
         seller.setAddress(form.get("address"));
         seller.setCity(form.get("city"));
         seller.setCountry(form.get("country"));
 
         Set<ShippingChargeStrategy> strategies = ShippingCharges.instantiateFrom(form);
+
         shippingChargeStrategyService.saveAll(strategies);
         sellerService.setShippingChargeStrategy(seller, strategies);
 
