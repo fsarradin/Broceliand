@@ -15,12 +15,12 @@
  */
 
 
-jQuery.fn.exists = function() { return this.length > 0; }
+jQuery.fn.exists = function() { return this.length > 0; };
 
 // add-modify-book.stg
 
 function priceModalDel(sellerId)  {
-    $('#price-table #seller-' + sellerId).remove();
+    $('#price-table').find('#seller-' + sellerId).remove();
 }
 
 function appendPrice(sellerId, price, sellers) {
@@ -39,7 +39,7 @@ function appendPrice(sellerId, price, sellers) {
 function priceModalSet(sellers) {
     var price = $('#price').val();
     var sellerId = $('#seller').val();
-    var sellerSelector = $('#price-table #seller-' + sellerId);
+    var sellerSelector = $('#price-table').find('#seller-' + sellerId);
     if (!sellerSelector.exists()) {
         appendPrice(sellerId, "", sellers)
     }
@@ -52,7 +52,7 @@ function shippingChargeModalSet(sellers) {
 //    var sellerId = $('#seller').val();
 //    var sellerSelector = $('#price-table #seller-' + sellerId);
 //    if (!sellerSelector.exists()) {
-        appendPolicy(policy)
+        appendPolicy(policy);
 //    }
 }
 
