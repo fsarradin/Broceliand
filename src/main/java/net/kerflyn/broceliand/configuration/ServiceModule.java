@@ -27,6 +27,8 @@ import net.kerflyn.broceliand.service.impl.BookServiceImpl;
 import net.kerflyn.broceliand.service.impl.SellerServiceImpl;
 import net.kerflyn.broceliand.service.impl.ShippingChargeStrategyServiceImpl;
 import net.kerflyn.broceliand.service.impl.UserServiceImpl;
+import net.kerflyn.broceliand.util.SessionManager;
+import net.kerflyn.broceliand.util.SessionManagerImpl;
 
 public class ServiceModule extends AbstractModule {
 
@@ -37,6 +39,7 @@ public class ServiceModule extends AbstractModule {
         bind(BasketService.class).to(BasketServiceImpl.class);
         bind(SellerService.class).to(SellerServiceImpl.class);
         bind(ShippingChargeStrategyService.class).to(ShippingChargeStrategyServiceImpl.class);
+        bind(SessionManager.class).to(SessionManagerImpl.class);
     }
 
 }

@@ -17,17 +17,16 @@
 package net.kerflyn.broceliand.controller;
 
 import com.google.inject.Inject;
-import net.kerflyn.broceliand.model.Invoice;
 import net.kerflyn.broceliand.model.User;
 import net.kerflyn.broceliand.route.PathName;
 import net.kerflyn.broceliand.service.BasketService;
 import net.kerflyn.broceliand.service.UserService;
+import net.kerflyn.broceliand.util.Session;
+import net.kerflyn.broceliand.util.SessionManager;
 import net.kerflyn.broceliand.util.Users;
 import org.joda.time.DateTime;
-import org.simpleframework.http.Form;
 import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
-import org.simpleframework.http.session.Session;
 import org.simpleframework.util.lease.LeaseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,24 +48,27 @@ public class UserController {
 
     private BasketService basketService;
 
+    private SessionManager sessionManager;
+
     @Inject
-    public UserController(UserService userService, BasketService basketService) {
+    public UserController(UserService userService, BasketService basketService, SessionManager sessionManager) {
         this.userService = userService;
         this.basketService = basketService;
+        this.sessionManager = sessionManager;
     }
 
     public void index(Request request, Response response) throws IOException, LeaseException {
         URL groupUrl = new File("template/create-user.stg").toURI().toURL();
-        ST template = createTemplateWithUserAndBasket(request, groupUrl, userService, basketService);
+        ST template = createTemplateWithUserAndBasket(request, groupUrl, userService, basketService, sessionManager);
 
         response.getPrintStream().append(template.render());
     }
 
     public void invoice(Request request, Response response) throws LeaseException, IOException {
         URL groupUrl = new File("template/invoice.stg").toURI().toURL();
-        ST template = createTemplateWithUserAndBasket(request, groupUrl, userService, basketService);
+        ST template = createTemplateWithUserAndBasket(request, groupUrl, userService, basketService, sessionManager);
 
-        User connectedUser = Users.getConnectedUser(userService, request);
+        User connectedUser = Users.getConnectedUser(userService, request, sessionManager);
 
         template.addAggr("data.{invoice}", new Object[] {basketService.getCurrentInvoiceFor(connectedUser)});
 
@@ -75,42 +77,39 @@ public class UserController {
 
     @PathName("basket-delete")
     public void basketDelete(Request request, Response response) throws IOException, LeaseException {
-        Form form = request.getForm();
+        User connectedUser = Users.getConnectedUser(userService, request, sessionManager);
 
-        User connectedUser = Users.getConnectedUser(userService, request);
-
-        basketService.deleteBookById(connectedUser, Long.valueOf(form.get("book-id")));
+        basketService.deleteBookById(connectedUser, Long.valueOf(request.getParameter("book-id")));
 
         redirectTo(response, "/user/invoice");
     }
 
     @PathName("basket-add")
     public void basketAdd(Request request, Response response) throws IOException, LeaseException {
-        Form form = request.getForm();
+        User connectedUser = Users.getConnectedUser(userService, request, sessionManager);
 
-        User connectedUser = Users.getConnectedUser(userService, request);
-
-        basketService.addBookById(connectedUser, Long.valueOf(form.get("book-id")));
+        basketService.addBookById(connectedUser, Long.valueOf(request.getParameter("book-id")));
 
         redirectTo(response, "/");
     }
 
     public void login(Request request, Response response) throws LeaseException, IOException {
         URL groupUrl = new File("template/login.stg").toURI().toURL();
-        ST template = createTemplateWithUserAndBasket(request, groupUrl, userService, basketService);
+        ST template = createTemplateWithUserAndBasket(request, groupUrl, userService, basketService, sessionManager);
 
         response.getPrintStream().append(template.render());
     }
 
     public void logout(Request request, Response response) throws LeaseException {
-        Session session = request.getSession(false);
+        Session session = sessionManager.getSession(request);
 
         if (session != null) {
-            User user = Users.getConnectedUser(userService, request);
+            User user = Users.getConnectedUser(userService, request, sessionManager);
             if (user != null) {
                 userService.deleteAllConnectionsFor(user);
             }
             session.remove(CURRENT_USER_SESSION_KEY);
+            session.close();
         }
 
         redirectTo(response, "/");
@@ -118,12 +117,10 @@ public class UserController {
 
     @SuppressWarnings("unchecked")
     public void connect(Request request, Response response) throws IOException, LeaseException {
-        Form form = request.getForm();
-
-        User user = userService.findByLogin(form.get("login"));
+        User user = userService.findByLogin(request.getParameter("login"));
 
         if (user != null) {
-            Users.login(user, request);
+            Users.login(user, request, sessionManager);
 
             DateTime expirationDate = new DateTime().plusDays(30);
             userService.saveConnection(user, request.getClientAddress().getAddress(), expirationDate);
@@ -134,11 +131,9 @@ public class UserController {
 
     @PathName("new")
     public void createUser(Request request, Response response) throws IOException {
-        Form form = request.getForm();
-
         User user = new User();
-        user.setName(form.get("name"));
-        user.setLogin(form.get("login"));
+        user.setName(request.getParameter("name"));
+        user.setLogin(request.getParameter("login"));
 
         userService.save(user);
 

@@ -19,15 +19,14 @@ package net.kerflyn.broceliand.controller;
 import com.google.inject.Inject;
 import net.kerflyn.broceliand.model.Book;
 import net.kerflyn.broceliand.model.Seller;
-import net.kerflyn.broceliand.model.SellerPrice;
 import net.kerflyn.broceliand.model.User;
 import net.kerflyn.broceliand.route.PathName;
 import net.kerflyn.broceliand.service.BasketService;
 import net.kerflyn.broceliand.service.BookService;
 import net.kerflyn.broceliand.service.SellerService;
 import net.kerflyn.broceliand.service.UserService;
+import net.kerflyn.broceliand.util.SessionManager;
 import net.kerflyn.broceliand.util.Users;
-import org.simpleframework.http.Form;
 import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
 import org.simpleframework.util.lease.LeaseException;
@@ -39,7 +38,6 @@ import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URL;
-import java.util.List;
 import java.util.Set;
 
 import static com.google.common.collect.Sets.newHashSet;
@@ -56,13 +54,19 @@ public class BookController {
     private UserService userService;
     private SellerService sellerService;
     private BasketService basketService;
+    private SessionManager sessionManager;
 
     @Inject
-    public BookController(BookService bookService, UserService userService, SellerService sellerService, BasketService basketService) {
+    public BookController(BookService bookService,
+                          UserService userService,
+                          SellerService sellerService,
+                          BasketService basketService,
+                          SessionManager sessionManager) {
         this.bookService = bookService;
         this.userService = userService;
         this.sellerService = sellerService;
         this.basketService = basketService;
+        this.sessionManager = sessionManager;
     }
 
     public void index(Request request, Response response) throws IOException, LeaseException {
@@ -70,15 +74,12 @@ public class BookController {
     }
 
     public void delete(Request request, Response response) throws IOException, LeaseException {
-        Form form = request.getForm();
-        bookService.deleteById(Long.valueOf(form.get("book-id")));
+        bookService.deleteById(Long.valueOf(request.getParameter("book-id")));
         redirectTo(response, "/");
     }
 
     public void details(Request request, Response response) throws IOException, LeaseException {
-        Form form = request.getForm();
-
-        String bookIdStr = form.get("book-id");
+        String bookIdStr = request.getParameter("book-id");
 
         Book book = null;
 
@@ -86,14 +87,14 @@ public class BookController {
             book = bookService.findById(Long.valueOf(bookIdStr));
         }
 
-        User user = Users.getConnectedUser(userService, request);
+        User user = Users.getConnectedUser(userService, request, sessionManager);
 
         if (user != null && user.isAdmin()) {
             renderAddOrModifyBook(request, response, "modify", "Modify book", book);
         } else {
             URL groupUrl = new File("template/details-book.stg").toURI().toURL();
 
-            ST template = createTemplateWithUserAndBasket(request, groupUrl, userService, basketService);
+            ST template = createTemplateWithUserAndBasket(request, groupUrl, userService, basketService, sessionManager);
 
             template.addAggr("data.{book, prices}",
                     new Object[]{book, bookService.findPricesFor(book)});
@@ -104,19 +105,15 @@ public class BookController {
 
     @PathName("new")
     public void createBook(Request request, Response response) throws IOException {
-        Form form = request.getForm();
-
         Book book = new Book();
-        book.setTitle(form.get("title"));
-        book.setAuthor(form.get("author"));
+        book.setTitle(request.getParameter("title"));
+        book.setAuthor(request.getParameter("author"));
         bookService.save(book);
 
-        for (Object obj : form.keySet()) {
-            String key = (String) obj;
-
-            if (key.startsWith(SELLER_PRICE_PREFIX)) {
-                BigDecimal price = new BigDecimal(form.get(key));
-                Long sellerId = Long.valueOf(key.substring(SELLER_PRICE_PREFIX.length()));
+        for (String name : request.getNames()) {
+            if (name.startsWith(SELLER_PRICE_PREFIX)) {
+                BigDecimal price = new BigDecimal(request.getPart(name).getContent());
+                Long sellerId = Long.valueOf(name.substring(SELLER_PRICE_PREFIX.length()));
 
                 bookService.setPrice(book, sellerService.findById(sellerId), price);
             }
@@ -126,22 +123,19 @@ public class BookController {
     }
 
     public void modify(Request request, Response response) throws IOException {
-        Form form = request.getForm();
+        LOGGER.debug("form names: " + request.getNames());
 
-        LOGGER.debug("form names: " + form.keySet());
-
-        Book book = bookService.findById(Long.valueOf(form.get("book-id")));
-        book.setTitle(form.get("title"));
-        book.setAuthor(form.get("author"));
+        Book book = bookService.findById(Long.valueOf(request.getParameter("book-id")));
+        book.setTitle(request.getParameter("title"));
+        book.setAuthor(request.getParameter("author"));
 
         Set<Seller> processedSellers = newHashSet();
 
-        for (Object obj : form.keySet()) {
-            String key = (String) obj;
-            if (key.startsWith(SELLER_PRICE_PREFIX)) {
-                BigDecimal price = new BigDecimal(form.get(key));
+        for (String name : request.getNames()) {
+            if (name.startsWith(SELLER_PRICE_PREFIX)) {
+                BigDecimal price = new BigDecimal(request.getPart(name).getContent());
 
-                Long sellerId = Long.valueOf(key.substring(SELLER_PRICE_PREFIX.length()));
+                Long sellerId = Long.valueOf(name.substring(SELLER_PRICE_PREFIX.length()));
                 Seller seller = sellerService.findById(sellerId);
                 processedSellers.add(seller);
 
@@ -156,7 +150,7 @@ public class BookController {
 
     private void renderAddOrModifyBook(Request request, Response response, String action, String actionName, Book book) throws LeaseException, IOException {
         URL groupUrl = new File("template/add-modify-book.stg").toURI().toURL();
-        ST template = createTemplateWithUserAndBasket(request, groupUrl, userService, basketService);
+        ST template = createTemplateWithUserAndBasket(request, groupUrl, userService, basketService, sessionManager);
 
         template.addAggr("data.{action, actionName, book, sellers, prices}",
                 new Object[]{action, actionName, book, sellerService.findAll(), bookService.findPricesFor(book)});

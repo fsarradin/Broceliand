@@ -4,7 +4,7 @@ page(metadata, user, basket, data) ::= <<
 <head>
     <title>Broceliand: $metadata.title$</title>
 
-    <script type="text/javascript" src="/resources/js/lib/jquery.js"></script>
+    <script data-main="/resources/js/main" type="text/javascript" src="/resources/js/lib/require.js"></script>
     <script type="text/javascript" src="/resources/js/lib/bootstrap.js"></script>
     <script type="text/javascript" src="/resources/js/broceliand.js"></script>
 

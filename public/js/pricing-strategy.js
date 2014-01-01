@@ -14,16 +14,10 @@
  *    limitations under the License.
  */
 
-package net.kerflyn.broceliand.util;
+define(['Underscore', 'Backbone'], function(_, Backbone) {
+    var PricingStrategy = Backbone.Model.extend({
 
-import org.simpleframework.http.Response;
-import org.simpleframework.http.Status;
+    });
 
-public class HttpUtils {
-
-    public static void redirectTo(Response response, String url) {
-        response.setCode(Status.TEMPORARY_REDIRECT.getCode());
-        response.setValue("Location", url);
-    }
-
-}
+    return PricingStrategy;
+});

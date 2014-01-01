@@ -23,7 +23,8 @@ import java.io.StringReader;
 import java.util.Map;
 import java.util.Set;
 
-import static org.fest.assertions.Assertions.assertThat;
+import static org.fest.assertions.api.Assertions.assertThat;
+
 
 public class SellerLoaderTest {
 

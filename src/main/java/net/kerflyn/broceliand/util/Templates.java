@@ -31,8 +31,12 @@ import java.util.List;
 
 public class Templates {
 
-    public static ST createTemplateWithUserAndBasket(Request request, URL groupUrl, UserService userService, BasketService basketService) throws LeaseException {
-        User currentUser = Users.getConnectedUser(userService, request);
+    public static ST createTemplateWithUserAndBasket(Request request,
+                                                     URL groupUrl,
+                                                     UserService userService,
+                                                     BasketService basketService,
+                                                     SessionManager sessionManager) throws LeaseException {
+        User currentUser = Users.getConnectedUser(userService, request, sessionManager);
         List<BasketElement> basketElements = Collections.emptyList();
         long basketCount = 0L;
 

@@ -30,7 +30,7 @@ import org.junit.Test;
 import java.math.BigDecimal;
 import java.util.Arrays;
 
-import static org.fest.assertions.Assertions.assertThat;
+import static org.fest.assertions.api.Assertions.assertThat;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;

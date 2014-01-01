@@ -21,6 +21,7 @@ import net.kerflyn.broceliand.model.Book;
 import net.kerflyn.broceliand.service.BasketService;
 import net.kerflyn.broceliand.service.BookService;
 import net.kerflyn.broceliand.service.UserService;
+import net.kerflyn.broceliand.util.SessionManager;
 import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
 import org.simpleframework.util.lease.LeaseException;
@@ -40,21 +41,21 @@ public class IndexController {
     private static final Logger LOGGER = LoggerFactory.getLogger(IndexController.class);
 
     private BookService bookService;
-
     private UserService userService;
-
     private BasketService basketService;
+    private SessionManager sessionManager;
 
     @Inject
-    public IndexController(BookService bookService, UserService userService, BasketService basketService) {
+    public IndexController(BookService bookService, UserService userService, BasketService basketService, SessionManager sessionManager) {
         this.bookService = bookService;
         this.userService = userService;
         this.basketService = basketService;
+        this.sessionManager = sessionManager;
     }
 
     public void index(Request request, Response response) throws IOException, LeaseException {
         final URL groupUrl = new File("template/index.stg").toURI().toURL();
-        ST template = createTemplateWithUserAndBasket(request, groupUrl, userService, basketService);
+        ST template = createTemplateWithUserAndBasket(request, groupUrl, userService, basketService, sessionManager);
 
         List<Book> books = bookService.findAll();
         template.addAggr("data.{books}", new Object[] { books });

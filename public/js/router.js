@@ -14,16 +14,25 @@
  *    limitations under the License.
  */
 
-package net.kerflyn.broceliand.util;
+define(['Backbone', 'pricing-strategy'], function(Backbone, PricingStrategy) {
+    var AppRouter = Backbone.Router.extend({
+        routes: {
+            'seller/add-pricing': 'add_pricing'
+        },
 
-import org.simpleframework.http.Response;
-import org.simpleframework.http.Status;
+        add_pricing: function() {
+            require(['pricing-details'], function(PricingDetailsView) {
+                new PricingDetailsView({model:new PricingStrategy()}).render();
+            });
+        }
+    });
 
-public class HttpUtils {
+    var initialize = function() {
+        window.app_router = new AppRouter;
+//        Backbone.history.start();
+    };
 
-    public static void redirectTo(Response response, String url) {
-        response.setCode(Status.TEMPORARY_REDIRECT.getCode());
-        response.setValue("Location", url);
-    }
-
-}
+    return {
+        initialize: initialize
+    };
+});

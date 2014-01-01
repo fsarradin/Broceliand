@@ -37,9 +37,10 @@ public class ResourceController {
 
     private static final Map<String, String> CONVERTER = new HashMap<String, String>() {{
         put("css", "text/css");
-        put("js", "text/script");
+        put("js", "text/javascript");
         put("jpg", "image/jpg");
         put("png", "image/png");
+        put("template", "text/plain");
     }};
 
     @PathName(".*")
@@ -48,7 +49,7 @@ public class ResourceController {
 
         LOGGER.info("getting resource at \"{}\"", getResourcePath(segments));
 
-        response.set("Content-Type", getMimeType(segments[1]));
+        response.setValue("Content-Type", getMimeType(segments[1]));
         Files.copy(new File(getResourcePath(segments)), response.getOutputStream());
     }
 

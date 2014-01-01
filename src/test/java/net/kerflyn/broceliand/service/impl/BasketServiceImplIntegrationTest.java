@@ -19,7 +19,6 @@ package net.kerflyn.broceliand.service.impl;
 import com.google.inject.Injector;
 import net.kerflyn.broceliand.model.BasketElement;
 import net.kerflyn.broceliand.model.Book;
-import net.kerflyn.broceliand.model.Seller;
 import net.kerflyn.broceliand.model.User;
 import net.kerflyn.broceliand.service.BasketService;
 import net.kerflyn.broceliand.service.BookService;
@@ -28,11 +27,11 @@ import net.kerflyn.broceliand.test.configuration.BroceliandTestConfiguration;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.math.BigDecimal;
-import java.util.HashSet;
 import java.util.List;
 
-import static org.fest.assertions.Assertions.assertThat;
+import static org.fest.assertions.api.Assertions.assertThat;
+import static org.fest.assertions.api.Assertions.extractProperty;
+
 
 public class BasketServiceImplIntegrationTest {
 
@@ -60,7 +59,7 @@ public class BasketServiceImplIntegrationTest {
         basketService.addBookById(user, book.getId());
 
         List<BasketElement> basketElements = basketService.findByUser(user);
-        assertThat(basketElements).onProperty("quantity").containsExactly(1);
+        assertThat(extractProperty("quantity").from(basketElements)).containsOnly(1);
     }
 
     @Test
@@ -69,7 +68,7 @@ public class BasketServiceImplIntegrationTest {
         basketService.addBookById(user, book.getId());
 
         List<BasketElement> basketElements = basketService.findByUser(user);
-        assertThat(basketElements).onProperty("quantity").containsExactly(2);
+        assertThat(extractProperty("quantity").from(basketElements)).containsOnly(2);
     }
 
 }

@@ -16,14 +16,20 @@
 
 package net.kerflyn.broceliand.util;
 
-import org.simpleframework.http.Response;
-import org.simpleframework.http.Status;
+import org.simpleframework.http.Cookie;
+import org.simpleframework.http.Request;
 
-public class HttpUtils {
 
-    public static void redirectTo(Response response, String url) {
-        response.setCode(Status.TEMPORARY_REDIRECT.getCode());
-        response.setValue("Location", url);
-    }
+public interface SessionManager {
+
+    Cookie getSessionCookie(Request request);
+
+    Cookie getOrCreateSessionCookie(Request request);
+
+    Session getOrCreateSession(Request request);
+
+    Session getSession(Request request);
+
+    void close(Session session);
 
 }

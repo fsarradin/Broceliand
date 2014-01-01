@@ -17,7 +17,6 @@
 package net.kerflyn.broceliand.controller;
 
 import com.google.inject.Inject;
-import net.kerflyn.broceliand.controller.model.ShippingChargeStrategyValueObject;
 import net.kerflyn.broceliand.model.Seller;
 import net.kerflyn.broceliand.model.charge.ShippingChargeStrategy;
 import net.kerflyn.broceliand.route.PathName;
@@ -25,8 +24,8 @@ import net.kerflyn.broceliand.service.BasketService;
 import net.kerflyn.broceliand.service.SellerService;
 import net.kerflyn.broceliand.service.ShippingChargeStrategyService;
 import net.kerflyn.broceliand.service.UserService;
+import net.kerflyn.broceliand.util.SessionManager;
 import net.kerflyn.broceliand.util.ShippingCharges;
-import org.simpleframework.http.Form;
 import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
 import org.simpleframework.util.lease.LeaseException;
@@ -35,7 +34,6 @@ import org.stringtemplate.v4.ST;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.List;
 import java.util.Set;
 
 import static net.kerflyn.broceliand.util.HttpUtils.redirectTo;
@@ -44,24 +42,27 @@ import static net.kerflyn.broceliand.util.Templates.createTemplateWithUserAndBas
 public class SellerController {
 
     private SellerService sellerService;
-
     private UserService userService;
-
     private BasketService basketService;
-
     private ShippingChargeStrategyService shippingChargeStrategyService;
+    private SessionManager sessionManager;
 
     @Inject
-    public SellerController(SellerService sellerService, UserService userService, BasketService basketService, ShippingChargeStrategyService shippingChargeStrategyService) {
+    public SellerController(SellerService sellerService,
+                            UserService userService,
+                            BasketService basketService,
+                            ShippingChargeStrategyService shippingChargeStrategyService,
+                            SessionManager sessionManager) {
         this.sellerService = sellerService;
         this.userService = userService;
         this.basketService = basketService;
         this.shippingChargeStrategyService = shippingChargeStrategyService;
+        this.sessionManager = sessionManager;
     }
 
     public void index(Request request, Response response) throws IOException, LeaseException {
         URL groupUrl = new File("template/add-modify-seller.stg").toURI().toURL();
-        ST template = createTemplateWithUserAndBasket(request, groupUrl, userService, basketService);
+        ST template = createTemplateWithUserAndBasket(request, groupUrl, userService, basketService, sessionManager);
 
         template.addAggr("data.{action, actionName}", new Object[] { "new", "Create" });
 
@@ -69,12 +70,10 @@ public class SellerController {
     }
 
     public void details(Request request, Response response) throws IOException, LeaseException {
-        Form form = request.getForm();
-
-        Seller seller = sellerService.findById(Long.valueOf(form.get("seller-id")));
+        Seller seller = sellerService.findById(Long.valueOf(request.getPart("seller-id").getContent()));
         
         URL groupUrl = new File("template/add-modify-seller.stg").toURI().toURL();
-        ST template = createTemplateWithUserAndBasket(request, groupUrl, userService, basketService);
+        ST template = createTemplateWithUserAndBasket(request, groupUrl, userService, basketService, sessionManager);
 
         template.addAggr("data.{action, actionName, seller, shippingChargeStrategies}",
                 new Object[] { "modify", "Modify", seller, ShippingCharges.getShippingChargeStrategyFrom(seller)});
@@ -83,16 +82,14 @@ public class SellerController {
     }
 
     public void delete(Request request, Response response) throws IOException, LeaseException {
-        Form form = request.getForm();
-
-        sellerService.deleteById(Long.valueOf(form.get("seller-id")));
+        sellerService.deleteById(Long.valueOf(request.getPart("seller-id").getContent()));
 
         redirectTo(response, "/seller/list");
     }
 
     public void list(Request request, Response response) throws LeaseException, IOException {
         URL groupUrl = new File("template/list-sellers.stg").toURI().toURL();
-        ST template = createTemplateWithUserAndBasket(request, groupUrl, userService, basketService);
+        ST template = createTemplateWithUserAndBasket(request, groupUrl, userService, basketService, sessionManager);
 
         template.addAggr("data.{sellers}", new Object[]{sellerService.findAll()});
 
@@ -101,15 +98,13 @@ public class SellerController {
 
     @PathName("new")
     public void createSeller(Request request, Response response) throws IOException {
-        Form form = request.getForm();
-
         Seller seller = new Seller();
-        seller.setName(form.get("name"));
-        seller.setAddress(form.get("address"));
-        seller.setCity(form.get("city"));
-        seller.setCountry(form.get("country"));
+        seller.setName(request.getPart("name").getContent());
+        seller.setAddress(request.getPart("address").getContent());
+        seller.setCity(request.getPart("city").getContent());
+        seller.setCountry(request.getPart("country").getContent());
 
-        Set<ShippingChargeStrategy> strategies = ShippingCharges.instantiateFrom(form);
+        Set<ShippingChargeStrategy> strategies = ShippingCharges.instantiateFrom(request);
 
         shippingChargeStrategyService.saveAll(strategies);
 
@@ -120,15 +115,13 @@ public class SellerController {
     }
 
     public void modify(Request request, Response response) throws IOException {
-        Form form = request.getForm();
+        Seller seller = sellerService.findById(Long.valueOf(request.getPart("seller-id").getContent()));
+        seller.setName(request.getPart("name").getContent());
+        seller.setAddress(request.getPart("address").getContent());
+        seller.setCity(request.getPart("city").getContent());
+        seller.setCountry(request.getPart("country").getContent());
 
-        Seller seller = sellerService.findById(Long.valueOf(form.get("seller-id")));
-        seller.setName(form.get("name"));
-        seller.setAddress(form.get("address"));
-        seller.setCity(form.get("city"));
-        seller.setCountry(form.get("country"));
-
-        Set<ShippingChargeStrategy> strategies = ShippingCharges.instantiateFrom(form);
+        Set<ShippingChargeStrategy> strategies = ShippingCharges.instantiateFrom(request);
 
         shippingChargeStrategyService.saveAll(strategies);
         sellerService.setShippingChargeStrategy(seller, strategies);

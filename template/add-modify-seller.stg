@@ -58,6 +58,15 @@ $if(user.admin)$
                 </tr>
             }$
         </table>
+
+        <table id="policy-table-bis" class="table table-striped table-bordered">
+            <tr>
+                <th>Policy</th>
+                <th>Parameters</th>
+                <th>Up to quantity</th>
+                <th>Action</th>
+            </tr>
+        </table>
     </fieldset>
 
     <div>

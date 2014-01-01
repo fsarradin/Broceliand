@@ -26,7 +26,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static org.fest.assertions.Assertions.assertThat;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 public class SellerTest {
 

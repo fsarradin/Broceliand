@@ -37,7 +37,9 @@ public class RouteModule extends AbstractModule {
                 serve("/resources/").with(ResourceController.class);
                 serve("/resources/css/").with(ResourceController.class);
                 serve("/resources/js/").with(ResourceController.class);
+                serve("/resources/js/lib/").with(ResourceController.class);
                 serve("/resources/img/").with(ResourceController.class);
+                serve("/resources/template/").with(ResourceController.class);
 
                 serve("/user/").with(UserController.class);
                 serve("/book/").with(BookController.class);

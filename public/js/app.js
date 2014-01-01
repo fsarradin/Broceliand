@@ -14,16 +14,12 @@
  *    limitations under the License.
  */
 
-package net.kerflyn.broceliand.util;
+define(['router'], function(Router) {
+    var initialize = function() {
+        Router.initialize();
+    };
 
-import org.simpleframework.http.Response;
-import org.simpleframework.http.Status;
-
-public class HttpUtils {
-
-    public static void redirectTo(Response response, String url) {
-        response.setCode(Status.TEMPORARY_REDIRECT.getCode());
-        response.setValue("Location", url);
+    return {
+        initialize: initialize
     }
-
-}
+});

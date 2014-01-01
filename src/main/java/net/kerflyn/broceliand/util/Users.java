@@ -19,30 +19,29 @@ package net.kerflyn.broceliand.util;
 import net.kerflyn.broceliand.model.User;
 import net.kerflyn.broceliand.service.UserService;
 import org.simpleframework.http.Request;
-import org.simpleframework.http.session.Session;
 import org.simpleframework.util.lease.LeaseException;
 
 import javax.persistence.NoResultException;
-import java.net.InetAddress;
 import java.util.concurrent.TimeUnit;
+
 
 public class Users {
 
     public static final String CURRENT_USER_SESSION_KEY = "current-user";
 
-    public static User getConnectedUser(UserService userService, Request request) throws LeaseException {
+    public static User getConnectedUser(UserService userService, Request request, SessionManager sessionManager) throws LeaseException {
         User user;
-        Session session = request.getSession(false);
+        Session session = sessionManager.getSession(request);
 
         if (session != null && session.containsKey(CURRENT_USER_SESSION_KEY)) {
 
-            user = userService.findByLogin((String) session.get(CURRENT_USER_SESSION_KEY));
+            user = userService.findByLogin(session.get(CURRENT_USER_SESSION_KEY));
 
         } else {
             user = userService.checkConnectedAt(request.getClientAddress().getAddress());
 
             if (user != null) {
-                login(user, request);
+                login(user, request, sessionManager);
             }
         }
 
@@ -70,10 +69,10 @@ public class Users {
     }
 
     @SuppressWarnings("unchecked")
-    public static void login(User user, Request request) throws LeaseException {
-        Session session = request.getSession(true);
+    public static void login(User user, Request request, SessionManager sessionManager) throws LeaseException {
+        Session session = sessionManager.getOrCreateSession(request);
 
-        session.getLease().renew(30, TimeUnit.DAYS);
+//        session.getLease().renew(30, TimeUnit.DAYS);
         session.put(CURRENT_USER_SESSION_KEY, user.getLogin());
     }
 }

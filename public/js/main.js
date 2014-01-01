@@ -14,16 +14,29 @@
  *    limitations under the License.
  */
 
-package net.kerflyn.broceliand.util;
+require.config({
+    paths: {
+        text: "lib/require.text",
+        jquery: '/resources/js/lib/jquery',
+        Underscore: '/resources/js/lib/underscore',
+        Backbone: '/resources/js/lib/backbone'
+    },
 
-import org.simpleframework.http.Response;
-import org.simpleframework.http.Status;
-
-public class HttpUtils {
-
-    public static void redirectTo(Response response, String url) {
-        response.setCode(Status.TEMPORARY_REDIRECT.getCode());
-        response.setValue("Location", url);
+    shim: {
+        jquery: {
+            exports: '$'
+        },
+        Underscore: {
+            deps: ['jquery'],
+            exports: '_'
+        },
+        Backbone: {
+            deps: ['Underscore', 'jquery'],
+            exports: 'Backbone'
+        }
     }
+});
 
-}
+require(['jquery', 'app'], function($, App) {
+    App.initialize();
+});

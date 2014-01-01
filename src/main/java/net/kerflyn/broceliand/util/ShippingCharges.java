@@ -21,7 +21,10 @@ import net.kerflyn.broceliand.model.Seller;
 import net.kerflyn.broceliand.model.charge.FixedShippingCharge;
 import net.kerflyn.broceliand.model.charge.ProportionalShippingCharge;
 import net.kerflyn.broceliand.model.charge.ShippingChargeStrategy;
+import org.simpleframework.http.Part;
+import org.simpleframework.http.Request;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,8 +45,8 @@ public final class ShippingCharges {
         throw new UnsupportedOperationException();
     }
 
-    public static Set<ShippingChargeStrategy> instantiateFrom(Map<String, String> form) {
-        Map<String, Map<String, String>> strategyData = classifyStrategyData(form);
+    public static Set<ShippingChargeStrategy> instantiateFrom(Request request) throws IOException {
+        Map<String, Map<String, String>> strategyData = classifyStrategyData(request);
 
         HashSet<ShippingChargeStrategy> strategies = new HashSet<ShippingChargeStrategy>();
 
@@ -63,23 +66,23 @@ public final class ShippingCharges {
         return strategies;
     }
 
-    private static Map<String, Map<String, String>> classifyStrategyData(Map<String, String> form) {
+    private static Map<String, Map<String, String>> classifyStrategyData(Request request) throws IOException {
         Map<String, Map<String, String>> strategyData = new HashMap<String, Map<String, String>>();
 
-        for (Map.Entry<String, String> entry : form.entrySet()) {
-            String key = entry.getKey();
+        for (Part part : request.getParts()) {
+            String name = part.getName();
 
-            if (!key.startsWith("shipping-charge")) {
+            if (!name.startsWith("shipping-charge")) {
                 continue;
             }
 
-            String index = getIndexFrom(key);
-            String field = getFieldFrom(key);
+            String index = getIndexFrom(name);
+            String field = getFieldFrom(name);
 
             if (!strategyData.containsKey(index)) {
                 strategyData.put(index, new HashMap<String, String>());
             }
-            strategyData.get(index).put(field, entry.getValue());
+            strategyData.get(index).put(field, part.getContent());
         }
         return strategyData;
     }
